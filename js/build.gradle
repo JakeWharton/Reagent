@@ -1,0 +1,6 @@
+apply plugin: 'org.jetbrains.kotlin.platform.js'
+
+dependencies {
+  implement project(':common')
+  compile deps.kotlin.stdLibJs
+}

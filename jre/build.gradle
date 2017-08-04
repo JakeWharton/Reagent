@@ -1,0 +1,11 @@
+apply plugin: 'org.jetbrains.kotlin.platform.jvm'
+
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
+
+dependencies {
+  implement project(':common')
+  compile deps.kotlin.stdLib
+  testCompile deps.junit
+  testCompile deps.truth
+}

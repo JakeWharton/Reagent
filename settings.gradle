@@ -1,0 +1,5 @@
+rootProject.name = 'reagent'
+
+include ':common'
+include ':jre'
+include ':js'
