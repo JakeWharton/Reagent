@@ -28,7 +28,7 @@ import reagent.internal.task.TaskComplete
 import reagent.internal.task.TaskFromLambda
 
 /** Emits 0 to infinite items and then signals complete or error. */
-abstract class Many<I> {
+abstract class Many<out I> {
   interface Listener<in I> {
     fun onNext(item: I)
     fun onComplete()
@@ -50,14 +50,12 @@ abstract class Many<I> {
     //@JvmStatic
     fun <I> fromArray(vararg items: I): Many<I> = ManyFromArray(items)
     //@JvmStatic
-    @Suppress("UNCHECKED_CAST")
-    fun <I> empty() : Many<I> = TaskComplete as Many<I>
+    fun <I> empty() : Many<I> = TaskComplete
     //@JvmStatic
     fun <I> error(t: Throwable): Many<I> = OneError(t)
     //@JvmStatic
     fun <I> returning(func: () -> I): Many<I> = OneFromLambda(func)
     //@JvmStatic
-    @Suppress("UNCHECKED_CAST")
-    fun <I> running(func: () -> Unit): Many<I> = TaskFromLambda(func) as Many<I>
+    fun <I> running(func: () -> Unit): Many<I> = TaskFromLambda(func)
   }
 }

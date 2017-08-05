@@ -37,19 +37,15 @@ abstract class Task : Maybe<Nothing>() {
   /** Hide this `Task` instance as a `Maybe`. */
   open fun toMaybe(): Maybe<Nothing> = MaybeFromTask(this)
 
-  @Suppress("UNCHECKED_CAST")
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun <O> map(func: (Nothing) -> O): Maybe<O> = this as Maybe<O>
+  override fun <O> map(func: (Nothing) -> O): Maybe<O> = this
 
-  @Suppress("UNCHECKED_CAST")
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun <O> flatMapMany(func: (Nothing) -> Many<O>): Many<O> = this as Many<O>
-  @Suppress("UNCHECKED_CAST")
+  override fun <O> flatMapMany(func: (Nothing) -> Many<O>): Many<O> = this
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun <O> flatMapMaybe(func: (Nothing) -> Maybe<O>): Maybe<O> = this as Maybe<O>
-  @Suppress("UNCHECKED_CAST")
+  override fun <O> flatMapMaybe(func: (Nothing) -> Maybe<O>): Maybe<O> = this
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun <O> flatMapOne(func: (Nothing) -> One<O>): Maybe<O> = this as Maybe<O>
+  override fun <O> flatMapOne(func: (Nothing) -> One<O>): Maybe<O> = this
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
   override fun flatMapTask(func: (Nothing) -> Task): Task = this
 

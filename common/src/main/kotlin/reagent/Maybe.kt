@@ -28,7 +28,7 @@ import reagent.internal.task.TaskError
 import reagent.internal.task.TaskFromLambda
 
 /** Emits an item, signals nothing (no item), or signals error. */
-abstract class Maybe<I> : Many<I>() {
+abstract class Maybe<out I> : Many<I>() {
   interface Listener<in I> {
     fun onItem(item: I)
     fun onNothing()
@@ -52,15 +52,12 @@ abstract class Maybe<I> : Many<I>() {
     //@JvmStatic
     fun <I> just(item: I) : Maybe<I> = OneJust(item)
     //@JvmStatic
-    @Suppress("UNCHECKED_CAST")
-    fun <I> empty() : Maybe<I> = TaskComplete as Maybe<I>
+    fun <I> empty() : Maybe<I> = TaskComplete
     //@JvmStatic
-    @Suppress("UNCHECKED_CAST")
-    fun <I> error(t: Throwable): Maybe<I> = TaskError(t) as Maybe<I>
+    fun <I> error(t: Throwable): Maybe<I> = TaskError(t)
     //@JvmStatic
     fun <I> returning(func: () -> I): Maybe<I> = OneFromLambda(func)
     //@JvmStatic
-    @Suppress("UNCHECKED_CAST")
-    fun <I> running(func: () -> Unit): Maybe<I> = TaskFromLambda(func) as Maybe<I>
+    fun <I> running(func: () -> Unit): Maybe<I> = TaskFromLambda(func)
   }
 }

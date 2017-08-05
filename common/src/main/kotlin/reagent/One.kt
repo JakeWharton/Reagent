@@ -27,7 +27,7 @@ import reagent.internal.one.OneJust
 import reagent.internal.one.OneMap
 
 /** Emits a single item or errors. */
-abstract class One<I> : Maybe<I>() {
+abstract class One<out I> : Maybe<I>() {
   interface Listener<in I> {
     fun onItem(item: I)
     fun onError(t: Throwable)
