@@ -1,3 +1,7 @@
+plugins {
+  id 'com.craigburke.karma' version '1.4.4'
+}
+
 apply plugin: 'org.jetbrains.kotlin.platform.js'
 
 dependencies {
@@ -5,3 +9,32 @@ dependencies {
   compile deps.kotlin.stdLib.js
   testCompile deps.kotlin.test.js
 }
+
+task populateNodeModules(type: Copy) {
+  configurations.testCompile.each {
+    from zipTree(it.absolutePath).matching { include '*.js' }
+  }
+  into "$buildDir/js_deps"
+}
+
+karma {
+  basePath = projectDir.absolutePath
+
+  dependencies(['qunitjs@1.23.1', 'karma-chrome-launcher'])
+
+  browsers = ['ChromeHeadless']
+  frameworks = ['qunit']
+
+  profile('default') {
+    libraryBases = ['build/js_deps/']
+    libraryFiles = ['kotlin.js', 'kotlin-test.js']
+    sourceBases = ['build/classes/main/']
+    sourceFiles = ['js_main.js']
+    testBases = ['build/classes/test/']
+    testFiles = ['js_test.js']
+  }
+}
+
+karmaGenerateConfig.outputs.upToDateWhen { false }
+karmaRun.dependsOn('classes', 'testClasses', 'populateNodeModules')
+clean.dependsOn('karmaClean')
