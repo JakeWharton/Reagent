@@ -15,27 +15,28 @@
  */
 package reagent.tester
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertSame
 import reagent.Many
-import java.util.concurrent.LinkedBlockingDeque
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class ManyAsserter<T>(private val events: LinkedBlockingDeque<Any>) {
+class ManyAsserter<T>(private val events: MutableList<Any>) {
   fun item(item: T) {
-    assertEquals(Item(item), events.pollFirst())
+    assertEquals(Item(item), events.removeAt(0))
   }
 
   fun complete() {
-    assertSame(Complete, events.pollFirst())
+    assertTrue(Complete === events.removeAt(0))
+    // TODO switch to assertSame once https://github.com/JetBrains/kotlin/pull/1230 is released.
   }
 
   fun error(t: Throwable) {
-    assertEquals(Error(t), events.pollFirst())
+    assertEquals(Error(t), events.removeAt(0))
   }
 }
 
 fun <T> Many<T>.testMany(assertions: ManyAsserter<T>.() -> Unit) {
-  val events = LinkedBlockingDeque<Any>()
+  // TODO switch to something that can block for elements.
+  val events = mutableListOf<Any>()
   subscribe(object : Many.Listener<T> {
     override fun onNext(item: T) {
       events.add(Item(item))
@@ -52,5 +53,5 @@ fun <T> Many<T>.testMany(assertions: ManyAsserter<T>.() -> Unit) {
 
   ManyAsserter<T>(events).assertions()
 
-  assert(events.isEmpty()) { "Unconsumed events: $events" }
+  assertTrue(events.isEmpty(), "Unconsumed events: $events")
 }

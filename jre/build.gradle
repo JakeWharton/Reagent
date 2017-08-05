@@ -5,7 +5,6 @@ targetCompatibility = JavaVersion.VERSION_1_6
 
 dependencies {
   implement project(':common')
-  compile deps.kotlin.stdLib
-  testCompile deps.junit
-  testCompile deps.truth
+  compile deps.kotlin.stdLib.jre
+  testCompile deps.kotlin.test.jre
 }

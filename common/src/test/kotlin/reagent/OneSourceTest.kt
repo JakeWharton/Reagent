@@ -15,34 +15,38 @@
  */
 package reagent
 
-import org.junit.Ignore
 import org.junit.Test
-import reagent.pure.PureOne
 import reagent.tester.testOne
+import kotlin.test.assertTrue
 
-class OneMapTest {
-  @Test fun map() {
-    PureOne.just("Hello")
-        .map(String::toUpperCase)
+class OneSourceTest {
+  @Test fun just() {
+    One.just("Hello")
         .testOne {
-          item("HELLO")
+          item("Hello")
         }
   }
 
-  @Test fun mapError() {
+  @Test fun error() {
     val exception = RuntimeException("Oops!")
-    PureOne.error(exception)
-        .map { throw AssertionError() }
+    One.error<Any>(exception)
         .testOne {
           error(exception)
         }
   }
 
-  @Ignore("Error handling not implemented yet")
-  @Test fun mapThrowing() {
+  @Test fun returning() {
+    var called = false
+    One.returning { called = true; 0 }
+        .testOne {
+          item(0)
+        }
+    assertTrue(called)
+  }
+
+  @Test fun returningThrowing() {
     val exception = RuntimeException("Oops!")
-    PureOne.just("Hello")
-        .map { throw exception }
+    One.returning { throw exception }
         .testOne {
           error(exception)
         }

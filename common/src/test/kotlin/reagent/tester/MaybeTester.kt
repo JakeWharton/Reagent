@@ -15,25 +15,35 @@
  */
 package reagent.tester
 
-import org.junit.Assert.assertEquals
-import reagent.One
-import java.util.concurrent.LinkedBlockingDeque
+import reagent.Maybe
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class OneAsserter<T>(private val events: LinkedBlockingDeque<Any>) {
+class MaybeAsserter<T>(private val events: MutableList<Any>) {
   fun item(item: T) {
-    assertEquals(Item(item), events.pollFirst())
+    assertEquals(Item(item), events.removeAt(0))
+  }
+
+  fun nothing() {
+    assertTrue(Complete === events.removeAt(0))
+    // TODO switch to assertSame once https://github.com/JetBrains/kotlin/pull/1230 is released.
   }
 
   fun error(t: Throwable) {
-    assertEquals(Error(t), events.pollFirst())
+    assertEquals(Error(t), events.removeAt(0))
   }
 }
 
-fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
-  val events = LinkedBlockingDeque<Any>()
-  subscribe(object : One.Listener<T> {
+fun <T> Maybe<T>.testMaybe(assertions: MaybeAsserter<T>.() -> Unit) {
+  // TODO switch to something that can block for elements.
+  val events = mutableListOf<Any>()
+  subscribe(object : Maybe.Listener<T> {
     override fun onItem(item: T) {
       events.add(Item(item))
+    }
+
+    override fun onNothing() {
+      events.add(Complete)
     }
 
     override fun onError(t: Throwable) {
@@ -41,7 +51,7 @@ fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
     }
   })
 
-  OneAsserter<T>(events).assertions()
+  MaybeAsserter<T>(events).assertions()
 
-  assert(events.isEmpty()) { "Unconsumed events: $events" }
+  assertTrue(events.isEmpty(), "Unconsumed events: $events")
 }

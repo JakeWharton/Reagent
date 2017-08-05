@@ -15,26 +15,26 @@
  */
 package reagent.tester
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertSame
-import reagent.Task
-import java.util.concurrent.LinkedBlockingDeque
+import reagent.One
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class TaskAsserter(private val events: LinkedBlockingDeque<Any>) {
-  fun complete() {
-    assertSame(Complete, events.pollFirst())
+class OneAsserter<T>(private val events: MutableList<Any>) {
+  fun item(item: T) {
+    assertEquals(Item(item), events.removeAt(0))
   }
 
   fun error(t: Throwable) {
-    assertEquals(Error(t), events.pollFirst())
+    assertEquals(Error(t), events.removeAt(0))
   }
 }
 
-fun Task.testTask(assertions: TaskAsserter.() -> Unit) {
-  val events = LinkedBlockingDeque<Any>()
-  subscribe(object : Task.Listener {
-    override fun onComplete() {
-      events.add(Complete)
+fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
+  // TODO switch to something that can block for elements.
+  val events = mutableListOf<Any>()
+  subscribe(object : One.Listener<T> {
+    override fun onItem(item: T) {
+      events.add(Item(item))
     }
 
     override fun onError(t: Throwable) {
@@ -42,7 +42,7 @@ fun Task.testTask(assertions: TaskAsserter.() -> Unit) {
     }
   })
 
-  TaskAsserter(events).assertions()
+  OneAsserter<T>(events).assertions()
 
-  assert(events.isEmpty()) { "Unconsumed events: $events" }
+  assertTrue(events.isEmpty(), "Unconsumed events: $events")
 }

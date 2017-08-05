@@ -4,12 +4,17 @@ buildscript {
   ]
 
   ext.deps = [
-      'junit': 'junit:junit:4.12',
-      'truth': 'com.google.truth:truth:0.33',
       'kotlin': [
-          'stdLibCommon': "org.jetbrains.kotlin:kotlin-stdlib-common:${versions.kotlin}",
-          'stdLib': "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
-          'stdLibJs': "org.jetbrains.kotlin:kotlin-stdlib-js:${versions.kotlin}",
+          'stdLib': [
+              'common': "org.jetbrains.kotlin:kotlin-stdlib-common:${versions.kotlin}",
+              'jre': "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+              'js': "org.jetbrains.kotlin:kotlin-stdlib-js:${versions.kotlin}",
+          ],
+          'test': [
+              'common': "org.jetbrains.kotlin:kotlin-test-common:${versions.kotlin}",
+              'jre': "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
+              'js': "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
+          ],
       ],
   ]
 

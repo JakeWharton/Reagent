@@ -15,11 +15,9 @@
  */
 package reagent
 
-import org.junit.Assert
 import org.junit.Test
 import reagent.tester.testMany
-import java.util.concurrent.Callable
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.test.assertTrue
 
 class ManySourceTest {
   @Test fun just() {
@@ -55,13 +53,13 @@ class ManySourceTest {
   }
 
   @Test fun returning() {
-    val called = AtomicBoolean()
-    Many.returning { called.getAndSet(true) }
+    var called = false
+    Many.returning { called = true; 0 }
         .testMany {
-          item(false)
+          item(0)
           complete()
         }
-    Assert.assertTrue(called.get())
+    assertTrue(called)
   }
 
   @Test fun returningThrowing() {
@@ -73,12 +71,12 @@ class ManySourceTest {
   }
 
   @Test fun running() {
-    val called = AtomicBoolean()
-    Many.running<Any> { called.set(true) }
+    var called = false
+    Many.running<Any> { called = true }
         .testMany {
           complete()
         }
-    Assert.assertTrue(called.get())
+    assertTrue(called)
   }
 
   @Test fun runningThrowing() {

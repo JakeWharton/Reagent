@@ -15,7 +15,6 @@
  */
 package reagent
 
-import org.junit.Ignore
 import org.junit.Test
 import reagent.pure.PureMaybe
 import reagent.tester.testMaybe
@@ -46,13 +45,13 @@ class MaybeMapTest {
         }
   }
 
-  @Ignore("Error handling not implemented yet")
-  @Test fun mapThrowing() {
-    val exception = RuntimeException("Oops!")
-    PureMaybe.just("Hello")
-        .map { throw exception }
-        .testMaybe {
-          error(exception)
-        }
-  }
+//  @Ignore("Error handling not implemented yet")
+//  @Test fun mapThrowing() {
+//    val exception = RuntimeException("Oops!")
+//    PureMaybe.just("Hello")
+//        .map { throw exception }
+//        .testMaybe {
+//          error(exception)
+//        }
+//  }
 }

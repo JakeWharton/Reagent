@@ -15,7 +15,6 @@
  */
 package reagent
 
-import org.junit.Ignore
 import org.junit.Test
 import reagent.pure.PureMany
 import reagent.tester.testMany
@@ -48,13 +47,13 @@ class ManyMapTest {
         }
   }
 
-  @Ignore("Error handling not implemented yet")
-  @Test fun mapThrowing() {
-    val exception = RuntimeException("Oops!")
-    PureMany.just("Hello", "World")
-        .map { throw exception }
-        .testMany {
-          error(exception)
-        }
-  }
+//  @Ignore("Error handling not implemented yet")
+//  @Test fun mapThrowing() {
+//    val exception = RuntimeException("Oops!")
+//    PureMany.just("Hello", "World")
+//        .map { throw exception }
+//        .testMany {
+//          error(exception)
+//        }
+//  }
 }

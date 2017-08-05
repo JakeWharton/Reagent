@@ -15,10 +15,9 @@
  */
 package reagent
 
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import reagent.tester.testMaybe
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.test.assertTrue
 
 class MaybeSourceTest {
   @Test fun just() {
@@ -44,12 +43,12 @@ class MaybeSourceTest {
   }
 
   @Test fun returning() {
-    val called = AtomicBoolean()
-    Maybe.returning { called.getAndSet(true) }
+    var called = false
+    Maybe.returning { called = true; 0 }
         .testMaybe {
-          item(false)
+          item(0)
         }
-    assertTrue(called.get())
+    assertTrue(called)
   }
 
   @Test fun returningThrowing() {
@@ -61,12 +60,12 @@ class MaybeSourceTest {
   }
 
   @Test fun running() {
-    val called = AtomicBoolean()
-    Maybe.running<Any> { called.set(true) }
+    var called = false
+    Maybe.running<Any> { called = true }
         .testMaybe {
           nothing()
         }
-    assertTrue(called.get())
+    assertTrue(called)
   }
 
   @Test fun runningThrowing() {

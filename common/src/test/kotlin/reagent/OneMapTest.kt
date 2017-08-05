@@ -15,42 +15,35 @@
  */
 package reagent
 
-import org.junit.Assert.assertTrue
 import org.junit.Test
+import reagent.pure.PureOne
 import reagent.tester.testOne
-import java.util.concurrent.Callable
-import java.util.concurrent.atomic.AtomicBoolean
 
-class OneSourceTest {
-  @Test fun just() {
-    One.just("Hello")
+class OneMapTest {
+  @Test fun map() {
+    PureOne.just("Hello")
+        .map(String::toUpperCase)
         .testOne {
-          item("Hello")
+          item("HELLO")
         }
   }
 
-  @Test fun error() {
+  @Test fun mapError() {
     val exception = RuntimeException("Oops!")
-    One.error<Any>(exception)
+    PureOne.error(exception)
+        .map { throw AssertionError() }
         .testOne {
           error(exception)
         }
   }
 
-  @Test fun returning() {
-    val called = AtomicBoolean()
-    One.returning { called.getAndSet(true) }
-        .testOne {
-          item(false)
-        }
-    assertTrue(called.get())
-  }
-
-  @Test fun returningThrowing() {
-    val exception = RuntimeException("Oops!")
-    One.returning { throw exception }
-        .testOne {
-          error(exception)
-        }
-  }
+//  @Ignore("Error handling not implemented yet")
+//  @Test fun mapThrowing() {
+//    val exception = RuntimeException("Oops!")
+//    PureOne.just("Hello")
+//        .map { throw exception }
+//        .testOne {
+//          error(exception)
+//        }
+//  }
 }

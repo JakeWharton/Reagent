@@ -15,11 +15,9 @@
  */
 package reagent
 
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import reagent.tester.testTask
-import java.util.concurrent.Callable
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.test.assertTrue
 
 class TaskSourceTest {
   @Test fun empty() {
@@ -38,12 +36,12 @@ class TaskSourceTest {
   }
 
   @Test fun running() {
-    val called = AtomicBoolean()
-    Task.running { called.set(true) }
+    var called = false
+    Task.running { called = true }
         .testTask {
           complete()
         }
-    assertTrue(called.get())
+    assertTrue(called)
   }
 
   @Test fun runningThrowing() {
