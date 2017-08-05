@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent.internal.many
+package reagent.internal.one
 
-import reagent.Many
+import reagent.Maybe.Listener
 import reagent.One
 
-internal class ManyFromOne<U>(val upstream: One<U>) : Many<U>() {
-  override fun subscribe(listener: Many.Listener<U>) = upstream.subscribe(Operator(listener))
-
-  class Operator<U>(val delegate: Many.Listener<U>) : One.Listener<U> {
-    override fun onItem(item: U) = delegate.let {
-      it.onNext(item)
-      it.onComplete()
-    }
-    override fun onError(t: Throwable) = delegate.onError(t)
-  }
+class MaybeOneListener<in U>(private val delegate: Listener<U>) : One.Listener<U> {
+  override fun onItem(item: U) = delegate.onItem(item)
+  override fun onError(t: Throwable) = delegate.onError(t)
 }

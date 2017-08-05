@@ -15,8 +15,8 @@
  */
 package reagent
 
-import reagent.internal.many.ManyFromOne
-import reagent.internal.maybe.MaybeFromOne
+import reagent.internal.one.ManyOneListener
+import reagent.internal.one.MaybeOneListener
 import reagent.internal.one.OneError
 import reagent.internal.one.OneFlatMapMany
 import reagent.internal.one.OneFlatMapMaybe
@@ -34,12 +34,8 @@ abstract class One<out I> : Maybe<I>() {
   }
 
   abstract fun subscribe(listener: Listener<I>)
-  override final fun subscribe(listener: Maybe.Listener<I>) = toMaybe().subscribe(listener)
-
-  /** Hide this `One` instance as a `Maybe`. */
-  open fun toMaybe(): Maybe<I> = MaybeFromOne(this)
-  /** Hide this `One` instance as a `Many`. */
-  override fun toMany(): Many<I> = ManyFromOne(this)
+  override fun subscribe(listener: Maybe.Listener<I>) = subscribe(MaybeOneListener(listener))
+  override fun subscribe(listener: Many.Listener<I>) = subscribe(ManyOneListener(listener))
 
   override fun <O> map(func: (I) -> O): One<O> = OneMap(this, func)
 

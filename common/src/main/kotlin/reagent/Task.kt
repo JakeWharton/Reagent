@@ -15,8 +15,8 @@
  */
 package reagent
 
-import reagent.internal.many.ManyFromTask
-import reagent.internal.maybe.MaybeFromTask
+import reagent.internal.task.ManyTaskListener
+import reagent.internal.task.MaybeTaskListener
 import reagent.internal.task.TaskComplete
 import reagent.internal.task.TaskError
 import reagent.internal.task.TaskFromLambda
@@ -30,12 +30,8 @@ abstract class Task : Maybe<Nothing>() {
   }
 
   abstract fun subscribe(listener: Listener)
-  override fun subscribe(listener: Maybe.Listener<Nothing>) = toMaybe().subscribe(listener)
-
-  /** Hide this `Task` instance as a `Many`. */
-  override fun toMany(): Many<Nothing> = ManyFromTask(this)
-  /** Hide this `Task` instance as a `Maybe`. */
-  open fun toMaybe(): Maybe<Nothing> = MaybeFromTask(this)
+  override fun subscribe(listener: Maybe.Listener<Nothing>) = subscribe(MaybeTaskListener(listener))
+  override fun subscribe(listener: Many.Listener<Nothing>) = subscribe(ManyTaskListener(listener))
 
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
   override fun <O> map(func: (Nothing) -> O): Maybe<O> = this

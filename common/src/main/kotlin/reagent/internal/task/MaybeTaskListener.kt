@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent.internal.many
+package reagent.internal.task
 
-import reagent.Many
 import reagent.Maybe
+import reagent.Task
 
-internal class ManyFromMaybe<U>(val upstream: Maybe<U>) : Many<U>() {
-  override fun subscribe(listener: Many.Listener<U>) = upstream.subscribe(Operator(listener))
-
-  class Operator<U>(val delegate: Many.Listener<U>) : Maybe.Listener<U> {
-    override fun onItem(item: U) = delegate.let {
-      it.onNext(item)
-      it.onComplete()
-    }
-    override fun onNothing() = delegate.onComplete()
-    override fun onError(t: Throwable) = delegate.onError(t)
-  }
+class MaybeTaskListener(private val delegate: Maybe.Listener<Nothing>) : Task.Listener {
+  override fun onComplete() = delegate.onNothing()
+  override fun onError(t: Throwable) = delegate.onError(t)
 }

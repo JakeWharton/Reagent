@@ -15,7 +15,7 @@
  */
 package reagent
 
-import reagent.internal.many.ManyFromMaybe
+import reagent.internal.maybe.ManyMaybeListener
 import reagent.internal.maybe.MaybeFlatMapMany
 import reagent.internal.maybe.MaybeFlatMapMaybe
 import reagent.internal.maybe.MaybeFlatMapOne
@@ -36,10 +36,7 @@ abstract class Maybe<out I> : Many<I>() {
   }
 
   abstract fun subscribe(listener: Listener<I>)
-  override final fun subscribe(listener: Many.Listener<I>) = toMany().subscribe(listener)
-
-  /** Hide this `Maybe` instance as a `Many`. */
-  open fun toMany() : Many<I> = ManyFromMaybe(this)
+  override fun subscribe(listener: Many.Listener<I>) = subscribe(ManyMaybeListener(listener))
 
   override fun <O> map(func: (I) -> O): Maybe<O> = MaybeMap(this, func)
 
