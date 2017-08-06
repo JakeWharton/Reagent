@@ -16,7 +16,6 @@
 package reagent
 
 import reagent.internal.AtomicRef
-import kotlin.DeprecationLevel.HIDDEN
 
 /** Signals complete or error. Has no items. */
 abstract class Task : Maybe<Nothing>() {
@@ -45,15 +44,6 @@ abstract class Task : Maybe<Nothing>() {
   abstract fun subscribe(subscriber: Subscriber)
   override fun subscribe(subscriber: Maybe.Subscriber<Nothing>) = subscribe(ListenerFromMaybe(subscriber))
   override fun subscribe(subscriber: Many.Subscriber<Nothing>) = subscribe(ListenerFromMany(subscriber))
-
-  @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun <O> flatMapMany(func: (Nothing) -> Many<O>): Many<O> = this
-  @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun <O> flatMapMaybe(func: (Nothing) -> Maybe<O>): Maybe<O> = this
-  @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun <O> flatMapOne(func: (Nothing) -> One<O>): Maybe<O> = this
-  @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun flatMapTask(func: (Nothing) -> Task): Task = this
 
   companion object Factory {
     //@JvmStatic

@@ -15,7 +15,8 @@
  */
 package reagent
 
-//@Ignore("Not implemented")
+// TODO overload resolution doesn't work here
+// TODO @Ignore("Not implemented")
 //class ManyFlatMapTest {
 //  @Test fun flatMapMany() {
 //    val flatMapItems = mutableListOf<String>()

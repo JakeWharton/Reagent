@@ -16,10 +16,6 @@
 package reagent
 
 import reagent.internal.AtomicRef
-import reagent.internal.many.ManyFlatMapMany
-import reagent.internal.many.ManyFlatMapMaybe
-import reagent.internal.many.ManyFlatMapOne
-import reagent.internal.many.ManyFlatMapTask
 
 /** Emits 0 to infinite items and then signals complete or error. */
 abstract class Many<out I> {
@@ -47,11 +43,6 @@ abstract class Many<out I> {
   }
 
   abstract fun subscribe(subscriber: Subscriber<I>)
-
-  open fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = ManyFlatMapMany(this, func)
-  open fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Many<O> = ManyFlatMapMaybe(this, func)
-  open fun <O> flatMapOne(func: (I) -> One<O>): Many<O> = ManyFlatMapOne(this, func)
-  open fun flatMapTask(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
 
   companion object Factory {
     //@JvmStatic

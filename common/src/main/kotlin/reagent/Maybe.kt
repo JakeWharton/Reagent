@@ -16,10 +16,6 @@
 package reagent
 
 import reagent.internal.AtomicRef
-import reagent.internal.maybe.MaybeFlatMapMany
-import reagent.internal.maybe.MaybeFlatMapMaybe
-import reagent.internal.maybe.MaybeFlatMapOne
-import reagent.internal.maybe.MaybeFlatMapTask
 
 /** Emits an item, signals nothing (no item), or signals error. */
 abstract class Maybe<out I> : Many<I>() {
@@ -48,11 +44,6 @@ abstract class Maybe<out I> : Many<I>() {
 
   abstract fun subscribe(subscriber: Subscriber<I>)
   override fun subscribe(subscriber: Many.Subscriber<I>) = subscribe(SubscriberFromMany(subscriber))
-
-  override fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = MaybeFlatMapMany(this, func)
-  override fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Maybe<O> = MaybeFlatMapMaybe(this, func)
-  override fun <O> flatMapOne(func: (I) -> One<O>): Maybe<O> = MaybeFlatMapOne(this, func)
-  override fun flatMapTask(func: (I) -> Task): Task = MaybeFlatMapTask(this, func)
 
   companion object Factory {
     //@JvmStatic
