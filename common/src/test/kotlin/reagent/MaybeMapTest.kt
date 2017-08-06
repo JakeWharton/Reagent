@@ -16,12 +16,12 @@
 package reagent
 
 import org.junit.Test
-import reagent.pure.PureMaybe
+import reagent.operator.map
 import reagent.tester.testMaybe
 
 class MaybeMapTest {
   @Test fun map() {
-    PureMaybe.just("Hello")
+    Maybe.just("Hello")
         .map(String::toUpperCase)
         .testMaybe {
           item("HELLO")
@@ -29,7 +29,7 @@ class MaybeMapTest {
   }
 
   @Test fun mapEmpty() {
-    PureMaybe.empty()
+    Maybe.empty<Nothing>()
         .map { throw AssertionError() }
         .testMaybe {
           nothing()
@@ -38,7 +38,7 @@ class MaybeMapTest {
 
   @Test fun mapError() {
     val exception = RuntimeException("Oops!")
-    PureMaybe.error(exception)
+    Maybe.error<Nothing>(exception)
         .map { throw AssertionError() }
         .testMaybe {
           error(exception)

@@ -34,9 +34,6 @@ abstract class Task : Maybe<Nothing>() {
   override fun subscribe(listener: Many.Listener<Nothing>) = subscribe(ManyTaskListener(listener))
 
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
-  override fun <O> map(func: (Nothing) -> O): Maybe<O> = this
-
-  @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
   override fun <O> flatMapMany(func: (Nothing) -> Many<O>): Many<O> = this
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
   override fun <O> flatMapMaybe(func: (Nothing) -> Maybe<O>): Maybe<O> = this

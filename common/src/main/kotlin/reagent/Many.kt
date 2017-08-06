@@ -20,7 +20,6 @@ import reagent.internal.many.ManyFlatMapMaybe
 import reagent.internal.many.ManyFlatMapOne
 import reagent.internal.many.ManyFlatMapTask
 import reagent.internal.many.ManyFromArray
-import reagent.internal.many.ManyMap
 import reagent.internal.one.OneError
 import reagent.internal.one.OneFromLambda
 import reagent.internal.one.OneJust
@@ -36,8 +35,6 @@ abstract class Many<out I> {
   }
 
   abstract fun subscribe(listener: Listener<I>)
-
-  open fun <O> map(func: (I) -> O): Many<O> = ManyMap(this, func)
 
   open fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = ManyFlatMapMany(this, func)
   open fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Many<O> = ManyFlatMapMaybe(this, func)

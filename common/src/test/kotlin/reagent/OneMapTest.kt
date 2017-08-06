@@ -16,12 +16,12 @@
 package reagent
 
 import org.junit.Test
-import reagent.pure.PureOne
+import reagent.operator.map
 import reagent.tester.testOne
 
 class OneMapTest {
   @Test fun map() {
-    PureOne.just("Hello")
+    One.just("Hello")
         .map(String::toUpperCase)
         .testOne {
           item("HELLO")
@@ -30,7 +30,7 @@ class OneMapTest {
 
   @Test fun mapError() {
     val exception = RuntimeException("Oops!")
-    PureOne.error(exception)
+    One.error<Nothing>(exception)
         .map { throw AssertionError() }
         .testOne {
           error(exception)

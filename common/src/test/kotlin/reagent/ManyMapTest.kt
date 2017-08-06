@@ -16,12 +16,12 @@
 package reagent
 
 import org.junit.Test
-import reagent.pure.PureMany
+import reagent.operator.map
 import reagent.tester.testMany
 
 class ManyMapTest {
   @Test fun map() {
-    PureMany.just("Hello", "World")
+    Many.fromArray("Hello", "World")
         .map(String::toUpperCase)
         .testMany {
           item("HELLO")
@@ -31,7 +31,7 @@ class ManyMapTest {
   }
 
   @Test fun mapEmpty() {
-    PureMany.empty()
+    Many.empty<Nothing>()
         .map { throw AssertionError() }
         .testMany {
           complete()
@@ -40,7 +40,7 @@ class ManyMapTest {
 
   @Test fun mapError() {
     val exception = RuntimeException("Oops!")
-    PureMany.error(exception)
+    Many.error<Nothing>(exception)
         .map { throw AssertionError() }
         .testMany {
           error(exception)

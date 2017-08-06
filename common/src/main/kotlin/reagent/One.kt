@@ -24,7 +24,6 @@ import reagent.internal.one.OneFlatMapOne
 import reagent.internal.one.OneFlatMapTask
 import reagent.internal.one.OneFromLambda
 import reagent.internal.one.OneJust
-import reagent.internal.one.OneMap
 
 /** Emits a single item or errors. */
 abstract class One<out I> : Maybe<I>() {
@@ -36,8 +35,6 @@ abstract class One<out I> : Maybe<I>() {
   abstract fun subscribe(listener: Listener<I>)
   override fun subscribe(listener: Maybe.Listener<I>) = subscribe(MaybeOneListener(listener))
   override fun subscribe(listener: Many.Listener<I>) = subscribe(ManyOneListener(listener))
-
-  override fun <O> map(func: (I) -> O): One<O> = OneMap(this, func)
 
   override fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = OneFlatMapMany(this, func)
   override fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Maybe<O> = OneFlatMapMaybe(this, func)

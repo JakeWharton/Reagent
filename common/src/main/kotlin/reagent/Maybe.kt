@@ -20,7 +20,6 @@ import reagent.internal.maybe.MaybeFlatMapMany
 import reagent.internal.maybe.MaybeFlatMapMaybe
 import reagent.internal.maybe.MaybeFlatMapOne
 import reagent.internal.maybe.MaybeFlatMapTask
-import reagent.internal.maybe.MaybeMap
 import reagent.internal.one.OneFromLambda
 import reagent.internal.one.OneJust
 import reagent.internal.task.TaskComplete
@@ -37,8 +36,6 @@ abstract class Maybe<out I> : Many<I>() {
 
   abstract fun subscribe(listener: Listener<I>)
   override fun subscribe(listener: Many.Listener<I>) = subscribe(ManyMaybeListener(listener))
-
-  override fun <O> map(func: (I) -> O): Maybe<O> = MaybeMap(this, func)
 
   override fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = MaybeFlatMapMany(this, func)
   override fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Maybe<O> = MaybeFlatMapMaybe(this, func)
