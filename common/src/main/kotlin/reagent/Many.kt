@@ -45,6 +45,8 @@ abstract class Many<out I> {
     //@JvmStatic
     fun <I> just(item: I): Many<I> = OneJust(item)
     //@JvmStatic
+    //@JvmName("fromArray")
+    // TODO rename to 'just' once @JvmName works: https://youtrack.jetbrains.com/issue/KT-19507.
     fun <I> fromArray(vararg items: I): Many<I> = ManyFromArray(items)
     //@JvmStatic
     fun <I> empty() : Many<I> = TaskComplete
