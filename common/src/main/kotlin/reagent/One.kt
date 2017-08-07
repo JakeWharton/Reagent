@@ -17,13 +17,10 @@ package reagent
 
 import reagent.internal.one.ManyOneListener
 import reagent.internal.one.MaybeOneListener
-import reagent.internal.one.OneError
 import reagent.internal.one.OneFlatMapMany
 import reagent.internal.one.OneFlatMapMaybe
 import reagent.internal.one.OneFlatMapOne
 import reagent.internal.one.OneFlatMapTask
-import reagent.internal.one.OneFromLambda
-import reagent.internal.one.OneJust
 
 /** Emits a single item or errors. */
 abstract class One<out I> : Maybe<I>() {
@@ -43,10 +40,31 @@ abstract class One<out I> : Maybe<I>() {
 
   companion object Factory {
     //@JvmStatic
-    fun <I> just(item: I): One<I> = OneJust(item)
+    fun <I> just(item: I): One<I> = Just(item)
     //@JvmStatic
-    fun <I> error(t: Throwable): One<I> = OneError(t)
+    fun <I> error(t: Throwable): One<I> = Error(t)
     //@JvmStatic
-    fun <I> returning(func: () -> I): One<I> = OneFromLambda(func)
+    fun <I> returning(func: () -> I): One<I> = FromLambda(func)
+  }
+
+  internal class Just<out I>(private val item: I) : One<I>() {
+    override fun subscribe(listener: Listener<I>) = listener.onItem(item)
+  }
+
+  internal class Error<out I>(private val t: Throwable) : One<I>() {
+    override fun subscribe(listener: Listener<I>) = listener.onError(t)
+  }
+
+  internal class FromLambda<out I>(private val func: () -> I) : One<I>() {
+    override fun subscribe(listener: Listener<I>) {
+      val value: I
+      try {
+        value = func.invoke()
+      } catch (t: Throwable) {
+        listener.onError(t)
+        return
+      }
+      listener.onItem(value)
+    }
   }
 }

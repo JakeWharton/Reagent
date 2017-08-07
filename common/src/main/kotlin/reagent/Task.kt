@@ -17,9 +17,6 @@ package reagent
 
 import reagent.internal.task.ManyTaskListener
 import reagent.internal.task.MaybeTaskListener
-import reagent.internal.task.TaskComplete
-import reagent.internal.task.TaskError
-import reagent.internal.task.TaskFromLambda
 import kotlin.DeprecationLevel.HIDDEN
 
 /* Signals complete or error. Has no items. */
@@ -44,10 +41,30 @@ abstract class Task : Maybe<Nothing>() {
 
   companion object Factory {
     //@JvmStatic
-    fun empty(): Task = TaskComplete
+    fun empty(): Task = Complete
     //@JvmStatic
-    fun error(t: Throwable): Task = TaskError(t)
+    fun error(t: Throwable): Task = Error(t)
     //@JvmStatic
-    fun running(func: () -> Unit): Task = TaskFromLambda(func)
+    fun running(func: () -> Unit): Task = FromLambda(func)
+  }
+
+  internal object Complete : Task() {
+    override fun subscribe(listener: Listener) = listener.onComplete()
+  }
+
+  internal class Error(private val t: Throwable) : Task() {
+    override fun subscribe(listener: Listener) = listener.onError(t)
+  }
+
+  internal class FromLambda(private val func: () -> Unit) : Task() {
+    override fun subscribe(listener: Listener) {
+      try {
+        func.invoke()
+      } catch (t: Throwable) {
+        listener.onError(t)
+        return
+      }
+      listener.onComplete()
+    }
   }
 }

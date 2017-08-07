@@ -19,12 +19,6 @@ import reagent.internal.many.ManyFlatMapMany
 import reagent.internal.many.ManyFlatMapMaybe
 import reagent.internal.many.ManyFlatMapOne
 import reagent.internal.many.ManyFlatMapTask
-import reagent.internal.many.ManyFromArray
-import reagent.internal.one.OneError
-import reagent.internal.one.OneFromLambda
-import reagent.internal.one.OneJust
-import reagent.internal.task.TaskComplete
-import reagent.internal.task.TaskFromLambda
 
 /** Emits 0 to infinite items and then signals complete or error. */
 abstract class Many<out I> {
@@ -43,18 +37,27 @@ abstract class Many<out I> {
 
   companion object Factory {
     //@JvmStatic
-    fun <I> just(item: I): Many<I> = OneJust(item)
+    fun <I> just(item: I): Many<I> = One.Just(item)
     //@JvmStatic
     //@JvmName("fromArray")
     // TODO rename to 'just' once @JvmName works: https://youtrack.jetbrains.com/issue/KT-19507.
-    fun <I> fromArray(vararg items: I): Many<I> = ManyFromArray(items)
+    fun <I> fromArray(vararg items: I): Many<I> = FromArray(items)
     //@JvmStatic
-    fun <I> empty() : Many<I> = TaskComplete
+    fun <I> empty() : Many<I> = Task.Complete
     //@JvmStatic
-    fun <I> error(t: Throwable): Many<I> = OneError(t)
+    fun <I> error(t: Throwable): Many<I> = One.Error(t)
     //@JvmStatic
-    fun <I> returning(func: () -> I): Many<I> = OneFromLambda(func)
+    fun <I> returning(func: () -> I): Many<I> = One.FromLambda(func)
     //@JvmStatic
-    fun <I> running(func: () -> Unit): Many<I> = TaskFromLambda(func)
+    fun <I> running(func: () -> Unit): Many<I> = Task.FromLambda(func)
+  }
+
+  internal class FromArray<out I>(private val items: Array<out I>) : Many<I>() {
+    override fun subscribe(listener: Listener<I>) {
+      for (item in items) {
+        listener.onNext(item)
+      }
+      listener.onComplete()
+    }
   }
 }

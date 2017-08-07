@@ -20,11 +20,6 @@ import reagent.internal.maybe.MaybeFlatMapMany
 import reagent.internal.maybe.MaybeFlatMapMaybe
 import reagent.internal.maybe.MaybeFlatMapOne
 import reagent.internal.maybe.MaybeFlatMapTask
-import reagent.internal.one.OneFromLambda
-import reagent.internal.one.OneJust
-import reagent.internal.task.TaskComplete
-import reagent.internal.task.TaskError
-import reagent.internal.task.TaskFromLambda
 
 /** Emits an item, signals nothing (no item), or signals error. */
 abstract class Maybe<out I> : Many<I>() {
@@ -44,14 +39,14 @@ abstract class Maybe<out I> : Many<I>() {
 
   companion object Factory {
     //@JvmStatic
-    fun <I> just(item: I) : Maybe<I> = OneJust(item)
+    fun <I> just(item: I) : Maybe<I> = One.Just(item)
     //@JvmStatic
-    fun <I> empty() : Maybe<I> = TaskComplete
+    fun <I> empty() : Maybe<I> = Task.Complete
     //@JvmStatic
-    fun <I> error(t: Throwable): Maybe<I> = TaskError(t)
+    fun <I> error(t: Throwable): Maybe<I> = Task.Error(t)
     //@JvmStatic
-    fun <I> returning(func: () -> I): Maybe<I> = OneFromLambda(func)
+    fun <I> returning(func: () -> I): Maybe<I> = One.FromLambda(func)
     //@JvmStatic
-    fun <I> running(func: () -> Unit): Maybe<I> = TaskFromLambda(func)
+    fun <I> running(func: () -> Unit): Maybe<I> = Task.FromLambda(func)
   }
 }
