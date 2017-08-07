@@ -17,7 +17,7 @@ package reagent
 
 import kotlin.DeprecationLevel.HIDDEN
 
-/* Signals complete or error. Has no items. */
+/** Signals complete or error. Has no items. */
 abstract class Task : Maybe<Nothing>() {
   interface Listener {
     fun onComplete()
