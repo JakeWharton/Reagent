@@ -30,5 +30,6 @@ fun <I, O> Maybe<I>.map(func: (I) -> O): Maybe<O> = MaybeMap(this, func)
 
 fun <I, O> One<I>.map(func: (I) -> O): One<O> = OneMap(this, func)
 
+@Suppress("DeprecatedCallableAddReplaceWith") // TODO https://youtrack.jetbrains.com/issue/KT-19512
 @Deprecated("Task has no items so mapping does not make sense.", level = ERROR)
 fun <O> Task.map(func: (Nothing) -> O): Task = this
