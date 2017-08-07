@@ -29,7 +29,7 @@ fun <I, O> One<I>.map(mapper: (I) -> O): One<O> = OneMap(this, mapper)
 
 @Suppress("DeprecatedCallableAddReplaceWith") // TODO https://youtrack.jetbrains.com/issue/KT-19512
 @Deprecated("Task has no items so mapping does not make sense.", level = ERROR)
-fun <O> Task.map(func: (Nothing) -> O): Task = this
+fun <O> Task.map(mapper: (Nothing) -> O): Task = this
 
 internal class ManyMap<in U, out D>(
     private val upstream: Many<U>,
