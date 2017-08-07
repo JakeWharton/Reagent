@@ -15,7 +15,6 @@
  */
 package reagent
 
-import reagent.internal.maybe.ManyMaybeListener
 import reagent.internal.maybe.MaybeFlatMapMany
 import reagent.internal.maybe.MaybeFlatMapMaybe
 import reagent.internal.maybe.MaybeFlatMapOne
@@ -30,7 +29,7 @@ abstract class Maybe<out I> : Many<I>() {
   }
 
   abstract fun subscribe(listener: Listener<I>)
-  override fun subscribe(listener: Many.Listener<I>) = subscribe(ManyMaybeListener(listener))
+  override fun subscribe(listener: Many.Listener<I>) = subscribe(ListenerFromMany(listener))
 
   override fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = MaybeFlatMapMany(this, func)
   override fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Maybe<O> = MaybeFlatMapMaybe(this, func)
@@ -48,5 +47,14 @@ abstract class Maybe<out I> : Many<I>() {
     fun <I> returning(func: () -> I): Maybe<I> = One.FromLambda(func)
     //@JvmStatic
     fun <I> running(func: () -> Unit): Maybe<I> = Task.FromLambda(func)
+  }
+
+  internal class ListenerFromMany<in U>(private val delegate: Many.Listener<U>) : Listener<U> {
+    override fun onItem(item: U) = delegate.run {
+      onNext(item)
+      onComplete()
+    }
+    override fun onNothing() = delegate.onComplete()
+    override fun onError(t: Throwable) = delegate.onError(t)
   }
 }

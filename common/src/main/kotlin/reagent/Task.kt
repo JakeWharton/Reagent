@@ -15,8 +15,6 @@
  */
 package reagent
 
-import reagent.internal.task.ManyTaskListener
-import reagent.internal.task.MaybeTaskListener
 import kotlin.DeprecationLevel.HIDDEN
 
 /* Signals complete or error. Has no items. */
@@ -27,8 +25,8 @@ abstract class Task : Maybe<Nothing>() {
   }
 
   abstract fun subscribe(listener: Listener)
-  override fun subscribe(listener: Maybe.Listener<Nothing>) = subscribe(MaybeTaskListener(listener))
-  override fun subscribe(listener: Many.Listener<Nothing>) = subscribe(ManyTaskListener(listener))
+  override fun subscribe(listener: Maybe.Listener<Nothing>) = subscribe(ListenerFromMaybe(listener))
+  override fun subscribe(listener: Many.Listener<Nothing>) = subscribe(ListenerFromMany(listener))
 
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
   override fun <O> flatMapMany(func: (Nothing) -> Many<O>): Many<O> = this
@@ -66,5 +64,15 @@ abstract class Task : Maybe<Nothing>() {
       }
       listener.onComplete()
     }
+  }
+
+  internal class ListenerFromMaybe(private val delegate: Maybe.Listener<Nothing>) : Listener {
+    override fun onComplete() = delegate.onNothing()
+    override fun onError(t: Throwable) = delegate.onError(t)
+  }
+
+  internal class ListenerFromMany(private val delegate: Many.Listener<Nothing>): Listener {
+    override fun onComplete() = delegate.onComplete()
+    override fun onError(t: Throwable) = delegate.onError(t)
   }
 }

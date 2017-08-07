@@ -15,8 +15,6 @@
  */
 package reagent
 
-import reagent.internal.one.ManyOneListener
-import reagent.internal.one.MaybeOneListener
 import reagent.internal.one.OneFlatMapMany
 import reagent.internal.one.OneFlatMapMaybe
 import reagent.internal.one.OneFlatMapOne
@@ -30,8 +28,8 @@ abstract class One<out I> : Maybe<I>() {
   }
 
   abstract fun subscribe(listener: Listener<I>)
-  override fun subscribe(listener: Maybe.Listener<I>) = subscribe(MaybeOneListener(listener))
-  override fun subscribe(listener: Many.Listener<I>) = subscribe(ManyOneListener(listener))
+  override fun subscribe(listener: Maybe.Listener<I>) = subscribe(ListenerFromMaybe(listener))
+  override fun subscribe(listener: Many.Listener<I>) = subscribe(ListenerFromMany(listener))
 
   override fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = OneFlatMapMany(this, func)
   override fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Maybe<O> = OneFlatMapMaybe(this, func)
@@ -66,5 +64,19 @@ abstract class One<out I> : Maybe<I>() {
       }
       listener.onItem(value)
     }
+  }
+
+  class ListenerFromMaybe<in U>(private val delegate: Maybe.Listener<U>) : Listener<U> {
+    override fun onItem(item: U) = delegate.onItem(item)
+    override fun onError(t: Throwable) = delegate.onError(t)
+  }
+
+  internal class ListenerFromMany<in I>(private val delegate: Many.Listener<I>): Listener<I> {
+    override fun onItem(item: I) = delegate.run {
+      onNext(item)
+      onComplete()
+    }
+
+    override fun onError(t: Throwable) = delegate.onError(t)
   }
 }
