@@ -19,17 +19,67 @@ import reagent.Many
 import reagent.Maybe
 import reagent.One
 import reagent.Task
-import reagent.internal.many.ManyMap
-import reagent.internal.maybe.MaybeMap
-import reagent.internal.one.OneMap
 import kotlin.DeprecationLevel.ERROR
 
-fun <I, O> Many<I>.map(func: (I) -> O): Many<O> = ManyMap(this, func)
+fun <I, O> Many<I>.map(mapper: (I) -> O): Many<O> = ManyMap(this, mapper)
 
-fun <I, O> Maybe<I>.map(func: (I) -> O): Maybe<O> = MaybeMap(this, func)
+fun <I, O> Maybe<I>.map(mapper: (I) -> O): Maybe<O> = MaybeMap(this, mapper)
 
-fun <I, O> One<I>.map(func: (I) -> O): One<O> = OneMap(this, func)
+fun <I, O> One<I>.map(mapper: (I) -> O): One<O> = OneMap(this, mapper)
 
 @Suppress("DeprecatedCallableAddReplaceWith") // TODO https://youtrack.jetbrains.com/issue/KT-19512
 @Deprecated("Task has no items so mapping does not make sense.", level = ERROR)
 fun <O> Task.map(func: (Nothing) -> O): Task = this
+
+internal class ManyMap<in U, out D>(
+    private val upstream: Many<U>,
+    private val mapper: (U) -> D
+) : Many<D>() {
+  override fun subscribe(listener: Listener<D>) {
+    upstream.subscribe(Operator(listener, mapper))
+  }
+
+  class Operator<in U, out D>(
+      private val downstream: Many.Listener<D>,
+      private val mapper: (U) -> D
+  ) : Many.Listener<U> {
+    override fun onNext(item: U) = downstream.onNext(mapper.invoke(item))
+    override fun onComplete() = downstream.onComplete()
+    override fun onError(t: Throwable) = downstream.onError(t)
+  }
+}
+
+internal class MaybeMap<in U, out D>(
+    private val upstream: Maybe<U>,
+    private val mapper: (U) -> D
+) : Maybe<D>() {
+  override fun subscribe(listener: Maybe.Listener<D>) {
+    upstream.subscribe(Operator(listener, mapper))
+  }
+
+  class Operator<in U, out D>(
+      private val downstream: Maybe.Listener<D>,
+      private val mapper: (U) -> D
+  ) : Maybe.Listener<U> {
+    override fun onItem(item: U) = downstream.onItem(mapper.invoke(item))
+    override fun onNothing() = downstream.onNothing()
+    override fun onError(t: Throwable) = downstream.onError(t)
+  }
+}
+
+internal class OneMap<in U, out D>(
+    private val upstream: One<U>,
+    private val mapper: (U) -> D
+) : One<D>() {
+  override fun subscribe(listener: Listener<D>) {
+    upstream.subscribe(Operator(listener, mapper))
+  }
+
+  class Operator<in U, out D>(
+      private val downstream: One.Listener<D>,
+      private val mapper: (U) -> D
+  ) : One.Listener<U> {
+    override fun onItem(item: U) = downstream.onItem(mapper.invoke(item))
+    override fun onError(t: Throwable) = downstream.onError(t)
+  }
+}
