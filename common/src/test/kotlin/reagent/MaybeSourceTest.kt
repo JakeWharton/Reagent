@@ -17,6 +17,7 @@ package reagent
 
 import org.junit.Test
 import reagent.tester.testMaybe
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class MaybeSourceTest {
@@ -74,5 +75,18 @@ class MaybeSourceTest {
         .testMaybe {
           error(exception)
         }
+  }
+
+  @Test fun defer() {
+    var called = 0
+    val deferred = Maybe.defer { called++; Maybe.just("Hello") }
+    deferred.testMaybe {
+      item("Hello")
+    }
+    assertEquals(1, called)
+    deferred.testMaybe {
+      item("Hello")
+    }
+    assertEquals(2, called)
   }
 }

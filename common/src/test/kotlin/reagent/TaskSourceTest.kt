@@ -17,6 +17,7 @@ package reagent
 
 import org.junit.Test
 import reagent.tester.testTask
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class TaskSourceTest {
@@ -50,5 +51,18 @@ class TaskSourceTest {
         .testTask {
           error(exception)
         }
+  }
+
+  @Test fun defer() {
+    var called = 0
+    val deferred = Task.defer { called++; Task.empty() }
+    deferred.testTask {
+      complete()
+    }
+    assertEquals(1, called)
+    deferred.testTask {
+      complete()
+    }
+    assertEquals(2, called)
   }
 }

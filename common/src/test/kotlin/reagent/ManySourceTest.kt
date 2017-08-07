@@ -17,6 +17,7 @@ package reagent
 
 import org.junit.Test
 import reagent.tester.testMany
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class ManySourceTest {
@@ -85,5 +86,20 @@ class ManySourceTest {
         .testMany {
           error(exception)
         }
+  }
+
+  @Test fun defer() {
+    var called = 0
+    val deferred = Many.defer { called++; Many.just("Hello") }
+    deferred.testMany {
+      item("Hello")
+      complete()
+    }
+    assertEquals(1, called)
+    deferred.testMany {
+      item("Hello")
+      complete()
+    }
+    assertEquals(2, called)
   }
 }

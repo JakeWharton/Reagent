@@ -43,6 +43,8 @@ abstract class One<out I> : Maybe<I>() {
     fun <I> error(t: Throwable): One<I> = Error(t)
     //@JvmStatic
     fun <I> returning(func: () -> I): One<I> = FromLambda(func)
+    //@JvmStatic
+    fun <I> defer(func: () -> One<I>): One<I> = Deferred(func)
   }
 
   internal class Just<out I>(private val item: I) : One<I>() {
@@ -66,7 +68,11 @@ abstract class One<out I> : Maybe<I>() {
     }
   }
 
-  class ListenerFromMaybe<in U>(private val delegate: Maybe.Listener<U>) : Listener<U> {
+  internal class Deferred<out I>(private val func: () -> One<I>) : One<I>() {
+    override fun subscribe(listener: Listener<I>) = func().subscribe(listener)
+  }
+
+  internal class ListenerFromMaybe<in U>(private val delegate: Maybe.Listener<U>) : Listener<U> {
     override fun onItem(item: U) = delegate.onItem(item)
     override fun onError(t: Throwable) = delegate.onError(t)
   }

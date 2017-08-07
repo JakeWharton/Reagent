@@ -50,6 +50,8 @@ abstract class Many<out I> {
     fun <I> returning(func: () -> I): Many<I> = One.FromLambda(func)
     //@JvmStatic
     fun <I> running(func: () -> Unit): Many<I> = Task.FromLambda(func)
+    //@JvmStatic
+    fun <I> defer(func: () -> Many<I>): Many<I> = Deferred(func)
   }
 
   internal class FromArray<out I>(private val items: Array<out I>) : Many<I>() {
@@ -59,5 +61,9 @@ abstract class Many<out I> {
       }
       listener.onComplete()
     }
+  }
+
+  internal class Deferred<I>(private val func: () -> Many<I>): Many<I>() {
+    override fun subscribe(listener: Listener<I>) = func().subscribe(listener)
   }
 }

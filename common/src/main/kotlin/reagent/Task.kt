@@ -44,6 +44,8 @@ abstract class Task : Maybe<Nothing>() {
     fun error(t: Throwable): Task = Error(t)
     //@JvmStatic
     fun running(func: () -> Unit): Task = FromLambda(func)
+    //@JvmStatic
+    fun defer(func: () -> Task): Task = Deferred(func)
   }
 
   internal object Complete : Task() {
@@ -64,6 +66,10 @@ abstract class Task : Maybe<Nothing>() {
       }
       listener.onComplete()
     }
+  }
+
+  internal class Deferred(private val func: () -> Task): Task() {
+    override fun subscribe(listener: Listener) = func().subscribe(listener)
   }
 
   internal class ListenerFromMaybe(private val delegate: Maybe.Listener<Nothing>) : Listener {

@@ -17,6 +17,7 @@ package reagent
 
 import org.junit.Test
 import reagent.tester.testOne
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class OneSourceTest {
@@ -50,5 +51,18 @@ class OneSourceTest {
         .testOne {
           error(exception)
         }
+  }
+
+  @Test fun defer() {
+    var called = 0
+    val deferred = One.defer { called++; One.just("Hello") }
+    deferred.testOne {
+      item("Hello")
+    }
+    assertEquals(1, called)
+    deferred.testOne {
+      item("Hello")
+    }
+    assertEquals(2, called)
   }
 }

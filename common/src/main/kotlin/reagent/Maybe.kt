@@ -47,6 +47,12 @@ abstract class Maybe<out I> : Many<I>() {
     fun <I> returning(func: () -> I): Maybe<I> = One.FromLambda(func)
     //@JvmStatic
     fun <I> running(func: () -> Unit): Maybe<I> = Task.FromLambda(func)
+    //@JvmStatic
+    fun <I> defer(func: () -> Maybe<I>): Maybe<I> = Deferred(func)
+  }
+
+  internal class Deferred<I>(private val func: () -> Maybe<I>): Maybe<I>() {
+    override fun subscribe(listener: Listener<I>) = func().subscribe(listener)
   }
 
   internal class ListenerFromMany<in U>(private val delegate: Many.Listener<U>) : Listener<U> {
