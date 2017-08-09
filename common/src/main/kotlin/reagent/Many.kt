@@ -43,6 +43,8 @@ abstract class Many<out I> {
     // TODO rename to 'just' once @JvmName works: https://youtrack.jetbrains.com/issue/KT-19507.
     fun <I> fromArray(vararg items: I): Many<I> = FromArray(items)
     //@JvmStatic
+    fun <I> fromIterable(items: Iterable<I>): Many<I> = FromIterable(items)
+    //@JvmStatic
     fun <I> empty() : Many<I> = Task.Complete
     //@JvmStatic
     fun <I> error(t: Throwable): Many<I> = One.Error(t)
@@ -63,7 +65,22 @@ abstract class Many<out I> {
     }
   }
 
+  internal class FromIterable<out I>(private val iterable: Iterable<I>): Many<I>() {
+    override fun subscribe(listener: Listener<I>) {
+      for (item in iterable) {
+        listener.onNext(item)
+      }
+      listener.onComplete()
+    }
+  }
+
   internal class Deferred<I>(private val func: () -> Many<I>): Many<I>() {
     override fun subscribe(listener: Listener<I>) = func().subscribe(listener)
   }
 }
+
+// TODO move to companion object after https://youtrack.jetbrains.com/issue/KT-18416.
+fun <T> Array<T>.toMany(): Many<T> = Many.FromArray(this)
+
+// TODO move to companion object after https://youtrack.jetbrains.com/issue/KT-18416.
+fun <T> Iterable<T>.toMany(): Many<T> = Many.FromIterable(this)

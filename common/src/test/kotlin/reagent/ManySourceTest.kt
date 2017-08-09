@@ -29,8 +29,37 @@ class ManySourceTest {
         }
   }
 
-  @Test fun from() {
+  @Test fun fromArray() {
     Many.fromArray("Hello", "World")
+        .testMany {
+          item("Hello")
+          item("World")
+          complete()
+        }
+  }
+
+  @Test fun arrayToMany() {
+    arrayOf("Hello", "World")
+        .toMany()
+        .testMany {
+          item("Hello")
+          item("World")
+          complete()
+        }
+  }
+
+  @Test fun fromIterable() {
+    Many.fromIterable(listOf("Hello", "World"))
+        .testMany {
+          item("Hello")
+          item("World")
+          complete()
+        }
+  }
+
+  @Test fun iterableToMany() {
+    listOf("Hello", "World")
+        .toMany()
         .testMany {
           item("Hello")
           item("World")
