@@ -51,7 +51,7 @@ abstract class Maybe<out I> : Many<I>() {
     fun <I> defer(func: () -> Maybe<I>): Maybe<I> = Deferred(func)
   }
 
-  internal class Deferred<I>(private val func: () -> Maybe<I>): Maybe<I>() {
+  internal class Deferred<out I>(private val func: () -> Maybe<I>): Maybe<I>() {
     override fun subscribe(listener: Listener<I>) = func().subscribe(listener)
   }
 
