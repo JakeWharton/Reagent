@@ -74,7 +74,7 @@ abstract class Many<out I> {
     }
   }
 
-  internal class Deferred<I>(private val func: () -> Many<I>): Many<I>() {
+  internal class Deferred<out I>(private val func: () -> Many<I>): Many<I>() {
     override fun subscribe(listener: Listener<I>) = func().subscribe(listener)
   }
 }
