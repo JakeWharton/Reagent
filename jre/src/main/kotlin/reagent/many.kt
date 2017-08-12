@@ -16,8 +16,6 @@
 @file:JvmName("Manys")
 package reagent
 
-import reagent.internal.one.OneFromCallable
-import reagent.internal.task.TaskFromRunnable
 import java.util.concurrent.Callable
 
 @JvmName("fromCallable")
@@ -25,4 +23,4 @@ fun <I> Callable<I>.asMany(): Many<I> = OneFromCallable(this)
 
 @JvmName("fromRunnable")
 @Suppress("UNCHECKED_CAST") // Never emits.
-fun <I> Runnable.asMany(): Many<I> = TaskFromRunnable(this) as Many<I>
+fun <I> Runnable.asMany(): Many<I> = TaskFromRunnable(this)

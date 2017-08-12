@@ -16,8 +16,6 @@
 @file:JvmName("Maybes")
 package reagent
 
-import reagent.internal.one.OneFromCallable
-import reagent.internal.task.TaskFromRunnable
 import java.util.concurrent.Callable
 
 @JvmName("fromCallable")
@@ -25,4 +23,4 @@ fun <I> Callable<I>.asMaybe(): Maybe<I> = OneFromCallable(this)
 
 @JvmName("fromRunnable")
 @Suppress("UNCHECKED_CAST") // Never emits.
-fun <I> Runnable.asMaybe(): Maybe<I> = TaskFromRunnable(this) as Maybe<I>
+fun <I> Runnable.asMaybe(): Maybe<I> = TaskFromRunnable(this)

@@ -16,12 +16,34 @@
 @file:JvmName("Tasks")
 package reagent
 
-import reagent.internal.task.TaskFromCallable
-import reagent.internal.task.TaskFromRunnable
 import java.util.concurrent.Callable
 
 @JvmName("fromRunnable")
 fun Runnable.asTask(): Task = TaskFromRunnable(this)
 
+internal class TaskFromRunnable(private val func: Runnable) : Task() {
+  override fun subscribe(listener: Listener) {
+    try {
+      func.run()
+    } catch (t: Throwable) {
+      listener.onError(t)
+      return
+    }
+    listener.onComplete()
+  }
+}
+
 @JvmName("fromCallable")
 fun Callable<*>.asTask(): Task = TaskFromCallable(this)
+
+internal class TaskFromCallable(private val func: Callable<*>) : Task() {
+  override fun subscribe(listener: Listener) {
+    try {
+      func.call()
+    } catch (t: Throwable) {
+      listener.onError(t)
+      return
+    }
+    listener.onComplete()
+  }
+}
