@@ -15,6 +15,7 @@
  */
 package reagent.tester
 
+import reagent.Disposable
 import reagent.Maybe
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -37,7 +38,10 @@ class MaybeAsserter<T>(private val events: MutableList<Any>) {
 fun <T> Maybe<T>.testMaybe(assertions: MaybeAsserter<T>.() -> Unit) {
   // TODO switch to something that can block for elements.
   val events = mutableListOf<Any>()
-  subscribe(object : Maybe.Listener<T> {
+  subscribe(object : Maybe.Subscriber<T> {
+    override fun onSubscribe(disposable: Disposable) {
+    }
+
     override fun onItem(item: T) {
       events.add(Item(item))
     }

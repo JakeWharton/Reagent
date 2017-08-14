@@ -19,5 +19,5 @@ import reagent.Many
 import reagent.Task
 
 internal class ManyFlatMapTask<U>(val upstream: Many<U>, val func: (U) -> Task) : Task() {
-  override fun subscribe(listener: Listener) = TODO()
+  override fun subscribe(subscriber: Subscriber) = TODO()
 }

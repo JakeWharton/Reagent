@@ -15,6 +15,7 @@
  */
 package reagent.operator
 
+import reagent.Disposable
 import reagent.Many
 import reagent.Maybe
 import reagent.One
@@ -35,14 +36,15 @@ internal class ManyMap<in U, out D>(
     private val upstream: Many<U>,
     private val mapper: (U) -> D
 ) : Many<D>() {
-  override fun subscribe(listener: Listener<D>) {
-    upstream.subscribe(Operator(listener, mapper))
+  override fun subscribe(subscriber: Subscriber<D>) {
+    upstream.subscribe(Operator(subscriber, mapper))
   }
 
   class Operator<in U, out D>(
-      private val downstream: Many.Listener<D>,
+      private val downstream: Many.Subscriber<D>,
       private val mapper: (U) -> D
-  ) : Many.Listener<U> {
+  ) : Subscriber<U> {
+    override fun onSubscribe(disposable: Disposable) = downstream.onSubscribe(disposable)
     override fun onNext(item: U) = downstream.onNext(mapper.invoke(item))
     override fun onComplete() = downstream.onComplete()
     override fun onError(t: Throwable) = downstream.onError(t)
@@ -53,14 +55,15 @@ internal class MaybeMap<in U, out D>(
     private val upstream: Maybe<U>,
     private val mapper: (U) -> D
 ) : Maybe<D>() {
-  override fun subscribe(listener: Maybe.Listener<D>) {
-    upstream.subscribe(Operator(listener, mapper))
+  override fun subscribe(subscriber: Subscriber<D>) {
+    upstream.subscribe(Operator(subscriber, mapper))
   }
 
   class Operator<in U, out D>(
-      private val downstream: Maybe.Listener<D>,
+      private val downstream: Subscriber<D>,
       private val mapper: (U) -> D
-  ) : Maybe.Listener<U> {
+  ) : Subscriber<U> {
+    override fun onSubscribe(disposable: Disposable) = downstream.onSubscribe(disposable)
     override fun onItem(item: U) = downstream.onItem(mapper.invoke(item))
     override fun onNothing() = downstream.onNothing()
     override fun onError(t: Throwable) = downstream.onError(t)
@@ -71,14 +74,15 @@ internal class OneMap<in U, out D>(
     private val upstream: One<U>,
     private val mapper: (U) -> D
 ) : One<D>() {
-  override fun subscribe(listener: Listener<D>) {
-    upstream.subscribe(Operator(listener, mapper))
+  override fun subscribe(subscriber: Subscriber<D>) {
+    upstream.subscribe(Operator(subscriber, mapper))
   }
 
   class Operator<in U, out D>(
-      private val downstream: One.Listener<D>,
+      private val downstream: Subscriber<D>,
       private val mapper: (U) -> D
-  ) : One.Listener<U> {
+  ) : Subscriber<U> {
+    override fun onSubscribe(disposable: Disposable) = downstream.onSubscribe(disposable)
     override fun onItem(item: U) = downstream.onItem(mapper.invoke(item))
     override fun onError(t: Throwable) = downstream.onError(t)
   }

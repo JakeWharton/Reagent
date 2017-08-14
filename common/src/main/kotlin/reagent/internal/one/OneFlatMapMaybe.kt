@@ -15,14 +15,16 @@
  */
 package reagent.internal.one
 
+import reagent.Disposable
 import reagent.Maybe
 import reagent.One
 
 internal class OneFlatMapMaybe<U, D>(val upstream: One<U>, val func: (U) -> Maybe<D>) : Maybe<D>() {
-  override fun subscribe(listener: Listener<D>) = upstream.subscribe(Operator(listener, func))
+  override fun subscribe(subscriber: Subscriber<D>) = upstream.subscribe(Operator(subscriber, func))
 
-  class Operator<U, D>(val listener: Maybe.Listener<D>, val func: (U) -> Maybe<D>) : One.Listener<U> {
-    override fun onItem(item: U) = func.invoke(item).subscribe(listener)
-    override fun onError(t: Throwable) = listener.onError(t)
+  class Operator<U, D>(val downstream: Subscriber<D>, val func: (U) -> Maybe<D>) : One.Subscriber<U> {
+    override fun onSubscribe(disposable: Disposable) = downstream.onSubscribe(disposable)
+    override fun onItem(item: U) = func.invoke(item).subscribe(downstream)
+    override fun onError(t: Throwable) = downstream.onError(t)
   }
 }

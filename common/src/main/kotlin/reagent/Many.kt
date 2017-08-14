@@ -15,6 +15,7 @@
  */
 package reagent
 
+import reagent.internal.AtomicRef
 import reagent.internal.many.ManyFlatMapMany
 import reagent.internal.many.ManyFlatMapMaybe
 import reagent.internal.many.ManyFlatMapOne
@@ -22,13 +23,30 @@ import reagent.internal.many.ManyFlatMapTask
 
 /** Emits 0 to infinite items and then signals complete or error. */
 abstract class Many<out I> {
-  interface Listener<in I> {
+  interface Subscriber<in I> {
+    fun onSubscribe(disposable: Disposable)
     fun onNext(item: I)
     fun onComplete()
     fun onError(t: Throwable)
   }
 
-  abstract fun subscribe(listener: Listener<I>)
+  abstract class Observer<in I> : Subscriber<I>, Disposable {
+    private val ref = AtomicRef<Disposable?>(null)
+
+    override final fun onSubscribe(disposable: Disposable) {
+      ref.setOnceThen(disposable, this::onStart)
+    }
+
+    open fun onStart() = Unit
+
+    override final fun dispose() {
+      ref.dispose()
+    }
+
+    override final val isDisposed get() = ref.isDisposed
+  }
+
+  abstract fun subscribe(subscriber: Subscriber<I>)
 
   open fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = ManyFlatMapMany(this, func)
   open fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Many<O> = ManyFlatMapMaybe(this, func)
@@ -57,25 +75,39 @@ abstract class Many<out I> {
   }
 
   internal class FromArray<out I>(private val items: Array<out I>) : Many<I>() {
-    override fun subscribe(listener: Listener<I>) {
+    override fun subscribe(subscriber: Subscriber<I>) {
+      val disposable = Disposable.empty()
+      subscriber.onSubscribe(disposable)
+
       for (item in items) {
-        listener.onNext(item)
+        if (!disposable.isDisposed) {
+          subscriber.onNext(item)
+        }
       }
-      listener.onComplete()
+      if (!disposable.isDisposed) {
+        subscriber.onComplete()
+      }
     }
   }
 
   internal class FromIterable<out I>(private val iterable: Iterable<I>): Many<I>() {
-    override fun subscribe(listener: Listener<I>) {
+    override fun subscribe(subscriber: Subscriber<I>) {
+      val disposable = Disposable.empty()
+      subscriber.onSubscribe(disposable)
+
       for (item in iterable) {
-        listener.onNext(item)
+        if (!disposable.isDisposed) {
+          subscriber.onNext(item)
+        }
       }
-      listener.onComplete()
+      if (!disposable.isDisposed) {
+        subscriber.onComplete()
+      }
     }
   }
 
   internal class Deferred<out I>(private val func: () -> Many<I>): Many<I>() {
-    override fun subscribe(listener: Listener<I>) = func().subscribe(listener)
+    override fun subscribe(subscriber: Subscriber<I>) = func().subscribe(subscriber)
   }
 }
 

@@ -15,18 +15,36 @@
  */
 package reagent
 
+import reagent.internal.AtomicRef
 import kotlin.DeprecationLevel.HIDDEN
 
 /** Signals complete or error. Has no items. */
 abstract class Task : Maybe<Nothing>() {
-  interface Listener {
+  interface Subscriber {
+    fun onSubscribe(disposable: Disposable)
     fun onComplete()
     fun onError(t: Throwable)
   }
 
-  abstract fun subscribe(listener: Listener)
-  override fun subscribe(listener: Maybe.Listener<Nothing>) = subscribe(ListenerFromMaybe(listener))
-  override fun subscribe(listener: Many.Listener<Nothing>) = subscribe(ListenerFromMany(listener))
+  abstract class Observer<in I> : reagent.Many.Subscriber<I>, Disposable {
+    private val ref = AtomicRef<Disposable?>(null)
+
+    override final fun onSubscribe(disposable: Disposable) {
+      ref.setOnceThen(disposable, this::onStart)
+    }
+
+    open fun onStart() = Unit
+
+    override final fun dispose() {
+      ref.dispose()
+    }
+
+    override final val isDisposed get() = ref.isDisposed
+  }
+
+  abstract fun subscribe(subscriber: Subscriber)
+  override fun subscribe(subscriber: Maybe.Subscriber<Nothing>) = subscribe(ListenerFromMaybe(subscriber))
+  override fun subscribe(subscriber: Many.Subscriber<Nothing>) = subscribe(ListenerFromMany(subscriber))
 
   @Deprecated("Task has no items so mapping does not make sense.", level = HIDDEN)
   override fun <O> flatMapMany(func: (Nothing) -> Many<O>): Many<O> = this
@@ -49,35 +67,37 @@ abstract class Task : Maybe<Nothing>() {
   }
 
   internal object Complete : Task() {
-    override fun subscribe(listener: Listener) = listener.onComplete()
+    override fun subscribe(subscriber: Subscriber) = subscriber.onComplete()
   }
 
   internal class Error(private val t: Throwable) : Task() {
-    override fun subscribe(listener: Listener) = listener.onError(t)
+    override fun subscribe(subscriber: Subscriber) = subscriber.onError(t)
   }
 
   internal class FromLambda(private val func: () -> Unit) : Task() {
-    override fun subscribe(listener: Listener) {
+    override fun subscribe(subscriber: Subscriber) {
       try {
         func.invoke()
       } catch (t: Throwable) {
-        listener.onError(t)
+        subscriber.onError(t)
         return
       }
-      listener.onComplete()
+      subscriber.onComplete()
     }
   }
 
   internal class Deferred(private val func: () -> Task): Task() {
-    override fun subscribe(listener: Listener) = func().subscribe(listener)
+    override fun subscribe(subscriber: Subscriber) = func().subscribe(subscriber)
   }
 
-  internal class ListenerFromMaybe(private val delegate: Maybe.Listener<Nothing>) : Listener {
+  internal class ListenerFromMaybe(private val delegate: Maybe.Subscriber<Nothing>) : Subscriber {
+    override fun onSubscribe(disposable: Disposable) = delegate.onSubscribe(disposable)
     override fun onComplete() = delegate.onNothing()
     override fun onError(t: Throwable) = delegate.onError(t)
   }
 
-  internal class ListenerFromMany(private val delegate: Many.Listener<Nothing>): Listener {
+  internal class ListenerFromMany(private val delegate: Many.Subscriber<Nothing>): Subscriber {
+    override fun onSubscribe(disposable: Disposable) = delegate.onSubscribe(disposable)
     override fun onComplete() = delegate.onComplete()
     override fun onError(t: Throwable) = delegate.onError(t)
   }

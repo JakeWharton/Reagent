@@ -24,14 +24,14 @@ import reagent.Many
  */
 class PureMany<T>
 private constructor(private val t: Throwable? = null, private vararg val items: T) : Many<T>() {
-  override fun subscribe(listener: Listener<T>) {
+  override fun subscribe(subscriber: Subscriber<T>) {
     if (t != null) {
-      listener.onError(t)
+      subscriber.onError(t)
     } else {
       items.forEach {
-        listener.onNext(it)
+        subscriber.onNext(it)
       }
-      listener.onComplete()
+      subscriber.onComplete()
     }
   }
 

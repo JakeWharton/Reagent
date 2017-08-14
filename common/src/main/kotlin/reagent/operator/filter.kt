@@ -15,6 +15,7 @@
  */
 package reagent.operator
 
+import reagent.Disposable
 import reagent.Many
 import reagent.Maybe
 import reagent.One
@@ -35,22 +36,19 @@ internal class ManyFilter<out I>(
     private val upstream: Many<I>,
     private val predicate: (I) -> Boolean
 ) : Many<I>() {
-  override fun subscribe(listener: Listener<I>) {
-    upstream.subscribe(Operator(listener, predicate))
+  override fun subscribe(subscriber: Subscriber<I>) {
+    upstream.subscribe(Operator(subscriber, predicate))
   }
 
   class Operator<in I>(
-      private val downstream: Listener<I>,
+      private val downstream: Subscriber<I>,
       private val predicate: (I) -> Boolean
-  ) : Many.Listener<I> {
+  ) : Many.Subscriber<I> by downstream {
     override fun onNext(item: I) {
       if (predicate(item)) {
         downstream.onNext(item)
       }
     }
-
-    override fun onComplete() = downstream.onComplete()
-    override fun onError(t: Throwable) = downstream.onError(t)
   }
 }
 
@@ -58,14 +56,14 @@ internal class MaybeFilter<out I>(
     private val upstream: Maybe<I>,
     private val predicate: (I) -> Boolean
 ) : Maybe<I>() {
-  override fun subscribe(listener: Listener<I>) {
-    upstream.subscribe(Operator(listener, predicate))
+  override fun subscribe(subscriber: Subscriber<I>) {
+    upstream.subscribe(Operator(subscriber, predicate))
   }
 
   class Operator<in I>(
-      private val downstream: Listener<I>,
+      private val downstream: Subscriber<I>,
       private val predicate: (I) -> Boolean
-  ) : Maybe.Listener<I> {
+  ) : Subscriber<I> by downstream {
     override fun onItem(item: I) {
       if (predicate(item)) {
         downstream.onItem(item)
@@ -73,9 +71,6 @@ internal class MaybeFilter<out I>(
         downstream.onNothing()
       }
     }
-
-    override fun onNothing() = downstream.onNothing()
-    override fun onError(t: Throwable) = downstream.onError(t)
   }
 }
 
@@ -83,14 +78,16 @@ internal class OneFilter<out I>(
     private val upstream: One<I>,
     private val predicate: (I) -> Boolean
 ) : Maybe<I>() {
-  override fun subscribe(listener: Listener<I>) {
-    upstream.subscribe(Operator(listener, predicate))
+  override fun subscribe(subscriber: Subscriber<I>) {
+    upstream.subscribe(Operator(subscriber, predicate))
   }
 
   class Operator<in I>(
-      private val downstream: Listener<I>,
+      private val downstream: Subscriber<I>,
       private val predicate: (I) -> Boolean
-  ) : One.Listener<I> {
+  ) : One.Subscriber<I> {
+    override fun onSubscribe(disposable: Disposable) = downstream.onSubscribe(disposable)
+
     override fun onItem(item: I) {
       if (predicate(item)) {
         downstream.onItem(item)

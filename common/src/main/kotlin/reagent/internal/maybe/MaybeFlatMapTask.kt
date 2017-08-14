@@ -15,13 +15,16 @@
  */
 package reagent.internal.maybe
 
+import reagent.Disposable
 import reagent.Maybe
 import reagent.Task
 
 internal class MaybeFlatMapTask<U>(val upstream: Maybe<U>, val func: (U) -> Task) : Task() {
-  override fun subscribe(listener: Listener) = upstream.subscribe(Operator(listener, func))
+  override fun subscribe(subscriber: Subscriber) = upstream.subscribe(Operator(
+      subscriber, func))
 
-  class Operator<U>(val downstream: Listener, val func: (U) -> Task) : Maybe.Listener<U> {
+  class Operator<U>(val downstream: Subscriber, val func: (U) -> Task) : Maybe.Subscriber<U> {
+    override fun onSubscribe(disposable: Disposable) = downstream.onSubscribe(disposable)
     override fun onItem(item: U) = func.invoke(item).subscribe(downstream)
     override fun onNothing() = downstream.onComplete()
     override fun onError(t: Throwable) = downstream.onError(t)

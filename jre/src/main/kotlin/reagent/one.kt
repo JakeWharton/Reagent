@@ -22,14 +22,14 @@ import java.util.concurrent.Callable
 fun <I> Callable<I>.asOne(): One<I> = OneFromCallable(this)
 
 internal class OneFromCallable<out I>(private val func: Callable<I>) : One<I>() {
-  override fun subscribe(listener: Listener<I>) {
+  override fun subscribe(subscriber: Subscriber<I>) {
     val value: I
     try {
       value = func.call()
     } catch (t: Throwable) {
-      listener.onError(t)
+      subscriber.onError(t)
       return
     }
-    listener.onItem(value)
+    subscriber.onItem(value)
   }
 }

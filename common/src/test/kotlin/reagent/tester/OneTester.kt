@@ -15,6 +15,7 @@
  */
 package reagent.tester
 
+import reagent.Disposable
 import reagent.One
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -32,7 +33,10 @@ class OneAsserter<T>(private val events: MutableList<Any>) {
 fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
   // TODO switch to something that can block for elements.
   val events = mutableListOf<Any>()
-  subscribe(object : One.Listener<T> {
+  subscribe(object : One.Subscriber<T> {
+    override fun onSubscribe(disposable: Disposable) {
+    }
+
     override fun onItem(item: T) {
       events.add(Item(item))
     }

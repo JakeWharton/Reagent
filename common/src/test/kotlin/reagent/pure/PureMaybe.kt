@@ -24,13 +24,13 @@ import reagent.Maybe
  */
 class PureMaybe<T>
 private constructor(private val t: Throwable? = null, private val item: T? = null) : Maybe<T>() {
-  override fun subscribe(listener: Listener<T>) {
+  override fun subscribe(subscriber: Subscriber<T>) {
     if (t != null) {
-      listener.onError(t)
+      subscriber.onError(t)
     } else if (item != null) {
-      listener.onItem(item)
+      subscriber.onItem(item)
     } else {
-      listener.onNothing()
+      subscriber.onNothing()
     }
   }
 

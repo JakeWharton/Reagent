@@ -15,6 +15,7 @@
  */
 package reagent.tester
 
+import reagent.Disposable
 import reagent.Task
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -33,7 +34,10 @@ class TaskAsserter(private val events: MutableList<Any>) {
 fun Task.testTask(assertions: TaskAsserter.() -> Unit) {
   // TODO switch to something that can block for elements.
   val events = mutableListOf<Any>()
-  subscribe(object : Task.Listener {
+  subscribe(object : Task.Subscriber {
+    override fun onSubscribe(disposable: Disposable) {
+    }
+
     override fun onComplete() {
       events.add(Complete)
     }

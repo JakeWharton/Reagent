@@ -22,14 +22,14 @@ import java.util.concurrent.Callable
 fun Runnable.asTask(): Task = TaskFromRunnable(this)
 
 internal class TaskFromRunnable(private val func: Runnable) : Task() {
-  override fun subscribe(listener: Listener) {
+  override fun subscribe(subscriber: Subscriber) {
     try {
       func.run()
     } catch (t: Throwable) {
-      listener.onError(t)
+      subscriber.onError(t)
       return
     }
-    listener.onComplete()
+    subscriber.onComplete()
   }
 }
 
@@ -37,13 +37,13 @@ internal class TaskFromRunnable(private val func: Runnable) : Task() {
 fun Callable<*>.asTask(): Task = TaskFromCallable(this)
 
 internal class TaskFromCallable(private val func: Callable<*>) : Task() {
-  override fun subscribe(listener: Listener) {
+  override fun subscribe(subscriber: Subscriber) {
     try {
       func.call()
     } catch (t: Throwable) {
-      listener.onError(t)
+      subscriber.onError(t)
       return
     }
-    listener.onComplete()
+    subscriber.onComplete()
   }
 }

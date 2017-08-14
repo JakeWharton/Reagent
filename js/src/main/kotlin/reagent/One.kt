@@ -21,13 +21,26 @@ import kotlin.js.Promise
 fun <I> Promise<I>.toOne(): One<I> = OneFromPromise(this)
 
 internal class OneFromPromise<out I>(private val promise: Promise<I>): One<I>() {
-  override fun subscribe(listener: Listener<I>) {
-    promise.then(listener::onItem, listener::onError)
+  override fun subscribe(subscriber: Subscriber<I>) {
+    val disposable = Disposable.empty()
+    promise.then({
+      if (!disposable.isDisposed) {
+        subscriber.onItem(it)
+      }
+    }, {
+      if (!disposable.isDisposed) {
+        subscriber.onError(it)
+      }
+    })
   }
 }
 
 fun <I> One<I>.toPromise(): Promise<I> = Promise { resolve, reject ->
-  subscribe(object : One.Listener<I> {
+  subscribe(object : One.Subscriber<I> {
+    override fun onSubscribe(disposable: Disposable) {
+      // TODO retain the instance?
+    }
+
     override fun onError(t: Throwable) = reject(t)
     override fun onItem(item: I) = resolve(item)
   })

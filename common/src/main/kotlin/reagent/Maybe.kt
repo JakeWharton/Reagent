@@ -15,6 +15,7 @@
  */
 package reagent
 
+import reagent.internal.AtomicRef
 import reagent.internal.maybe.MaybeFlatMapMany
 import reagent.internal.maybe.MaybeFlatMapMaybe
 import reagent.internal.maybe.MaybeFlatMapOne
@@ -22,14 +23,31 @@ import reagent.internal.maybe.MaybeFlatMapTask
 
 /** Emits an item, signals nothing (no item), or signals error. */
 abstract class Maybe<out I> : Many<I>() {
-  interface Listener<in I> {
+  interface Subscriber<in I> {
+    fun onSubscribe(disposable: Disposable)
     fun onItem(item: I)
     fun onNothing()
     fun onError(t: Throwable)
   }
 
-  abstract fun subscribe(listener: Listener<I>)
-  override fun subscribe(listener: Many.Listener<I>) = subscribe(ListenerFromMany(listener))
+  abstract class Observer<in I> : reagent.Many.Subscriber<I>, Disposable {
+    private val ref = AtomicRef<Disposable?>(null)
+
+    override final fun onSubscribe(disposable: Disposable) {
+      ref.setOnceThen(disposable, this::onStart)
+    }
+
+    open fun onStart() = Unit
+
+    override final fun dispose() {
+      ref.dispose()
+    }
+
+    override final val isDisposed get() = ref.isDisposed
+  }
+
+  abstract fun subscribe(subscriber: Subscriber<I>)
+  override fun subscribe(subscriber: Many.Subscriber<I>) = subscribe(SubscriberFromMany(subscriber))
 
   override fun <O> flatMapMany(func: (I) -> Many<O>): Many<O> = MaybeFlatMapMany(this, func)
   override fun <O> flatMapMaybe(func: (I) -> Maybe<O>): Maybe<O> = MaybeFlatMapMaybe(this, func)
@@ -52,10 +70,11 @@ abstract class Maybe<out I> : Many<I>() {
   }
 
   internal class Deferred<out I>(private val func: () -> Maybe<I>): Maybe<I>() {
-    override fun subscribe(listener: Listener<I>) = func().subscribe(listener)
+    override fun subscribe(subscriber: Subscriber<I>) = func().subscribe(subscriber)
   }
 
-  internal class ListenerFromMany<in U>(private val delegate: Many.Listener<U>) : Listener<U> {
+  internal class SubscriberFromMany<in U>(private val delegate: Many.Subscriber<U>) : Subscriber<U> {
+    override fun onSubscribe(disposable: Disposable) = delegate.onSubscribe(disposable)
     override fun onItem(item: U) = delegate.run {
       onNext(item)
       onComplete()
