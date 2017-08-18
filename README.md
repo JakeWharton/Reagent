@@ -6,11 +6,6 @@ An experiment which rewrites RxJava-like types using polymorphism (and also in K
 Just like how every `List<T>` and `Set<T>` is a `Collection<T>`, every `One<T>` is just a `Many<T>`
 with only a single element, etc.
 
-Missing:
-
- * `Many.flatMap*` implementations
- * Disposing
-
 
 
 Type Hierarchy
