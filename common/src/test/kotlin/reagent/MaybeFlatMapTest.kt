@@ -15,8 +15,12 @@
  */
 package reagent
 
+import org.junit.Test
+import reagent.operator.flatMap
+import reagent.tester.testTask
+
+class MaybeFlatMapTest {
 // TODO overload resolution doesn't work here
-//class MaybeFlatMapTest {
 //  @Test fun flatMapMany() {
 //    PureMaybe.just("Item")
 //        .flatMap { Many.fromArray("Hello", "World") }
@@ -93,29 +97,29 @@ package reagent
 //          error(exception)
 //        }
 //  }
-//
-//  @Test fun flatMapTask() {
-//    PureMaybe.just("Item")
-//        .flatMap { Task.empty() }
-//        .testTask {
-//          complete()
-//        }
-//  }
-//
-//  @Test fun flatMapTaskComplete() {
-//    PureMaybe.empty()
-//        .flatMap { Task.empty() }
-//        .testTask {
-//          complete()
-//        }
-//  }
-//
-//  @Test fun flatMapTaskError() {
-//    val exception = RuntimeException("Oops!")
-//    PureMaybe.error(exception)
-//        .flatMap { Task.empty() }
-//        .testTask {
-//          error(exception)
-//        }
-//  }
-//}
+
+  @Test fun flatMapTask() {
+    Maybe.just("Item")
+        .flatMap { Task.empty() }
+        .testTask {
+          complete()
+        }
+  }
+
+  @Test fun flatMapTaskComplete() {
+    Maybe.empty<String>()
+        .flatMap { Task.empty() }
+        .testTask {
+          complete()
+        }
+  }
+
+  @Test fun flatMapTaskError() {
+    val exception = RuntimeException("Oops!")
+    Maybe.error<String>(exception)
+        .flatMap { Task.empty() }
+        .testTask {
+          error(exception)
+        }
+  }
+}

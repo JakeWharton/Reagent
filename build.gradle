@@ -1,6 +1,6 @@
 buildscript {
   ext.versions = [
-      'kotlin': '1.1.4-eap-77',
+      'kotlin': '1.2-M2',
   ]
 
   ext.deps = [
@@ -25,7 +25,7 @@ buildscript {
   repositories {
     mavenCentral()
     maven {
-      url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1'
+      url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2'
     }
   }
 }
@@ -34,7 +34,7 @@ subprojects {
   repositories {
     mavenCentral()
     maven {
-      url 'https://dl.bintray.com/kotlin/kotlin-eap-1.1'
+      url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2'
     }
   }
 }

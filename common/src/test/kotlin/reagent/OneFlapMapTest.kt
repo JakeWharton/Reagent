@@ -71,7 +71,7 @@ package reagent
 //  }
 //
 //  @Test fun flatMapTask() {
-//    PureOne.just("Item")
+//    One.just("Item")
 //        .flatMap { Task.empty() }
 //        .testTask {
 //          complete()
@@ -80,7 +80,7 @@ package reagent
 //
 //  @Test fun flatMapTaskError() {
 //    val exception = RuntimeException("Oops!")
-//    PureOne.error(exception)
+//    One.error<String>(exception)
 //        .flatMap { Task.empty() }
 //        .testTask {
 //          error(exception)

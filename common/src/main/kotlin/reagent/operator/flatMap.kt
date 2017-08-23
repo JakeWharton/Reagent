@@ -32,6 +32,8 @@ internal class ManyFlatMapMany<U, out D>(
 }
 
 fun <I> Many<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
+fun <I> Maybe<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
+fun <I> One<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
 
 internal class ManyFlatMapTask<U>(
     private val upstream: Many<U>,
@@ -46,8 +48,7 @@ internal class MaybeFlatMapMaybe<U, out D>(
     private val upstream: Maybe<U>,
     private val func: (U) -> Maybe<D>
 ) : Maybe<D>() {
-  override fun subscribe(subscriber: Subscriber<D>) = upstream.subscribe(Operator(
-      subscriber, func))
+  override fun subscribe(subscriber: Subscriber<D>) = upstream.subscribe(Operator(subscriber, func))
 
   class Operator<in U, D>(
       private val downstream: Subscriber<D>,
@@ -78,5 +79,5 @@ internal class OneFlatMapOne<U, D>(
   }
 }
 
-@Deprecated("Task has no items so mapping does not make sense.", level = ERROR)
+@Deprecated("Task produces no items so mapping has no effect.", level = ERROR)
 fun Task.flatMap(func: (Nothing) -> Many<*>): Task = this

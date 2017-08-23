@@ -15,9 +15,14 @@
  */
 package reagent
 
-// TODO overload resolution doesn't work here
+import org.junit.Test
+import reagent.operator.flatMap
+import reagent.tester.testTask
+import kotlin.test.assertEquals
+
 // TODO @Ignore("Not implemented")
-//class ManyFlatMapTest {
+class ManyFlatMapTest {
+// TODO overload resolution doesn't work here
 //  @Test fun flatMapMany() {
 //    val flatMapItems = mutableListOf<String>()
 //    var manyCalled = 0
@@ -122,38 +127,38 @@ package reagent
 //          error(exception)
 //        }
 //  }
-//
-//  @Test fun flatMapTask() {
-//    val flatMapItems = mutableListOf<String>()
-//    var taskCalled = 0
-//
-//    PureMany.just("One", "Two")
-//        .flatMapTask {
-//          flatMapItems.add(it)
-//          Task.running { ++taskCalled }
-//        }
-//        .testTask {
-//          complete()
-//        }
-//
-//    assertEquals(listOf("One", "Two"), flatMapItems)
-//    assertEquals(2, taskCalled)
-//  }
-//
-//  @Test fun flatMapTaskEmpty() {
-//    PureMany.empty()
-//        .flatMapTask { throw AssertionError() }
-//        .testTask {
-//          complete()
-//        }
-//  }
-//
-//  @Test fun flatMapTaskError() {
-//    val exception = RuntimeException("Oops!")
-//    PureMany.error(exception)
-//        .flatMapTask { throw AssertionError() }
-//        .testTask {
-//          complete()
-//        }
-//  }
-//}
+
+  @Test fun flatMapTask() {
+    val flatMapItems = mutableListOf<String>()
+    var taskCalled = 0
+
+    Many.fromArray("One", "Two")
+        .flatMap {
+          flatMapItems.add(it)
+          Task.running { ++taskCalled }
+        }
+        .testTask {
+          complete()
+        }
+
+    assertEquals(listOf("One", "Two"), flatMapItems)
+    assertEquals(2, taskCalled)
+  }
+
+  @Test fun flatMapTaskEmpty() {
+    Many.empty<String>()
+        .flatMap { throw AssertionError() }
+        .testTask {
+          complete()
+        }
+  }
+
+  @Test fun flatMapTaskError() {
+    val exception = RuntimeException("Oops!")
+    Many.error<String>(exception)
+        .flatMap { throw AssertionError() }
+        .testTask {
+          complete()
+        }
+  }
+}
