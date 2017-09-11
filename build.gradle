@@ -20,12 +20,16 @@ buildscript {
 
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+    classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
   }
 
   repositories {
     mavenCentral()
     maven {
       url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2'
+    }
+    maven {
+      url 'https://plugins.gradle.org/m2/'
     }
   }
 }

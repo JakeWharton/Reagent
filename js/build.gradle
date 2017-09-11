@@ -1,8 +1,5 @@
-plugins {
-  id 'com.craigburke.karma' version '1.4.4'
-}
-
 apply plugin: 'org.jetbrains.kotlin.platform.js'
+apply plugin: 'com.moowork.node'
 
 dependencies {
   implement project(':common')
@@ -10,31 +7,30 @@ dependencies {
   testCompile deps.kotlin.test.js
 }
 
-task populateNodeModules(type: Copy) {
+task populateNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
+  from compileKotlin2Js.destinationDir
   configurations.testCompile.each {
     from zipTree(it.absolutePath).matching { include '*.js' }
   }
-  into "$buildDir/js_deps"
+
+  into "${buildDir}/node_modules"
 }
 
-karma {
-  basePath = projectDir.absolutePath
-
-  dependencies(['qunitjs@1.23.1', 'karma-chrome-launcher'])
-
-  browsers = ['ChromeHeadless']
-  frameworks = ['qunit']
-
-  profile('default') {
-    libraryBases = ['build/js_deps/']
-    libraryFiles = ['kotlin.js', 'kotlin-test.js']
-    sourceBases = ['build/classes/main/']
-    sourceFiles = ['js_main.js']
-    testBases = ['build/classes/test/']
-    testFiles = ['js_test.js']
-  }
+[compileKotlin2Js, compileTestKotlin2Js]*.configure {
+  kotlinOptions.moduleKind = "commonjs"
 }
 
-karmaGenerateConfig.outputs.upToDateWhen { false }
-karmaRun.dependsOn('classes', 'testClasses', 'populateNodeModules')
-clean.dependsOn('karmaClean')
+node {
+  download = true
+}
+
+task installQunit(type: NpmTask) {
+  args = ['install', 'qunitjs']
+}
+
+task runQunit(type: NodeTask, dependsOn: [compileTestKotlin2Js, populateNodeModules, installQunit]) {
+  script = file('node_modules/.bin/qunit')
+  args = [projectDir.toPath().relativize(file(compileTestKotlin2Js.outputFile).toPath())]
+}
+
+test.dependsOn(runQunit)
