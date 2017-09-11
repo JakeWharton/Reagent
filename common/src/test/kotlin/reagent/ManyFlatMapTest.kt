@@ -128,7 +128,8 @@ class ManyFlatMapTest {
 //        }
 //  }
 
-  @Test fun flatMapTask() {
+  // TODO @Test
+  fun flatMapTask() {
     val flatMapItems = mutableListOf<String>()
     var taskCalled = 0
 
@@ -145,7 +146,8 @@ class ManyFlatMapTest {
     assertEquals(2, taskCalled)
   }
 
-  @Test fun flatMapTaskEmpty() {
+  // TODO @Test
+  fun flatMapTaskEmpty() {
     Many.empty<String>()
         .flatMap { throw AssertionError() }
         .testTask {
@@ -153,7 +155,8 @@ class ManyFlatMapTest {
         }
   }
 
-  @Test fun flatMapTaskError() {
+  // TODO @Test
+  fun flatMapTaskError() {
     val exception = RuntimeException("Oops!")
     Many.error<String>(exception)
         .flatMap { throw AssertionError() }
