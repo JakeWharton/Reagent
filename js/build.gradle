@@ -1,6 +1,8 @@
 apply plugin: 'org.jetbrains.kotlin.platform.js'
 apply plugin: 'com.moowork.node'
 
+archivesBaseName = 'reagent'
+
 dependencies {
   implement project(':common')
   compile deps.kotlin.stdLib.js

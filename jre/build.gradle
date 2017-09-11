@@ -3,6 +3,8 @@ apply plugin: 'org.jetbrains.kotlin.platform.jvm'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
+archivesBaseName = 'reagent'
+
 dependencies {
   implement project(':common')
   compile deps.kotlin.stdLib.jre
