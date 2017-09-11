@@ -3,4 +3,4 @@
 *.iml
 build
 node_modules
-/reports
+reports

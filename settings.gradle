@@ -1,5 +1,7 @@
 rootProject.name = 'reagent'
 
-include ':common'
-include ':jre'
-include ':js'
+include ':coroutines'
+
+include ':multiplatform:common'
+include ':multiplatform:jre'
+include ':multiplatform:js'

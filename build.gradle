@@ -1,6 +1,7 @@
 buildscript {
   ext.versions = [
       'kotlin': '1.2-M2',
+      'coroutines': '0.18',
   ]
 
   ext.deps = [
@@ -15,6 +16,7 @@ buildscript {
               'jre': "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
               'js': "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
           ],
+          'coroutines': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
       ],
   ]
 

@@ -1,0 +1,27 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+  compile deps.kotlin.stdLib.jre
+  compile deps.kotlin.coroutines
+  testCompile 'junit:junit:4.12'
+}
+
+kotlin {
+  experimental {
+    coroutines 'enable'
+  }
+}
+
+test {
+  testLogging {
+    events 'passed', 'skipped', 'failed'
+  }
+}

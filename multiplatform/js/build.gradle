@@ -4,7 +4,7 @@ apply plugin: 'com.moowork.node'
 archivesBaseName = 'reagent'
 
 dependencies {
-  implement project(':common')
+  implement project(':multiplatform:common')
   compile deps.kotlin.stdLib.js
   testCompile deps.kotlin.test.js
 }
