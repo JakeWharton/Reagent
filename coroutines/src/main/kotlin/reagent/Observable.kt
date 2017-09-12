@@ -20,9 +20,10 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.runBlocking
 import java.util.function.Consumer
+import kotlin.coroutines.experimental.CoroutineContext
 
 abstract class Observable<T> {
-  suspend abstract fun subscribe(): ReceiveChannel<T>
+  suspend abstract fun subscribe(context: CoroutineContext): ReceiveChannel<T>
 
   @JvmOverloads
   fun subscribe(
@@ -31,7 +32,7 @@ abstract class Observable<T> {
       onComplete: Runnable = NoLambda
   ) = runBlocking(Unconfined) {
     try {
-      for (value in subscribe()) {
+      for (value in subscribe(coroutineContext)) {
         onNext.accept(value)
       }
       onComplete.run()
@@ -64,8 +65,11 @@ abstract class Observable<T> {
   }
 }
 
+// TODO blocked by https://youtrack.jetbrains.com/issue/KT-10468
+//suspend fun <T> (Observable<T>, CoroutineScope).subscribe() = subscribe(coroutineContext)
+
 class Chars(private val string: String): Observable<Int>() {
-  suspend override fun subscribe() = produce(Unconfined) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
     for (char in string) {
       send(char.toInt())
     }
@@ -73,11 +77,11 @@ class Chars(private val string: String): Observable<Int>() {
 }
 
 private class FromValue<O>(private val value: O) : Observable<O>() {
-  suspend override fun subscribe() = produce(Unconfined) { send(value) }
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) { send(value) }
 }
 
 private class FromIterable<O>(private val iterable: Iterable<O>): Observable<O>() {
-  suspend override fun subscribe() = produce(Unconfined) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
     iterable.forEach { send(it) }
   }
 }
@@ -86,8 +90,8 @@ private class Map<in U, D>(
     private val upstream: Observable<U>,
     private val mapper: (U) -> D
 ) : Observable<D>() {
-  suspend override fun subscribe() = produce(Unconfined) {
-    for (value in upstream.subscribe()) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
+    for (value in upstream.subscribe(context)) {
       send(mapper(value))
     }
   }
@@ -97,8 +101,8 @@ private class Filter<O>(
     private val upstream: Observable<O>,
     private val predicate: (O) -> Boolean
 ) : Observable<O>() {
-  suspend override fun subscribe() = produce(Unconfined) {
-    for (value in upstream.subscribe()) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
+    for (value in upstream.subscribe(context)) {
       if (predicate(value)) {
         send(value)
       }
@@ -110,9 +114,9 @@ private class Take<O>(
     private val upstream: Observable<O>,
     private val count: Int
 ) : Observable<O>() {
-  suspend override fun subscribe() = produce(Unconfined) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
     var seen = 0
-    for (value in upstream.subscribe()) {
+    for (value in upstream.subscribe(context)) {
       send(value)
       if (++seen == count) {
         break
@@ -125,9 +129,9 @@ private class Skip<O>(
     private val upstream: Observable<O>,
     private val count: Int
 ) : Observable<O>() {
-  suspend override fun subscribe() = produce(Unconfined) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
     var seen = 0
-    for (value in upstream.subscribe()) {
+    for (value in upstream.subscribe(context)) {
       if (++seen > count) {
         send(value)
       }
@@ -140,9 +144,9 @@ private class Collect<T, R>(
     private val collectionSupplier: () -> R,
     private val collector: (R, T) -> Unit
 ) : Observable<R>() {
-  suspend override fun subscribe() = produce(Unconfined) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
     val collection = collectionSupplier()
-    for (value in upstream.subscribe()) {
+    for (value in upstream.subscribe(context)) {
       collector(collection, value)
     }
     send(collection)
@@ -153,8 +157,8 @@ private class Flatten<in U, D>(
     private val upstream: Observable<U>,
     private val mapper: (U) -> Iterable<D>
 ) : Observable<D>() {
-  suspend override fun subscribe() = produce(Unconfined) {
-    for (value in upstream.subscribe()) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
+    for (value in upstream.subscribe(context)) {
       for (inner in mapper(value)) {
         send(inner)
       }
@@ -163,9 +167,9 @@ private class Flatten<in U, D>(
 }
 
 private class Concat<O>(private val sources: Array<Observable<O>>) : Observable<O>() {
-  suspend override fun subscribe() = produce(Unconfined) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
     for (source in sources) {
-      for (value in source.subscribe()) {
+      for (value in source.subscribe(context)) {
         send(value)
       }
     }

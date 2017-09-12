@@ -15,15 +15,15 @@
  */
 package reagent
 
-import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.channels.produce
+import kotlin.coroutines.experimental.CoroutineContext
 
 fun Observable<Int>.sum(): Observable<Int> = Sum(this)
 fun <T : Comparable<T>> Observable<T>.max(): Observable<T> = Max(this)
 
 class Max<T : Comparable<T>>(private val upstream: Observable<T>) : Observable<T>() {
-  suspend override fun subscribe() = produce(Unconfined) {
-    val values = upstream.subscribe()
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
+    val values = upstream.subscribe(context)
     var max = values.receiveOrNull() ?: return@produce
     for (value in values) {
       if (value > max) {
@@ -35,9 +35,9 @@ class Max<T : Comparable<T>>(private val upstream: Observable<T>) : Observable<T
 }
 
 private class Sum(private val upstream: Observable<Int>) : Observable<Int>() {
-  suspend override fun subscribe() = produce(Unconfined) {
+  suspend override fun subscribe(context: CoroutineContext) = produce(context) {
     var sum = 0
-    for (value in upstream.subscribe()) {
+    for (value in upstream.subscribe(context)) {
       sum += value
     }
     send(sum)

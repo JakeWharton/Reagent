@@ -5,7 +5,7 @@ import org.junit.Test
 
 class ObservableKotlinTest {
   @Test fun simple() = runBlocking {
-    for (value in Observable.just("Hey").subscribe()) {
+    for (value in Observable.just("Hey").subscribe(coroutineContext)) {
       println(value)
     }
   }
