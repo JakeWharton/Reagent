@@ -11,7 +11,7 @@ repositories {
 dependencies {
   compile deps.kotlin.stdLib.jre
   compile deps.kotlin.coroutines
-  testCompile 'junit:junit:4.12'
+  testCompile deps.junit
 }
 
 kotlin {
