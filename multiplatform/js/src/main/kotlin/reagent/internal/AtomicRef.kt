@@ -1,19 +1,19 @@
 package reagent.internal
 
-impl class AtomicRef<V>(private var value: V) {
-  impl fun get(): V = this.value
+actual class AtomicRef<V> actual constructor(private var value: V) {
+  actual fun get(): V = this.value
 
-  impl fun set(value: V) {
+  actual fun set(value: V) {
     this.value = value
   }
 
-  impl fun getAndSet(value: V): V {
+  actual fun getAndSet(value: V): V {
     val old = this.value
     this.value = value
     return old
   }
 
-  impl fun compareAndSet(expect: V, update: V): Boolean {
+  actual fun compareAndSet(expect: V, update: V): Boolean {
     if (this.value == expect) {
       this.value = update
       return true
