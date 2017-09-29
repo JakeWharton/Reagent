@@ -18,6 +18,7 @@ buildscript {
           ],
           'coroutines': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
       ],
+      'junit': 'junit:junit:4.12'
   ]
 
   dependencies {
