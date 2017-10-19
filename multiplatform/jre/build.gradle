@@ -6,7 +6,7 @@ targetCompatibility = JavaVersion.VERSION_1_6
 archivesBaseName = 'reagent'
 
 dependencies {
-  implement project(':multiplatform:common')
+  expectedBy project(':multiplatform:common')
   compile deps.kotlin.stdLib.jre
   testCompile deps.kotlin.test.jre
 }

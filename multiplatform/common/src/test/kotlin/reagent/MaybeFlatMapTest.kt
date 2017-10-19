@@ -15,10 +15,12 @@
  */
 package reagent
 
-import org.junit.Test
 import reagent.operator.flatMap
 import reagent.tester.testTask
+import kotlin.test.Ignore
+import kotlin.test.Test
 
+@Ignore // Not implemented
 class MaybeFlatMapTest {
 // TODO overload resolution doesn't work here
 //  @Test fun flatMapMany() {
@@ -98,8 +100,7 @@ class MaybeFlatMapTest {
 //        }
 //  }
 
-  // TODO @Test
-  fun flatMapTask() {
+  @Test fun flatMapTask() {
     Maybe.just("Item")
         .flatMap { Task.empty() }
         .testTask {
@@ -107,8 +108,7 @@ class MaybeFlatMapTest {
         }
   }
 
-  // TODO @Test
-  fun flatMapTaskComplete() {
+  @Test fun flatMapTaskComplete() {
     Maybe.empty<String>()
         .flatMap { Task.empty() }
         .testTask {
@@ -116,8 +116,7 @@ class MaybeFlatMapTest {
         }
   }
 
-  // TODO @Test
-  fun flatMapTaskError() {
+  @Test fun flatMapTaskError() {
     val exception = RuntimeException("Oops!")
     Maybe.error<String>(exception)
         .flatMap { Task.empty() }

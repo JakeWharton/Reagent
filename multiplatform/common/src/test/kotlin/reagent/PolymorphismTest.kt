@@ -15,11 +15,11 @@
  */
 package reagent
 
-import org.junit.Test
 import reagent.tester.testMany
 import reagent.tester.testMaybe
 import reagent.tester.testOne
 import reagent.tester.testTask
+import kotlin.test.Test
 
 class PolymorphismTest {
   @Test fun taskComplete() {

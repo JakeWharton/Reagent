@@ -15,9 +15,10 @@
  */
 package reagent
 
-import org.junit.Test
 import reagent.operator.map
 import reagent.tester.testOne
+import kotlin.test.Ignore
+import kotlin.test.Test
 
 class OneMapTest {
   @Test fun map() {
@@ -37,13 +38,13 @@ class OneMapTest {
         }
   }
 
-//  @Ignore("Error handling not implemented yet")
-//  @Test fun mapThrowing() {
-//    val exception = RuntimeException("Oops!")
-//    PureOne.just("Hello")
-//        .map { throw exception }
-//        .testOne {
-//          error(exception)
-//        }
-//  }
+  @Ignore // Error handling not implemented yet
+  @Test fun mapThrowing() {
+    val exception = RuntimeException("Oops!")
+    One.just("Hello")
+        .map { throw exception }
+        .testOne {
+          error(exception)
+        }
+  }
 }

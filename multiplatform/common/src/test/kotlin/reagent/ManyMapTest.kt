@@ -15,9 +15,10 @@
  */
 package reagent
 
-import org.junit.Test
 import reagent.operator.map
 import reagent.tester.testMany
+import kotlin.test.Ignore
+import kotlin.test.Test
 
 class ManyMapTest {
   @Test fun map() {
@@ -47,13 +48,13 @@ class ManyMapTest {
         }
   }
 
-//  @Ignore("Error handling not implemented yet")
-//  @Test fun mapThrowing() {
-//    val exception = RuntimeException("Oops!")
-//    PureMany.just("Hello", "World")
-//        .map { throw exception }
-//        .testMany {
-//          error(exception)
-//        }
-//  }
+  @Ignore // Error handling not implemented yet
+  @Test fun mapThrowing() {
+    val exception = RuntimeException("Oops!")
+    Many.fromArray("Hello", "World")
+        .map { throw exception }
+        .testMany {
+          error(exception)
+        }
+  }
 }

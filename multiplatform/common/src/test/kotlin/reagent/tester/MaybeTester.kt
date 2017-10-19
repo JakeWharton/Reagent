@@ -18,6 +18,7 @@ package reagent.tester
 import reagent.Disposable
 import reagent.Maybe
 import kotlin.test.assertEquals
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class MaybeAsserter<T>(private val events: MutableList<Any>) {
@@ -26,8 +27,7 @@ class MaybeAsserter<T>(private val events: MutableList<Any>) {
   }
 
   fun nothing() {
-    assertTrue(Complete === events.removeAt(0))
-    // TODO switch to assertSame once https://github.com/JetBrains/kotlin/pull/1230 is released.
+    assertSame(Complete, events.removeAt(0))
   }
 
   fun error(t: Throwable) {

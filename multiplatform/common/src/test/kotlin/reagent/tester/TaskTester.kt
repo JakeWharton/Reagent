@@ -18,12 +18,12 @@ package reagent.tester
 import reagent.Disposable
 import reagent.Task
 import kotlin.test.assertEquals
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class TaskAsserter(private val events: MutableList<Any>) {
   fun complete() {
-    assertTrue(Complete === events.removeAt(0))
-    // TODO switch to assertSame once https://github.com/JetBrains/kotlin/pull/1230 is released.
+    assertSame(Complete, events.removeAt(0))
   }
 
   fun error(t: Throwable) {
