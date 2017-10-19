@@ -1,8 +1,9 @@
 package reagent
 
-import org.junit.Test
 import reagent.operator.filter
 import reagent.tester.testMany
+import kotlin.test.Ignore
+import kotlin.test.Test
 
 class ManyFilterTest {
   @Test fun filter() {
@@ -31,13 +32,13 @@ class ManyFilterTest {
         }
   }
 
-//  @Ignore("Error handling not implemented yet")
-//  @Test fun filterThrowing() {
-//    val exception = RuntimeException("Oops!")
-//    PureMany.just("Hello", "World")
-//        .filter { throw exception }
-//        .testMany {
-//          error(exception)
-//        }
-//  }
+  @Ignore // Error handling not implemented yet
+  @Test fun filterThrowing() {
+    val exception = RuntimeException("Oops!")
+    Many.fromArray("Hello", "World")
+        .filter { throw exception }
+        .testMany {
+          error(exception)
+        }
+  }
 }

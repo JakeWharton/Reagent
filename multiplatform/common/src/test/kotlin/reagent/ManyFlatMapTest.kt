@@ -15,12 +15,13 @@
  */
 package reagent
 
-import org.junit.Test
 import reagent.operator.flatMap
 import reagent.tester.testTask
+import kotlin.test.Ignore
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
-// TODO @Ignore("Not implemented")
+@Ignore // Not implemented
 class ManyFlatMapTest {
 // TODO overload resolution doesn't work here
 //  @Test fun flatMapMany() {
@@ -128,8 +129,7 @@ class ManyFlatMapTest {
 //        }
 //  }
 
-  // TODO @Test
-  fun flatMapTask() {
+  @Test fun flatMapTask() {
     val flatMapItems = mutableListOf<String>()
     var taskCalled = 0
 
@@ -146,8 +146,7 @@ class ManyFlatMapTest {
     assertEquals(2, taskCalled)
   }
 
-  // TODO @Test
-  fun flatMapTaskEmpty() {
+  @Test fun flatMapTaskEmpty() {
     Many.empty<String>()
         .flatMap { throw AssertionError() }
         .testTask {
@@ -155,8 +154,7 @@ class ManyFlatMapTest {
         }
   }
 
-  // TODO @Test
-  fun flatMapTaskError() {
+  @Test fun flatMapTaskError() {
     val exception = RuntimeException("Oops!")
     Many.error<String>(exception)
         .flatMap { throw AssertionError() }

@@ -1,8 +1,9 @@
 package reagent
 
-import org.junit.Test
 import reagent.operator.filter
 import reagent.tester.testMaybe
+import kotlin.test.Ignore
+import kotlin.test.Test
 
 class OneFilterTest {
   @Test fun filter() {
@@ -29,13 +30,13 @@ class OneFilterTest {
         }
   }
 
-//  @Ignore("Error handling not implemented yet")
-//  @Test fun mapThrowing() {
-//    val exception = RuntimeException("Oops!")
-//    PureOne.just("Hello")
-//        .filter { throw exception }
-//        .testMaybe {
-//          error(exception)
-//        }
-//  }
+  @Ignore // Error handling not implemented yet
+  @Test fun mapThrowing() {
+    val exception = RuntimeException("Oops!")
+    One.just("Hello")
+        .filter { throw exception }
+        .testMaybe {
+          error(exception)
+        }
+  }
 }

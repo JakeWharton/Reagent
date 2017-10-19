@@ -15,8 +15,8 @@
  */
 package reagent
 
-import org.junit.Test
 import reagent.tester.testTask
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
