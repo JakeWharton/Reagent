@@ -5,8 +5,10 @@ archivesBaseName = 'reagent'
 
 dependencies {
   expectedBy project(':multiplatform:common')
-  compile deps.kotlin.stdLib.js
-  testCompile deps.kotlin.test.js
+
+  implementation deps.kotlin.stdLib.js
+
+  testImplementation deps.kotlin.test.js
 }
 
 task populateNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
