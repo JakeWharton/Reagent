@@ -1,7 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = versions.java
+targetCompatibility = versions.java
 
 repositories {
   mavenCentral()
