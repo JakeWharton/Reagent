@@ -9,9 +9,10 @@ repositories {
 }
 
 dependencies {
-  compile deps.kotlin.stdLib.jre
-  compile deps.kotlin.coroutines
-  testCompile deps.junit
+  implementation deps.kotlin.stdLib.jre
+  implementation deps.kotlin.coroutines
+
+  testImplementation deps.junit
 }
 
 kotlin {

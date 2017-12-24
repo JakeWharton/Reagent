@@ -1,7 +1,8 @@
 apply plugin: 'org.jetbrains.kotlin.platform.common'
 
 dependencies {
-  compile deps.kotlin.stdLib.common
-  testCompile deps.kotlin.test.annotations
-  testCompile deps.kotlin.test.common
+  implementation deps.kotlin.stdLib.common
+
+  testImplementation deps.kotlin.test.annotations
+  testImplementation deps.kotlin.test.common
 }

@@ -7,8 +7,10 @@ archivesBaseName = 'reagent'
 
 dependencies {
   expectedBy project(':multiplatform:common')
-  compile deps.kotlin.stdLib.jre
-  testCompile deps.kotlin.test.jre
+
+  implementation deps.kotlin.stdLib.jre
+
+  testImplementation deps.kotlin.test.jre
 }
 
 test {
