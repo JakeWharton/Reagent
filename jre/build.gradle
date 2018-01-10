@@ -1,3 +1,4 @@
+apply plugin: 'java-library'
 apply plugin: 'org.jetbrains.kotlin.platform.jvm'
 
 sourceCompatibility = versions.java
@@ -7,9 +8,9 @@ archivesBaseName = 'reagent'
 
 dependencies {
   expectedBy project(':common')
-  compile deps.kotlin.stdLib.jre
-  compile deps.kotlin.coroutines.jre
-  testCompile deps.kotlin.test.jre
+  api deps.kotlin.stdLib.jre
+  api deps.kotlin.coroutines.jre
+  testImplementation deps.kotlin.test.jre
 }
 
 kotlin {
