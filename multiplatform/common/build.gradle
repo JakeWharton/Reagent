@@ -1,7 +1,0 @@
-apply plugin: 'org.jetbrains.kotlin.platform.common'
-
-dependencies {
-  compile deps.kotlin.stdLib.common
-  testCompile deps.kotlin.test.annotations
-  testCompile deps.kotlin.test.common
-}

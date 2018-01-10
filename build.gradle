@@ -1,7 +1,7 @@
 buildscript {
   ext.versions = [
       'kotlin': '1.2.10',
-      'coroutines': '0.18',
+      'coroutines': '0.21',
       'java': JavaVersion.VERSION_1_8
   ]
 
@@ -18,9 +18,12 @@ buildscript {
               'jre': "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}",
               'js': "org.jetbrains.kotlin:kotlin-test-js:${versions.kotlin}",
           ],
-          'coroutines': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
+          'coroutines': [
+              'common': "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${versions.coroutines}",
+              'jre': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
+              'js': "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${versions.coroutines}",
+          ],
       ],
-      'junit': 'junit:junit:4.12'
   ]
 
   dependencies {

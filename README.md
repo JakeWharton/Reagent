@@ -3,28 +3,23 @@ Reagent
 
 Experiments for future reactive libraries.
 
-## `coroutines/`
-
-**Simpler asynchrony and concurrency primitives.**
-
-By leveraging the language and library coroutine support, the need for a custom lightweight job
+ * **Simpler asynchrony and concurrency primitives.**
+ 
+   By leveraging the language and library coroutine support, the need for a custom lightweight job
 scheduler and executor as well as concurrency primitives can be largely eliminated. Maintenance
 costs for operators goes way down since imperative-looking code can be written.
 
-
-## `multiplatform/`
-
-**One API for multiple platforms. Also polymorphic stream types.**
+ * **One API for multiple platforms.**
  
-Use the same reactive API and implementation in crossplatform code as well as natively inside
+   Use the same reactive API and implementation in crossplatform code as well as natively inside
 platform-specific code.
 
-Polymorphic types mean that just like how every `List<T>` and `Set<T>` is a `Collection<T>`, every
+ * **Polymorphic stream types.**
+
+   Polymorphic types mean that just like how every `List<T>` and `Set<T>` is a `Collection<T>`, every
 `One<T>` is just a `Many<T>` with only a single element, etc.
 
-
-### Type Hierarchy
-
+   ```
                   +---------------+
                   |               |
                   |    Many<T>    |
@@ -44,11 +39,8 @@ Polymorphic types mean that just like how every `List<T>` and `Set<T>` is a `Col
         |    One<T>     |   |     Task     |
         |               |   |              |
         +---------------+   +--------------+
+   ```
 
-
-
-_Note: `coroutines/` and `multiplatform/` should be combined, but can't until Kotlin's coroutine
-libraries are properly multiplatform._
 
 
 FAQ

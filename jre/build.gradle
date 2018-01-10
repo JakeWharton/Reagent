@@ -1,0 +1,25 @@
+apply plugin: 'org.jetbrains.kotlin.platform.jvm'
+
+sourceCompatibility = versions.java
+targetCompatibility = versions.java
+
+archivesBaseName = 'reagent'
+
+dependencies {
+  expectedBy project(':common')
+  compile deps.kotlin.stdLib.jre
+  compile deps.kotlin.coroutines.jre
+  testCompile deps.kotlin.test.jre
+}
+
+kotlin {
+  experimental {
+    coroutines 'enable'
+  }
+}
+
+test {
+  testLogging {
+    events 'passed', 'skipped', 'failed'
+  }
+}
