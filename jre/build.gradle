@@ -1,8 +1,8 @@
 apply plugin: 'java-library'
 apply plugin: 'org.jetbrains.kotlin.platform.jvm'
 
-sourceCompatibility = versions.java
-targetCompatibility = versions.java
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
 
 archivesBaseName = 'reagent'
 
