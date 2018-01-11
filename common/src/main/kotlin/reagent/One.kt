@@ -17,14 +17,11 @@ package reagent
 
 /** Emits a single item or errors. */
 abstract class One<out I> : Maybe<I>() {
-  interface Observer<in I> {
-    suspend fun onItem(item: I)
-    suspend fun onError(t: Throwable)
-  }
+  abstract override suspend fun produce(): I
 
-  abstract suspend fun subscribe(observer: Observer<I>)
-  override suspend fun subscribe(observer: Maybe.Observer<I>) = subscribe(ObserverFromMaybe(observer))
-  override suspend fun subscribe(observer: Many.Observer<I>) = subscribe(ObserverFromMany(observer))
+  override suspend fun subscribe(emitter: Emitter<I>) {
+    emitter.send(produce())
+  }
 
   companion object Factory {
     //@JvmStatic
@@ -38,40 +35,18 @@ abstract class One<out I> : Maybe<I>() {
   }
 
   internal class Just<out I>(private val item: I) : One<I>() {
-    override suspend fun subscribe(observer: Observer<I>) = observer.onItem(item)
+    override suspend fun produce() = item
   }
 
   internal class Error<out I>(private val t: Throwable) : One<I>() {
-    override suspend fun subscribe(observer: Observer<I>) = observer.onError(t)
+    override suspend fun produce() = throw t
   }
 
   internal class FromLambda<out I>(private val func: () -> I) : One<I>() {
-    override suspend fun subscribe(observer: Observer<I>) {
-      val value: I
-      try {
-        value = func.invoke()
-      } catch (t: Throwable) {
-        observer.onError(t)
-        return
-      }
-      observer.onItem(value)
-    }
+    override suspend fun produce() = func()
   }
 
   internal class Deferred<out I>(private val func: () -> One<I>) : One<I>() {
-    override suspend fun subscribe(observer: Observer<I>) = func().subscribe(observer)
-  }
-
-  internal class ObserverFromMaybe<in U>(private val delegate: Maybe.Observer<U>) : Observer<U> {
-    override suspend fun onItem(item: U) = delegate.onItem(item)
-    override suspend fun onError(t: Throwable) = delegate.onError(t)
-  }
-
-  internal class ObserverFromMany<in I>(private val delegate: Many.Observer<I>): Observer<I> {
-    override suspend fun onItem(item: I) = delegate.run {
-      onNext(item)
-      onComplete()
-    }
-    override suspend fun onError(t: Throwable) = delegate.onError(t)
+    override suspend fun produce() = func().produce()
   }
 }

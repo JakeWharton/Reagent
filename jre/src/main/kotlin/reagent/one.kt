@@ -22,14 +22,5 @@ import java.util.concurrent.Callable
 fun <I> Callable<I>.asOne(): One<I> = OneFromCallable(this)
 
 internal class OneFromCallable<out I>(private val func: Callable<I>) : One<I>() {
-  override suspend fun subscribe(observer: Observer<I>) {
-    val value: I
-    try {
-      value = func.call()
-    } catch (t: Throwable) {
-      observer.onError(t)
-      return
-    }
-    observer.onItem(value)
-  }
+  override suspend fun produce() = func.call()
 }

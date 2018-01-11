@@ -17,14 +17,11 @@ package reagent
 
 /** Emits an item, signals nothing (no item), or signals error. */
 abstract class Maybe<out I> : Many<I>() {
-  interface Observer<in I> {
-    suspend fun onItem(item: I)
-    suspend fun onNothing()
-    suspend fun onError(t: Throwable)
-  }
+  abstract suspend fun produce(): I?
 
-  abstract suspend fun subscribe(observer: Observer<I>)
-  override suspend fun subscribe(observer: Many.Observer<I>) = subscribe(ObserverFromMany(observer))
+  override suspend fun subscribe(emitter: Emitter<I>) {
+    produce()?.let { emitter.send(it) }
+  }
 
   companion object Factory {
     //@JvmStatic
@@ -42,15 +39,6 @@ abstract class Maybe<out I> : Many<I>() {
   }
 
   internal class Deferred<out I>(private val func: () -> Maybe<I>): Maybe<I>() {
-    override suspend fun subscribe(observer: Observer<I>) = func().subscribe(observer)
-  }
-
-  internal class ObserverFromMany<in U>(private val delegate: Many.Observer<U>) : Observer<U> {
-    override suspend fun onItem(item: U) = delegate.run {
-      onNext(item)
-      onComplete()
-    }
-    override suspend fun onNothing() = delegate.onComplete()
-    override suspend fun onError(t: Throwable) = delegate.onError(t)
+    override suspend fun produce() = func().produce()
   }
 }

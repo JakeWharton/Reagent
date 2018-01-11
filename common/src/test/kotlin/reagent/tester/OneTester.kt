@@ -34,15 +34,11 @@ fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
   runBlocking {
-    subscribe(object : One.Observer<T> {
-      override suspend fun onItem(item: T) {
-        events.add(Item(item))
-      }
-
-      override suspend fun onError(t: Throwable) {
-        events.add(Error(t))
-      }
-    })
+    try {
+      events.add(Item(produce()))
+    } catch (t: Throwable) {
+      events.add(Error(t))
+    }
   }
 
   OneAsserter<T>(events).assertions()

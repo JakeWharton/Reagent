@@ -17,13 +17,11 @@ package reagent
 
 /** Emits 0 to infinite items and then signals complete or error. */
 abstract class Many<out I> {
-  interface Observer<in I> {
-    suspend fun onNext(item: I)
-    suspend fun onComplete()
-    suspend fun onError(t: Throwable)
+  interface Emitter<in I> {
+    suspend fun send(item: I)
   }
 
-  abstract suspend fun subscribe(observer: Observer<I>)
+  abstract suspend fun subscribe(emitter: Emitter<I>)
 
   companion object Factory {
     //@JvmStatic
@@ -47,25 +45,19 @@ abstract class Many<out I> {
   }
 
   internal class FromArray<out I>(private val items: Array<out I>) : Many<I>() {
-    override suspend fun subscribe(observer: Observer<I>) {
-      for (item in items) {
-          observer.onNext(item)
-      }
-      observer.onComplete()
+    override suspend fun subscribe(emitter: Emitter<I>) {
+      items.forEach { emitter.send(it) }
     }
   }
 
   internal class FromIterable<out I>(private val iterable: Iterable<I>): Many<I>() {
-    override suspend fun subscribe(observer: Observer<I>) {
-      for (item in iterable) {
-          observer.onNext(item)
-      }
-      observer.onComplete()
+    override suspend fun subscribe(emitter: Emitter<I>) {
+      iterable.forEach { emitter.send(it) }
     }
   }
 
   internal class Deferred<out I>(private val func: () -> Many<I>): Many<I>() {
-    override suspend fun subscribe(observer: Observer<I>) = func().subscribe(observer)
+    override suspend fun subscribe(emitter: Emitter<I>) = func().subscribe(emitter)
   }
 }
 

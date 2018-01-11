@@ -35,15 +35,12 @@ fun Task.testTask(assertions: TaskAsserter.() -> Unit) {
   val events = mutableListOf<Any>()
 
   runBlocking {
-    subscribe(object : Task.Observer {
-      override suspend fun onComplete() {
-        events.add(Complete)
-      }
-
-      override suspend fun onError(t: Throwable) {
-        events.add(Error(t))
-      }
-    })
+    try {
+      run()
+      events.add(Complete)
+    } catch (t: Throwable) {
+      events.add(Error(t))
+    }
   }
 
   TaskAsserter(events).assertions()

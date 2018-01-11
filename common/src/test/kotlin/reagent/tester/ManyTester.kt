@@ -17,6 +17,7 @@ package reagent.tester
 
 import reagent.runBlocking
 import reagent.Many
+import reagent.Many.Emitter
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
@@ -39,19 +40,16 @@ fun <T> Many<T>.testMany(assertions: ManyAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
   runBlocking {
-    subscribe(object : Many.Observer<T> {
-      override suspend fun onNext(item: T) {
-        events.add(Item(item))
-      }
-
-      override suspend fun onComplete() {
-        events.add(Complete)
-      }
-
-      override suspend fun onError(t: Throwable) {
-        events.add(Error(t))
-      }
-    })
+    try {
+      subscribe(object : Emitter<T> {
+        override suspend fun send(item: T) {
+          events.add(Item(item))
+        }
+      })
+      events.add(Complete)
+    } catch (t: Throwable) {
+      events.add(Error(t))
+    }
   }
 
   ManyAsserter<T>(events).assertions()

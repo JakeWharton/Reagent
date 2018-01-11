@@ -35,17 +35,17 @@ internal class ManyFilter<out I>(
     private val upstream: Many<I>,
     private val predicate: (I) -> Boolean
 ) : Many<I>() {
-  override suspend fun subscribe(observer: Observer<I>) {
-    upstream.subscribe(Operator(observer, predicate))
+  override suspend fun subscribe(emitter: Emitter<I>) {
+    upstream.subscribe(Operator(emitter, predicate))
   }
 
   class Operator<in I>(
-      private val downstream: Observer<I>,
+      private val downstream: Emitter<I>,
       private val predicate: (I) -> Boolean
-  ) : Many.Observer<I> by downstream {
-    override suspend fun onNext(item: I) {
+  ) : Emitter<I> {
+    override suspend fun send(item: I) {
       if (predicate(item)) {
-        downstream.onNext(item)
+        downstream.send(item)
       }
     }
   }
@@ -55,21 +55,9 @@ internal class MaybeFilter<out I>(
     private val upstream: Maybe<I>,
     private val predicate: (I) -> Boolean
 ) : Maybe<I>() {
-  override suspend fun subscribe(observer: Observer<I>) {
-    upstream.subscribe(Operator(observer, predicate))
-  }
-
-  class Operator<in I>(
-      private val downstream: Observer<I>,
-      private val predicate: (I) -> Boolean
-  ) : Observer<I> by downstream {
-    override suspend fun onItem(item: I) {
-      if (predicate(item)) {
-        downstream.onItem(item)
-      } else {
-        downstream.onNothing()
-      }
-    }
+  override suspend fun produce(): I? {
+    upstream.produce()?.let { if (predicate(it)) return it }
+    return null
   }
 }
 
@@ -77,22 +65,8 @@ internal class OneFilter<out I>(
     private val upstream: One<I>,
     private val predicate: (I) -> Boolean
 ) : Maybe<I>() {
-  override suspend fun subscribe(observer: Observer<I>) {
-    upstream.subscribe(Operator(observer, predicate))
-  }
-
-  class Operator<in I>(
-      private val downstream: Observer<I>,
-      private val predicate: (I) -> Boolean
-  ) : One.Observer<I> {
-    override suspend fun onItem(item: I) {
-      if (predicate(item)) {
-        downstream.onItem(item)
-      } else {
-        downstream.onNothing()
-      }
-    }
-
-    override suspend fun onError(t: Throwable) = downstream.onError(t)
+  override suspend fun produce(): I? {
+    val value = upstream.produce()
+    return if (predicate(value)) value else null
   }
 }

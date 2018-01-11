@@ -27,7 +27,7 @@ internal class ManyFlatMapMany<U, out D>(
     private val upstream: Many<U>,
     private val func: (U) -> Many<D>
 ) : Many<D>() {
-  override suspend fun subscribe(observer: Observer<D>) = TODO()
+  override suspend fun subscribe(emitter: Emitter<D>) = TODO()
 }
 
 fun <I> Many<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
@@ -38,7 +38,7 @@ internal class ManyFlatMapTask<U>(
     private val upstream: Many<U>,
     private val func: (U) -> Task
 ) : Task() {
-  override suspend fun subscribe(observer: Observer) = TODO()
+  override suspend fun run() = TODO()
 }
 
 fun <I, O> Maybe<I>.flatMap(func: (I) -> Maybe<O>): Maybe<O> = MaybeFlatMapMaybe(this, func)
@@ -47,16 +47,7 @@ internal class MaybeFlatMapMaybe<U, out D>(
     private val upstream: Maybe<U>,
     private val func: (U) -> Maybe<D>
 ) : Maybe<D>() {
-  override suspend fun subscribe(observer: Observer<D>) = upstream.subscribe(Operator(observer, func))
-
-  class Operator<in U, D>(
-      private val downstream: Observer<D>,
-      private val func: (U) -> Maybe<D>
-  ) : Observer<U> {
-    override suspend fun onItem(item: U) = func.invoke(item).subscribe(downstream)
-    override suspend fun onNothing() = downstream.onNothing()
-    override suspend fun onError(t: Throwable) = downstream.onError(t)
-  }
+  override suspend fun produce() = upstream.produce()?.let(func)?.produce()
 }
 
 fun <I, O> One<I>.flatMap(func: (I) -> One<O>): One<O> = OneFlatMapOne(this, func)
@@ -65,15 +56,7 @@ internal class OneFlatMapOne<U, D>(
     private val upstream: One<U>,
     private val func: (U) -> One<D>
 ) : One<D>() {
-  override suspend fun subscribe(observer: Observer<D>) = upstream.subscribe(Operator(observer, func))
-
-  class Operator<in U, D>(
-      private val downstream: Observer<D>,
-      private val func: (U) -> One<D>
-  ) : Observer<U> {
-    override suspend fun onItem(item: U) = func.invoke(item).subscribe(downstream)
-    override suspend fun onError(t: Throwable) = downstream.onError(t)
-  }
+  override suspend fun produce() = func(upstream.produce()).produce()
 }
 
 @Deprecated("Task produces no items so mapping has no effect.", level = ERROR)

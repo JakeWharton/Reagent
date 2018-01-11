@@ -17,29 +17,25 @@ package reagent
 
 import kotlin.js.Promise
 import kotlinx.coroutines.experimental.launch
+import kotlin.coroutines.experimental.suspendCoroutine
 
 @JsName("fromPromise")
 fun <I> Promise<I>.toOne(): One<I> = OneFromPromise(this)
 
 internal class OneFromPromise<out I>(private val promise: Promise<I>): One<I>() {
-  override suspend fun subscribe(observer: Observer<I>) {
-    promise.then({
-      launch {
-        observer.onItem(it)
-      }
-    }, {
-      launch {
-        observer.onError(it)
-      }
-    })
+  override suspend fun produce() = suspendCoroutine<I> { continuation ->
+    promise.then(continuation::resume, continuation::resumeWithException)
   }
 }
 
 fun <I> One<I>.toPromise(): Promise<I> = Promise { resolve, reject ->
   launch {
-    subscribe(object : One.Observer<I> {
-      override suspend fun onError(t: Throwable) = reject(t)
-      override suspend fun onItem(item: I) = resolve(item)
-    })
+    val result = try {
+      produce()
+    } catch (t: Throwable) {
+      reject(t)
+      return@launch
+    }
+    resolve(result)
   }
 }

@@ -39,19 +39,16 @@ fun <T> Maybe<T>.testMaybe(assertions: MaybeAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
   runBlocking {
-    subscribe(object : Maybe.Observer<T> {
-      override suspend fun onItem(item: T) {
-        events.add(Item(item))
-      }
-
-      override suspend fun onNothing() {
+    try {
+      val value = produce()
+      if (value != null) {
+        events.add(Item(value))
+      } else {
         events.add(Complete)
       }
-
-      override suspend fun onError(t: Throwable) {
-        events.add(Error(t))
-      }
-    })
+    } catch (t: Throwable) {
+      events.add(Error(t))
+    }
   }
 
   MaybeAsserter<T>(events).assertions()

@@ -22,28 +22,14 @@ import java.util.concurrent.Callable
 fun Runnable.asTask(): Task = TaskFromRunnable(this)
 
 internal class TaskFromRunnable(private val func: Runnable) : Task() {
-  override suspend fun subscribe(observer: Observer) {
-    try {
-      func.run()
-    } catch (t: Throwable) {
-      observer.onError(t)
-      return
-    }
-    observer.onComplete()
-  }
+  override suspend fun run() = func.run()
 }
 
 @JvmName("fromCallable")
 fun Callable<*>.asTask(): Task = TaskFromCallable(this)
 
 internal class TaskFromCallable(private val func: Callable<*>) : Task() {
-  override suspend fun subscribe(observer: Observer) {
-    try {
-      func.call()
-    } catch (t: Throwable) {
-      observer.onError(t)
-      return
-    }
-    observer.onComplete()
+  override suspend fun run() {
+    func.call()
   }
 }

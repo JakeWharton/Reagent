@@ -35,17 +35,17 @@ internal class ManyMap<in U, out D>(
     private val upstream: Many<U>,
     private val mapper: (U) -> D
 ) : Many<D>() {
-  suspend override fun subscribe(observer: Observer<D>) {
-    upstream.subscribe(Operator(observer, mapper))
+  override suspend fun subscribe(emitter: Emitter<D>) {
+    upstream.subscribe(Operator(emitter, mapper))
   }
 
   class Operator<in U, out D>(
-      private val downstream: Many.Observer<D>,
+      private val downstream: Emitter<D>,
       private val mapper: (U) -> D
-  ) : Observer<U> {
-    override suspend fun onNext(item: U) = downstream.onNext(mapper.invoke(item))
-    override suspend fun onComplete() = downstream.onComplete()
-    override suspend fun onError(t: Throwable) = downstream.onError(t)
+  ) : Emitter<U> {
+    override suspend fun send(item: U) {
+      downstream.send(mapper(item))
+    }
   }
 }
 
@@ -53,33 +53,12 @@ internal class MaybeMap<in U, out D>(
     private val upstream: Maybe<U>,
     private val mapper: (U) -> D
 ) : Maybe<D>() {
-  override suspend fun subscribe(observer: Observer<D>) {
-    upstream.subscribe(Operator(observer, mapper))
-  }
-
-  class Operator<in U, out D>(
-      private val downstream: Observer<D>,
-      private val mapper: (U) -> D
-  ) : Observer<U> {
-    override suspend fun onItem(item: U) = downstream.onItem(mapper.invoke(item))
-    override suspend fun onNothing() = downstream.onNothing()
-    override suspend fun onError(t: Throwable) = downstream.onError(t)
-  }
+  override suspend fun produce() = upstream.produce()?.let(mapper)
 }
 
 internal class OneMap<in U, out D>(
     private val upstream: One<U>,
     private val mapper: (U) -> D
 ) : One<D>() {
-  override suspend fun subscribe(observer: Observer<D>) {
-    upstream.subscribe(Operator(observer, mapper))
-  }
-
-  class Operator<in U, out D>(
-      private val downstream: Observer<D>,
-      private val mapper: (U) -> D
-  ) : Observer<U> {
-    override suspend fun onItem(item: U) = downstream.onItem(mapper.invoke(item))
-    override suspend fun onError(t: Throwable) = downstream.onError(t)
-  }
+  override suspend fun produce() = mapper(upstream.produce())
 }

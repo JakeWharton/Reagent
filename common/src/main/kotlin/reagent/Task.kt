@@ -17,14 +17,14 @@ package reagent
 
 /** Signals complete or error. Has no items. */
 abstract class Task : Maybe<Nothing>() {
-  interface Observer {
-    suspend fun onComplete()
-    suspend fun onError(t: Throwable)
+  abstract suspend fun run()
+
+  override suspend fun produce(): Nothing? {
+    run()
+    return null
   }
 
-  abstract suspend fun subscribe(observer: Observer)
-  override suspend fun subscribe(observer: Maybe.Observer<Nothing>) = subscribe(ObserverFromMaybe(observer))
-  override suspend fun subscribe(observer: Many.Observer<Nothing>) = subscribe(ObserverFromMany(observer))
+  override suspend fun subscribe(emitter: Emitter<Nothing>) = run()
 
   companion object Factory {
     //@JvmStatic
@@ -38,36 +38,18 @@ abstract class Task : Maybe<Nothing>() {
   }
 
   internal object Complete : Task() {
-    override suspend fun subscribe(observer: Observer) = observer.onComplete()
+    override suspend fun run() = Unit
   }
 
   internal class Error(private val t: Throwable) : Task() {
-    override suspend fun subscribe(observer: Observer) = observer.onError(t)
+    override suspend fun run() = throw t
   }
 
   internal class FromLambda(private val func: () -> Unit) : Task() {
-    override suspend fun subscribe(observer: Observer) {
-      try {
-        func.invoke()
-      } catch (t: Throwable) {
-        observer.onError(t)
-        return
-      }
-      observer.onComplete()
-    }
+    override suspend fun run() = func()
   }
 
   internal class Deferred(private val func: () -> Task): Task() {
-    override suspend fun subscribe(observer: Observer) = func().subscribe(observer)
-  }
-
-  internal class ObserverFromMaybe(private val delegate: Maybe.Observer<Nothing>) : Observer {
-    override suspend fun onComplete() = delegate.onNothing()
-    override suspend fun onError(t: Throwable) = delegate.onError(t)
-  }
-
-  internal class ObserverFromMany(private val delegate: Many.Observer<Nothing>): Observer {
-    override suspend fun onComplete() = delegate.onComplete()
-    override suspend fun onError(t: Throwable) = delegate.onError(t)
+    override suspend fun run() = func().run()
   }
 }
