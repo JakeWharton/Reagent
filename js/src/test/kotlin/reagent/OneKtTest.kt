@@ -15,12 +15,16 @@
  */
 package reagent
 
+import kotlinx.coroutines.experimental.await
 import reagent.tester.testOne
 import kotlin.js.Promise
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertSame
+import kotlin.test.fail
 
 class OneKtTest {
-  // TODO @Test: Requires blocking for One result.
-  fun toOneResolve() = runTest {
+  @Test fun toOneResolve() = runTest {
     Promise.resolve("Hello")
         .toOne()
         .testOne {
@@ -28,8 +32,7 @@ class OneKtTest {
         }
   }
 
-  // TODO @Test: Requires blocking for One result.
-  fun toOneReject() = runTest {
+  @Test fun toOneReject() = runTest {
     val exception = RuntimeException("Hello")
     Promise.reject(exception)
         .toOne()
@@ -38,18 +41,22 @@ class OneKtTest {
         }
   }
 
-  // TODO @Test: Requires blocking for promise result.
-  fun itemToPromise() = runTest {
-    One.just("Hello")
+  @Test fun itemToPromise() = runTest {
+    val value = One.just("Hello")
         .toPromise()
-        //something?
+        .await()
+    assertEquals("Hello", value)
   }
 
-  // TODO @Test: Requires blocking for promise result.
-  fun errorToPromise() = runTest {
+  @Test fun errorToPromise() = runTest {
     val exception = RuntimeException("Hello")
-    One.error<String>(exception)
+    val promise = One.error<String>(exception)
         .toPromise()
-        //something?
+    try {
+      promise.await()
+      fail()
+    } catch (t: Throwable) {
+      assertSame(exception, t)
+    }
   }
 }
