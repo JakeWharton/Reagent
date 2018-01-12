@@ -17,7 +17,6 @@ package reagent
 
 import reagent.operator.map
 import reagent.tester.testMaybe
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class MaybeMapTest {
@@ -46,7 +45,6 @@ class MaybeMapTest {
         }
   }
 
-  @Ignore // Error handling not implemented yet
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.just("Hello")

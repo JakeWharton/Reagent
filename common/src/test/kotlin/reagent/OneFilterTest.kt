@@ -2,7 +2,6 @@ package reagent
 
 import reagent.operator.filter
 import reagent.tester.testMaybe
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class OneFilterTest {
@@ -30,7 +29,6 @@ class OneFilterTest {
         }
   }
 
-  @Ignore // Error handling not implemented yet
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     One.just("Hello")

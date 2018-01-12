@@ -2,7 +2,6 @@ package reagent
 
 import reagent.operator.filter
 import reagent.tester.testMany
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class ManyFilterTest {
@@ -32,7 +31,6 @@ class ManyFilterTest {
         }
   }
 
-  @Ignore // Error handling not implemented yet
   @Test fun filterThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Many.fromArray("Hello", "World")

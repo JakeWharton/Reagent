@@ -17,7 +17,6 @@ package reagent
 
 import reagent.operator.map
 import reagent.tester.testOne
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class OneMapTest {
@@ -38,7 +37,6 @@ class OneMapTest {
         }
   }
 
-  @Ignore // Error handling not implemented yet
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     One.just("Hello")

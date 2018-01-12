@@ -2,7 +2,6 @@ package reagent
 
 import reagent.operator.filter
 import reagent.tester.testMaybe
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class MaybeFilterTest {
@@ -41,7 +40,6 @@ class MaybeFilterTest {
         }
   }
 
-  @Ignore // Error handling not implemented yet
   @Test fun filterThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.just("Hello")

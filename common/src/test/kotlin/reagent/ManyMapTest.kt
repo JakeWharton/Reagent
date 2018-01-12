@@ -17,7 +17,6 @@ package reagent
 
 import reagent.operator.map
 import reagent.tester.testMany
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class ManyMapTest {
@@ -48,7 +47,6 @@ class ManyMapTest {
         }
   }
 
-  @Ignore // Error handling not implemented yet
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Many.fromArray("Hello", "World")
