@@ -15,7 +15,6 @@
  */
 package reagent.tester
 
-import reagent.runBlocking
 import reagent.One
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -30,15 +29,13 @@ class OneAsserter<T>(private val events: MutableList<Any>) {
   }
 }
 
-fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
+suspend fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
-  runBlocking {
-    try {
-      events.add(Item(produce()))
-    } catch (t: Throwable) {
-      events.add(Error(t))
-    }
+  try {
+    events.add(Item(produce()))
+  } catch (t: Throwable) {
+    events.add(Error(t))
   }
 
   OneAsserter<T>(events).assertions()

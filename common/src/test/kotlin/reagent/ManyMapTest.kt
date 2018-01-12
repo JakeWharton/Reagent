@@ -21,7 +21,7 @@ import kotlin.test.Ignore
 import kotlin.test.Test
 
 class ManyMapTest {
-  @Test fun map() {
+  @Test fun map() = runTest {
     Many.fromArray("Hello", "World")
         .map(String::toUpperCase)
         .testMany {
@@ -31,7 +31,7 @@ class ManyMapTest {
         }
   }
 
-  @Test fun mapEmpty() {
+  @Test fun mapEmpty() = runTest {
     Many.empty<Nothing>()
         .map { throw AssertionError() }
         .testMany {
@@ -39,7 +39,7 @@ class ManyMapTest {
         }
   }
 
-  @Test fun mapError() {
+  @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
     Many.error<Nothing>(exception)
         .map { throw AssertionError() }
@@ -49,7 +49,7 @@ class ManyMapTest {
   }
 
   @Ignore // Error handling not implemented yet
-  @Test fun mapThrowing() {
+  @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Many.fromArray("Hello", "World")
         .map { throw exception }

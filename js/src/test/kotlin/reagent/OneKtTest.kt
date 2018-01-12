@@ -20,7 +20,7 @@ import kotlin.js.Promise
 
 class OneKtTest {
   // TODO @Test: Requires blocking for One result.
-  fun toOneResolve() {
+  fun toOneResolve() = runTest {
     Promise.resolve("Hello")
         .toOne()
         .testOne {
@@ -29,7 +29,7 @@ class OneKtTest {
   }
 
   // TODO @Test: Requires blocking for One result.
-  fun toOneReject() {
+  fun toOneReject() = runTest {
     val exception = RuntimeException("Hello")
     Promise.reject(exception)
         .toOne()
@@ -39,14 +39,14 @@ class OneKtTest {
   }
 
   // TODO @Test: Requires blocking for promise result.
-  fun itemToPromise() {
+  fun itemToPromise() = runTest {
     One.just("Hello")
         .toPromise()
         //something?
   }
 
   // TODO @Test: Requires blocking for promise result.
-  fun errorToPromise() {
+  fun errorToPromise() = runTest {
     val exception = RuntimeException("Hello")
     One.error<String>(exception)
         .toPromise()

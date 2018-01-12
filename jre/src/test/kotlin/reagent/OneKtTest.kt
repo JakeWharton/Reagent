@@ -2,13 +2,13 @@ package reagent
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import reagent.tester.testOne
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
-import reagent.tester.testOne
 
 class OneKtTest {
   @Test
-  fun fromCallable() {
+  fun fromCallable() = runTest {
     val called = AtomicBoolean()
     Callable { called.getAndSet(true) }
         .asOne()
@@ -19,7 +19,7 @@ class OneKtTest {
   }
 
   @Test
-  fun fromCallableThrowing() {
+  fun fromCallableThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Callable { throw exception }
         .asOne()

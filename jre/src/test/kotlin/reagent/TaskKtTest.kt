@@ -2,13 +2,13 @@ package reagent
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import reagent.tester.testTask
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
-import reagent.tester.testTask
 
 class TaskKtTest {
   @Test
-  fun fromRunnable() {
+  fun fromRunnable() = runTest {
     val called = AtomicBoolean()
     Runnable { called.set(true) }
         .asTask()
@@ -19,7 +19,7 @@ class TaskKtTest {
   }
 
   @Test
-  fun fromRunnableThrowing() {
+  fun fromRunnableThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Runnable { throw exception }
         .asTask()
@@ -28,7 +28,7 @@ class TaskKtTest {
         }
   }
 
-  @Test fun fromCallable() {
+  @Test fun fromCallable() = runTest {
     val called = AtomicBoolean()
     Callable { called.set(true) }
         .asTask()
@@ -38,7 +38,7 @@ class TaskKtTest {
     assertTrue(called.get())
   }
 
-  @Test fun fromCallableThrowing() {
+  @Test fun fromCallableThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Callable { throw exception }
         .asTask()

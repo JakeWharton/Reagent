@@ -6,14 +6,14 @@ import kotlin.test.Ignore
 import kotlin.test.Test
 
 class OneFilterTest {
-  @Test fun filter() {
+  @Test fun filter() = runTest {
     One.just("Hello")
         .filter { it == "Hello" }
         .testMaybe {
           item("Hello")
         }
   }
-  @Test fun filterOut() {
+  @Test fun filterOut() = runTest {
     One.just("Hello")
         .filter { it != "Hello" }
         .testMaybe {
@@ -21,7 +21,7 @@ class OneFilterTest {
         }
   }
 
-  @Test fun filterError() {
+  @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
     One.error<Nothing>(exception)
         .filter { throw AssertionError() }
@@ -31,7 +31,7 @@ class OneFilterTest {
   }
 
   @Ignore // Error handling not implemented yet
-  @Test fun mapThrowing() {
+  @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     One.just("Hello")
         .filter { throw exception }

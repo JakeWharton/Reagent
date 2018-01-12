@@ -6,7 +6,7 @@ import kotlin.test.Ignore
 import kotlin.test.Test
 
 class MaybeFilterTest {
-  @Test fun filter() {
+  @Test fun filter() = runTest {
     Maybe.just("Hello")
         .filter { it == "Hello" }
         .testMaybe {
@@ -14,7 +14,7 @@ class MaybeFilterTest {
         }
   }
 
-  @Test fun filterOut() {
+  @Test fun filterOut() = runTest {
     Maybe.just("Hello")
         .filter { it != "Hello" }
         .testMaybe {
@@ -23,7 +23,7 @@ class MaybeFilterTest {
   }
 
   @Test
-  fun filterEmpty() {
+  fun filterEmpty() = runTest {
     Maybe.empty<Nothing>()
         .filter { throw AssertionError() }
         .testMaybe {
@@ -32,7 +32,7 @@ class MaybeFilterTest {
   }
 
   @Test
-  fun filterError() {
+  fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.error<Nothing>(exception)
         .filter { throw AssertionError() }
@@ -42,7 +42,7 @@ class MaybeFilterTest {
   }
 
   @Ignore // Error handling not implemented yet
-  @Test fun filterThrowing() {
+  @Test fun filterThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.just("Hello")
         .filter { throw exception }

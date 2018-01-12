@@ -17,7 +17,7 @@ package reagent
 
 // TODO overload resolution doesn't work here
 //class OneFlapMapTest {
-//  @Test fun flatMapMany() {
+//  @Test fun flatMapMany() = runTest {
 //    PureOne.just("Item")
 //        .flatMap { Many.fromArray("Hello", "World") }
 //        .testMany {
@@ -27,7 +27,7 @@ package reagent
 //        }
 //  }
 //
-//  @Test fun flatMapManyError() {
+//  @Test fun flatMapManyError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    PureOne.error(exception)
 //        .flatMap { Many.fromArray("Hello", "World") }
@@ -36,7 +36,7 @@ package reagent
 //        }
 //  }
 //
-//  @Test fun flatMapMaybe() {
+//  @Test fun flatMapMaybe() = runTest {
 //    PureOne.just("Item")
 //        .flatMap { Maybe.just("Hello") }
 //        .testMaybe {
@@ -44,7 +44,7 @@ package reagent
 //        }
 //  }
 //
-//  @Test fun flatMapMaybeError() {
+//  @Test fun flatMapMaybeError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    PureOne.error(exception)
 //        .flatMap { Maybe.just("Hello") }
@@ -53,7 +53,7 @@ package reagent
 //        }
 //  }
 //
-//  @Test fun flatMapOne() {
+//  @Test fun flatMapOne() = runTest {
 //    PureOne.just("Item")
 //        .flatMap { One.just("Hello") }
 //        .testOne {
@@ -61,7 +61,7 @@ package reagent
 //        }
 //  }
 //
-//  @Test fun flatMapOneError() {
+//  @Test fun flatMapOneError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    PureOne.error(exception)
 //        .flatMap { One.just("Hello") }
@@ -70,7 +70,7 @@ package reagent
 //        }
 //  }
 //
-//  @Test fun flatMapTask() {
+//  @Test fun flatMapTask() = runTest {
 //    One.just("Item")
 //        .flatMap { Task.empty() }
 //        .testTask {
@@ -78,7 +78,7 @@ package reagent
 //        }
 //  }
 //
-//  @Test fun flatMapTaskError() {
+//  @Test fun flatMapTaskError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    One.error<String>(exception)
 //        .flatMap { Task.empty() }

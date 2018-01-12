@@ -15,7 +15,6 @@
  */
 package reagent.tester
 
-import reagent.runBlocking
 import reagent.Maybe
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
@@ -35,20 +34,18 @@ class MaybeAsserter<T>(private val events: MutableList<Any>) {
   }
 }
 
-fun <T> Maybe<T>.testMaybe(assertions: MaybeAsserter<T>.() -> Unit) {
+suspend fun <T> Maybe<T>.testMaybe(assertions: MaybeAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
-  runBlocking {
-    try {
-      val value = produce()
-      if (value != null) {
-        events.add(Item(value))
-      } else {
-        events.add(Complete)
-      }
-    } catch (t: Throwable) {
-      events.add(Error(t))
+  try {
+    val value = produce()
+    if (value != null) {
+      events.add(Item(value))
+    } else {
+      events.add(Complete)
     }
+  } catch (t: Throwable) {
+    events.add(Error(t))
   }
 
   MaybeAsserter<T>(events).assertions()

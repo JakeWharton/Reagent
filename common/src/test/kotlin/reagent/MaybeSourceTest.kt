@@ -21,21 +21,21 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class MaybeSourceTest {
-  @Test fun just() {
+  @Test fun just() = runTest {
     Maybe.just("Hello")
         .testMaybe {
           item("Hello")
         }
   }
 
-  @Test fun empty() {
+  @Test fun empty() = runTest {
     Maybe.empty<Any>()
         .testMaybe {
           nothing()
         }
   }
 
-  @Test fun error() {
+  @Test fun error() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.error<Any>(exception)
         .testMaybe {
@@ -43,7 +43,7 @@ class MaybeSourceTest {
         }
   }
 
-  @Test fun returning() {
+  @Test fun returning() = runTest {
     var called = false
     Maybe.returning { called = true; 0 }
         .testMaybe {
@@ -52,7 +52,7 @@ class MaybeSourceTest {
     assertTrue(called)
   }
 
-  @Test fun returningThrowing() {
+  @Test fun returningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.returning { throw exception }
         .testMaybe {
@@ -60,7 +60,7 @@ class MaybeSourceTest {
         }
   }
 
-  @Test fun running() {
+  @Test fun running() = runTest {
     var called = false
     Maybe.running<Any> { called = true }
         .testMaybe {
@@ -69,7 +69,7 @@ class MaybeSourceTest {
     assertTrue(called)
   }
 
-  @Test fun runningThrowing() {
+  @Test fun runningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.running<Any> { throw exception }
         .testMaybe {
@@ -77,7 +77,7 @@ class MaybeSourceTest {
         }
   }
 
-  @Test fun defer() {
+  @Test fun defer() = runTest {
     var called = 0
     val deferred = Maybe.defer { called++; Maybe.just("Hello") }
     deferred.testMaybe {

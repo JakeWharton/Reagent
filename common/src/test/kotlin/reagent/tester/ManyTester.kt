@@ -15,7 +15,6 @@
  */
 package reagent.tester
 
-import reagent.runBlocking
 import reagent.Many
 import reagent.Many.Emitter
 import kotlin.test.assertEquals
@@ -36,20 +35,18 @@ class ManyAsserter<T>(private val events: MutableList<Any>) {
   }
 }
 
-fun <T> Many<T>.testMany(assertions: ManyAsserter<T>.() -> Unit) {
+suspend fun <T> Many<T>.testMany(assertions: ManyAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
-  runBlocking {
-    try {
-      subscribe(object : Emitter<T> {
-        override suspend fun send(item: T) {
-          events.add(Item(item))
-        }
-      })
-      events.add(Complete)
-    } catch (t: Throwable) {
-      events.add(Error(t))
-    }
+  try {
+    subscribe(object : Emitter<T> {
+      override suspend fun send(item: T) {
+        events.add(Item(item))
+      }
+    })
+    events.add(Complete)
+  } catch (t: Throwable) {
+    events.add(Error(t))
   }
 
   ManyAsserter<T>(events).assertions()

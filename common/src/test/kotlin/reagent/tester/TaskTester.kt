@@ -15,7 +15,6 @@
  */
 package reagent.tester
 
-import reagent.runBlocking
 import reagent.Task
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
@@ -31,16 +30,14 @@ class TaskAsserter(private val events: MutableList<Any>) {
   }
 }
 
-fun Task.testTask(assertions: TaskAsserter.() -> Unit) {
+suspend fun Task.testTask(assertions: TaskAsserter.() -> Unit) {
   val events = mutableListOf<Any>()
 
-  runBlocking {
-    try {
-      run()
-      events.add(Complete)
-    } catch (t: Throwable) {
-      events.add(Error(t))
-    }
+  try {
+    run()
+    events.add(Complete)
+  } catch (t: Throwable) {
+    events.add(Error(t))
   }
 
   TaskAsserter(events).assertions()

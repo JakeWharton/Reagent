@@ -2,13 +2,13 @@ package reagent
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import reagent.tester.testMaybe
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
-import reagent.tester.testMaybe
 
 class MaybeKtTest {
   @Test
-  fun fromCallable() {
+  fun fromCallable() = runTest {
     val called = AtomicBoolean()
     Callable { called.getAndSet(true) }
         .asMaybe()
@@ -19,7 +19,7 @@ class MaybeKtTest {
   }
 
   @Test
-  fun fromCallableThrowing() {
+  fun fromCallableThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Callable { throw exception }
         .asMaybe()
@@ -28,7 +28,7 @@ class MaybeKtTest {
         }
   }
 
-  @Test fun fromRunnable() {
+  @Test fun fromRunnable() = runTest {
     val called = AtomicBoolean()
     Runnable { called.set(true) }
         .asMaybe<Any>()
@@ -38,7 +38,7 @@ class MaybeKtTest {
     assertTrue(called.get())
   }
 
-  @Test fun fromRunnableThrowing() {
+  @Test fun fromRunnableThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Runnable { throw exception }
         .asMaybe<Any>()

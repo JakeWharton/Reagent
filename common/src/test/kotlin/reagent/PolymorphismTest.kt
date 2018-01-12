@@ -22,7 +22,7 @@ import reagent.tester.testTask
 import kotlin.test.Test
 
 class PolymorphismTest {
-  @Test fun taskComplete() {
+  @Test fun taskComplete() = runTest {
     val task = Task.empty()
     task.testTask {
       complete()
@@ -35,7 +35,7 @@ class PolymorphismTest {
     }
   }
 
-  @Test fun taskError() {
+  @Test fun taskError() = runTest {
     val exception = RuntimeException("Oops")
     val task = Task.error(exception)
     task.testTask {
@@ -49,7 +49,7 @@ class PolymorphismTest {
     }
   }
 
-  @Test fun oneItem() {
+  @Test fun oneItem() = runTest {
     val one = One.just("Hello")
     one.testOne {
       item("Hello")
@@ -63,7 +63,7 @@ class PolymorphismTest {
     }
   }
 
-  @Test fun oneError() {
+  @Test fun oneError() = runTest {
     val exception = RuntimeException("Oops")
     val one = One.error<Any>(exception)
     one.testOne {
@@ -77,7 +77,7 @@ class PolymorphismTest {
     }
   }
 
-  @Test fun maybeItem() {
+  @Test fun maybeItem() = runTest {
     val maybe = Maybe.just("Hello")
     maybe.testMaybe {
       item("Hello")
@@ -88,7 +88,7 @@ class PolymorphismTest {
     }
   }
 
-  @Test fun maybeNothing() {
+  @Test fun maybeNothing() = runTest {
     val maybe = Maybe.empty<Any>()
     maybe.testMaybe {
       nothing()
@@ -98,7 +98,7 @@ class PolymorphismTest {
     }
   }
 
-  @Test fun maybeError() {
+  @Test fun maybeError() = runTest {
     val exception = RuntimeException("Oops")
     val maybe = Maybe.error<Any>(exception)
     maybe.testMaybe {

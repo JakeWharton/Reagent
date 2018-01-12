@@ -21,7 +21,7 @@ import kotlin.test.Ignore
 import kotlin.test.Test
 
 class MaybeMapTest {
-  @Test fun map() {
+  @Test fun map() = runTest {
     Maybe.just("Hello")
         .map(String::toUpperCase)
         .testMaybe {
@@ -29,7 +29,7 @@ class MaybeMapTest {
         }
   }
 
-  @Test fun mapEmpty() {
+  @Test fun mapEmpty() = runTest {
     Maybe.empty<Nothing>()
         .map { throw AssertionError() }
         .testMaybe {
@@ -37,7 +37,7 @@ class MaybeMapTest {
         }
   }
 
-  @Test fun mapError() {
+  @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.error<Nothing>(exception)
         .map { throw AssertionError() }
@@ -47,7 +47,7 @@ class MaybeMapTest {
   }
 
   @Ignore // Error handling not implemented yet
-  @Test fun mapThrowing() {
+  @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Maybe.just("Hello")
         .map { throw exception }

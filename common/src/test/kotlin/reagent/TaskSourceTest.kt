@@ -21,14 +21,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class TaskSourceTest {
-  @Test fun empty() {
+  @Test fun empty() = runTest {
     Task.empty()
         .testTask {
           complete()
         }
   }
 
-  @Test fun error() {
+  @Test fun error() = runTest {
     val exception = RuntimeException("Oops")
     Task.error(exception)
         .testTask {
@@ -36,7 +36,7 @@ class TaskSourceTest {
         }
   }
 
-  @Test fun running() {
+  @Test fun running() = runTest {
     var called = false
     Task.running { called = true }
         .testTask {
@@ -45,7 +45,7 @@ class TaskSourceTest {
     assertTrue(called)
   }
 
-  @Test fun runningThrowing() {
+  @Test fun runningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Task.running { throw exception }
         .testTask {
@@ -53,7 +53,7 @@ class TaskSourceTest {
         }
   }
 
-  @Test fun defer() {
+  @Test fun defer() = runTest {
     var called = 0
     val deferred = Task.defer { called++; Task.empty() }
     deferred.testTask {

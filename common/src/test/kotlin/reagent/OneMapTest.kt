@@ -21,7 +21,7 @@ import kotlin.test.Ignore
 import kotlin.test.Test
 
 class OneMapTest {
-  @Test fun map() {
+  @Test fun map() = runTest {
     One.just("Hello")
         .map(String::toUpperCase)
         .testOne {
@@ -29,7 +29,7 @@ class OneMapTest {
         }
   }
 
-  @Test fun mapError() {
+  @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
     One.error<Nothing>(exception)
         .map { throw AssertionError() }
@@ -39,7 +39,7 @@ class OneMapTest {
   }
 
   @Ignore // Error handling not implemented yet
-  @Test fun mapThrowing() {
+  @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     One.just("Hello")
         .map { throw exception }

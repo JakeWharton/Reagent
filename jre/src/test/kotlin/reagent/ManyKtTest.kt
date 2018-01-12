@@ -2,12 +2,12 @@ package reagent
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.Callable
 import reagent.tester.testMany
+import java.util.concurrent.Callable
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ManyKtTest {
-  @Test fun fromCallable() {
+  @Test fun fromCallable() = runTest {
     val called = AtomicBoolean()
     Callable { called.getAndSet(true) }
         .asMany()
@@ -18,7 +18,7 @@ class ManyKtTest {
     assertTrue(called.get())
   }
 
-  @Test fun fromCallableThrowing() {
+  @Test fun fromCallableThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Callable { throw exception }
         .asMany()
@@ -28,7 +28,7 @@ class ManyKtTest {
   }
 
   @Test
-  fun fromRunnable() {
+  fun fromRunnable() = runTest {
     val called = AtomicBoolean()
     Runnable { called.set(true) }
         .asMany<Any>()
@@ -39,7 +39,7 @@ class ManyKtTest {
   }
 
   @Test
-  fun fromRunnableThrowing() {
+  fun fromRunnableThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Runnable { throw exception }
         .asMany<Any>()

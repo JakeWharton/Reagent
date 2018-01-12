@@ -6,7 +6,7 @@ import kotlin.test.Ignore
 import kotlin.test.Test
 
 class ManyFilterTest {
-  @Test fun filter() {
+  @Test fun filter() = runTest {
     Many.fromArray("Hello", "World")
         .filter { it == "Hello" }
         .testMany {
@@ -15,7 +15,7 @@ class ManyFilterTest {
         }
   }
 
-  @Test fun filterEmpty() {
+  @Test fun filterEmpty() = runTest {
     Many.empty<Nothing>()
         .filter { throw AssertionError() }
         .testMany {
@@ -23,7 +23,7 @@ class ManyFilterTest {
         }
   }
 
-  @Test fun filterError() {
+  @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
     Many.error<Nothing>(exception)
         .filter { throw AssertionError() }
@@ -33,7 +33,7 @@ class ManyFilterTest {
   }
 
   @Ignore // Error handling not implemented yet
-  @Test fun filterThrowing() {
+  @Test fun filterThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Many.fromArray("Hello", "World")
         .filter { throw exception }

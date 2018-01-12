@@ -21,14 +21,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class OneSourceTest {
-  @Test fun just() {
+  @Test fun just() = runTest {
     One.just("Hello")
         .testOne {
           item("Hello")
         }
   }
 
-  @Test fun error() {
+  @Test fun error() = runTest {
     val exception = RuntimeException("Oops!")
     One.error<Any>(exception)
         .testOne {
@@ -36,7 +36,7 @@ class OneSourceTest {
         }
   }
 
-  @Test fun returning() {
+  @Test fun returning() = runTest {
     var called = false
     One.returning { called = true; 0 }
         .testOne {
@@ -45,7 +45,7 @@ class OneSourceTest {
     assertTrue(called)
   }
 
-  @Test fun returningThrowing() {
+  @Test fun returningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     One.returning { throw exception }
         .testOne {
@@ -53,7 +53,7 @@ class OneSourceTest {
         }
   }
 
-  @Test fun defer() {
+  @Test fun defer() = runTest {
     var called = 0
     val deferred = One.defer { called++; One.just("Hello") }
     deferred.testOne {
