@@ -1,7 +1,8 @@
-package reagent
+package reagent.source
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import reagent.runTest
 import reagent.tester.testOne
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean

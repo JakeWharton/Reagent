@@ -16,6 +16,10 @@
 package reagent
 
 import reagent.operator.flatMap
+import reagent.source.emptyMany
+import reagent.source.manyOf
+import reagent.source.taskRunning
+import reagent.source.toMany
 import reagent.tester.testTask
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -133,10 +137,10 @@ class ManyFlatMapTest {
     val flatMapItems = mutableListOf<String>()
     var taskCalled = 0
 
-    Many.fromArray("One", "Two")
+    manyOf("One", "Two")
         .flatMap {
           flatMapItems.add(it)
-          Task.running { ++taskCalled }
+          taskRunning { ++taskCalled }
         }
         .testTask {
           complete()
@@ -147,7 +151,7 @@ class ManyFlatMapTest {
   }
 
   @Test fun flatMapTaskEmpty() = runTest {
-    Many.empty<String>()
+    emptyMany<String>()
         .flatMap { throw AssertionError() }
         .testTask {
           complete()
@@ -156,7 +160,7 @@ class ManyFlatMapTest {
 
   @Test fun flatMapTaskError() = runTest {
     val exception = RuntimeException("Oops!")
-    Many.error<String>(exception)
+    exception.toMany<String>()
         .flatMap { throw AssertionError() }
         .testTask {
           complete()

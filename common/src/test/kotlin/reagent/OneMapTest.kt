@@ -16,12 +16,14 @@
 package reagent
 
 import reagent.operator.map
+import reagent.source.oneOf
+import reagent.source.toOne
 import reagent.tester.testOne
 import kotlin.test.Test
 
 class OneMapTest {
   @Test fun map() = runTest {
-    One.just("Hello")
+    oneOf("Hello")
         .map(String::toUpperCase)
         .testOne {
           item("HELLO")
@@ -30,7 +32,7 @@ class OneMapTest {
 
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
-    One.error<Nothing>(exception)
+    exception.toOne<Nothing>()
         .map { throw AssertionError() }
         .testOne {
           error(exception)
@@ -39,7 +41,7 @@ class OneMapTest {
 
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    One.just("Hello")
+    oneOf("Hello")
         .map { throw exception }
         .testOne {
           error(exception)

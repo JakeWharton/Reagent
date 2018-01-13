@@ -13,40 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.source
 
-import reagent.tester.testMaybe
+import reagent.runTest
+import reagent.tester.testOne
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class MaybeSourceTest {
+class OneSourceTest {
   @Test fun just() = runTest {
-    Maybe.just("Hello")
-        .testMaybe {
+    oneOf("Hello")
+        .testOne {
           item("Hello")
-        }
-  }
-
-  @Test fun empty() = runTest {
-    Maybe.empty<Any>()
-        .testMaybe {
-          nothing()
         }
   }
 
   @Test fun error() = runTest {
     val exception = RuntimeException("Oops!")
-    Maybe.error<Any>(exception)
-        .testMaybe {
+    exception.toOne<Any>()
+        .testOne {
           error(exception)
         }
   }
 
   @Test fun returning() = runTest {
     var called = false
-    Maybe.returning { called = true; 0 }
-        .testMaybe {
+    oneReturning { called = true; 0 }
+        .testOne {
           item(0)
         }
     assertTrue(called)
@@ -54,37 +48,20 @@ class MaybeSourceTest {
 
   @Test fun returningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    Maybe.returning { throw exception }
-        .testMaybe {
-          error(exception)
-        }
-  }
-
-  @Test fun running() = runTest {
-    var called = false
-    Maybe.running<Any> { called = true }
-        .testMaybe {
-          nothing()
-        }
-    assertTrue(called)
-  }
-
-  @Test fun runningThrowing() = runTest {
-    val exception = RuntimeException("Oops!")
-    Maybe.running<Any> { throw exception }
-        .testMaybe {
+    oneReturning { throw exception }
+        .testOne {
           error(exception)
         }
   }
 
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = Maybe.defer { called++; Maybe.just("Hello") }
-    deferred.testMaybe {
+    val deferred = deferOne { called++; oneOf("Hello") }
+    deferred.testOne {
       item("Hello")
     }
     assertEquals(1, called)
-    deferred.testMaybe {
+    deferred.testOne {
       item("Hello")
     }
     assertEquals(2, called)

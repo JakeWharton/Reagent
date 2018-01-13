@@ -1,12 +1,15 @@
 package reagent
 
 import reagent.operator.filter
+import reagent.source.emptyMaybe
+import reagent.source.maybeOf
+import reagent.source.toMaybe
 import reagent.tester.testMaybe
 import kotlin.test.Test
 
 class MaybeFilterTest {
   @Test fun filter() = runTest {
-    Maybe.just("Hello")
+    maybeOf("Hello")
         .filter { it == "Hello" }
         .testMaybe {
           item("Hello")
@@ -14,7 +17,7 @@ class MaybeFilterTest {
   }
 
   @Test fun filterOut() = runTest {
-    Maybe.just("Hello")
+    maybeOf("Hello")
         .filter { it != "Hello" }
         .testMaybe {
           nothing()
@@ -23,7 +26,7 @@ class MaybeFilterTest {
 
   @Test
   fun filterEmpty() = runTest {
-    Maybe.empty<Nothing>()
+    emptyMaybe<Nothing>()
         .filter { throw AssertionError() }
         .testMaybe {
           nothing()
@@ -33,7 +36,7 @@ class MaybeFilterTest {
   @Test
   fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
-    Maybe.error<Nothing>(exception)
+    exception.toMaybe<Nothing>()
         .filter { throw AssertionError() }
         .testMaybe {
           error(exception)
@@ -42,7 +45,7 @@ class MaybeFilterTest {
 
   @Test fun filterThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    Maybe.just("Hello")
+    maybeOf("Hello")
         .filter { throw exception }
         .testMaybe {
           error(exception)

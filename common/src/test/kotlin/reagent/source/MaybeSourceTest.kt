@@ -13,55 +13,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.source
 
-import reagent.tester.testTask
+import reagent.runTest
+import reagent.tester.testMaybe
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class TaskSourceTest {
+class MaybeSourceTest {
+  @Test fun just() = runTest {
+    maybeOf("Hello")
+        .testMaybe {
+          item("Hello")
+        }
+  }
+
   @Test fun empty() = runTest {
-    Task.empty()
-        .testTask {
-          complete()
+    emptyMaybe<Any>()
+        .testMaybe {
+          nothing()
         }
   }
 
   @Test fun error() = runTest {
-    val exception = RuntimeException("Oops")
-    Task.error(exception)
-        .testTask {
+    val exception = RuntimeException("Oops!")
+    exception.toMaybe<Any>()
+        .testMaybe {
+          error(exception)
+        }
+  }
+
+  @Test fun returning() = runTest {
+    var called = false
+    maybeReturning { called = true; 0 }
+        .testMaybe {
+          item(0)
+        }
+    assertTrue(called)
+  }
+
+  @Test fun returningThrowing() = runTest {
+    val exception = RuntimeException("Oops!")
+    maybeReturning { throw exception }
+        .testMaybe {
           error(exception)
         }
   }
 
   @Test fun running() = runTest {
     var called = false
-    Task.running { called = true }
-        .testTask {
-          complete()
+    maybeRunning<Any> { called = true }
+        .testMaybe {
+          nothing()
         }
     assertTrue(called)
   }
 
   @Test fun runningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    Task.running { throw exception }
-        .testTask {
+    maybeRunning<Any> { throw exception }
+        .testMaybe {
           error(exception)
         }
   }
 
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = Task.defer { called++; Task.empty() }
-    deferred.testTask {
-      complete()
+    val deferred = deferMaybe { called++; maybeOf("Hello") }
+    deferred.testMaybe {
+      item("Hello")
     }
     assertEquals(1, called)
-    deferred.testTask {
-      complete()
+    deferred.testMaybe {
+      item("Hello")
     }
     assertEquals(2, called)
   }

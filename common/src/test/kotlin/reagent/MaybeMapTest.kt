@@ -16,12 +16,15 @@
 package reagent
 
 import reagent.operator.map
+import reagent.source.emptyMaybe
+import reagent.source.maybeOf
+import reagent.source.toMaybe
 import reagent.tester.testMaybe
 import kotlin.test.Test
 
 class MaybeMapTest {
   @Test fun map() = runTest {
-    Maybe.just("Hello")
+    maybeOf("Hello")
         .map(String::toUpperCase)
         .testMaybe {
           item("HELLO")
@@ -29,7 +32,7 @@ class MaybeMapTest {
   }
 
   @Test fun mapEmpty() = runTest {
-    Maybe.empty<Nothing>()
+    emptyMaybe<Nothing>()
         .map { throw AssertionError() }
         .testMaybe {
           nothing()
@@ -38,7 +41,7 @@ class MaybeMapTest {
 
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
-    Maybe.error<Nothing>(exception)
+    exception.toMaybe<Nothing>()
         .map { throw AssertionError() }
         .testMaybe {
           error(exception)
@@ -47,7 +50,7 @@ class MaybeMapTest {
 
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    Maybe.just("Hello")
+    maybeOf("Hello")
         .map { throw exception }
         .testMaybe {
           error(exception)

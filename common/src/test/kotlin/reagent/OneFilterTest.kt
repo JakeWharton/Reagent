@@ -1,19 +1,21 @@
 package reagent
 
 import reagent.operator.filter
+import reagent.source.oneOf
+import reagent.source.toOne
 import reagent.tester.testMaybe
 import kotlin.test.Test
 
 class OneFilterTest {
   @Test fun filter() = runTest {
-    One.just("Hello")
+    oneOf("Hello")
         .filter { it == "Hello" }
         .testMaybe {
           item("Hello")
         }
   }
   @Test fun filterOut() = runTest {
-    One.just("Hello")
+    oneOf("Hello")
         .filter { it != "Hello" }
         .testMaybe {
           nothing()
@@ -22,7 +24,7 @@ class OneFilterTest {
 
   @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
-    One.error<Nothing>(exception)
+    exception.toOne<Nothing>()
         .filter { throw AssertionError() }
         .testMaybe {
           error(exception)
@@ -31,7 +33,7 @@ class OneFilterTest {
 
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    One.just("Hello")
+    oneOf("Hello")
         .filter { throw exception }
         .testMaybe {
           error(exception)

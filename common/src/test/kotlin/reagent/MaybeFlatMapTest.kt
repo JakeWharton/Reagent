@@ -16,6 +16,10 @@
 package reagent
 
 import reagent.operator.flatMap
+import reagent.source.emptyMaybe
+import reagent.source.emptyTask
+import reagent.source.maybeOf
+import reagent.source.toMaybe
 import reagent.tester.testTask
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -101,16 +105,16 @@ class MaybeFlatMapTest {
 //  }
 
   @Test fun flatMapTask() = runTest {
-    Maybe.just("Item")
-        .flatMap { Task.empty() }
+    maybeOf("Item")
+        .flatMap { emptyTask() }
         .testTask {
           complete()
         }
   }
 
   @Test fun flatMapTaskComplete() = runTest {
-    Maybe.empty<String>()
-        .flatMap { Task.empty() }
+    emptyMaybe<String>()
+        .flatMap { emptyTask() }
         .testTask {
           complete()
         }
@@ -118,8 +122,8 @@ class MaybeFlatMapTest {
 
   @Test fun flatMapTaskError() = runTest {
     val exception = RuntimeException("Oops!")
-    Maybe.error<String>(exception)
-        .flatMap { Task.empty() }
+    exception.toMaybe<String>()
+        .flatMap { emptyTask() }
         .testTask {
           error(exception)
         }

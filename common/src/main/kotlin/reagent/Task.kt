@@ -25,31 +25,4 @@ abstract class Task : Maybe<Nothing>() {
   }
 
   override suspend fun subscribe(emitter: Emitter<Nothing>) = run()
-
-  companion object Factory {
-    //@JvmStatic
-    fun empty(): Task = Complete
-    //@JvmStatic
-    fun error(t: Throwable): Task = Error(t)
-    //@JvmStatic
-    fun running(func: () -> Unit): Task = FromLambda(func)
-    //@JvmStatic
-    fun defer(func: () -> Task): Task = Deferred(func)
-  }
-
-  internal object Complete : Task() {
-    override suspend fun run() = Unit
-  }
-
-  internal class Error(private val t: Throwable) : Task() {
-    override suspend fun run() = throw t
-  }
-
-  internal class FromLambda(private val func: () -> Unit) : Task() {
-    override suspend fun run() = func()
-  }
-
-  internal class Deferred(private val func: () -> Task): Task() {
-    override suspend fun run() = func().run()
-  }
 }

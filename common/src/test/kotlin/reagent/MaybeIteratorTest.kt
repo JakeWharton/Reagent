@@ -1,5 +1,8 @@
 package reagent
 
+import reagent.source.emptyMaybe
+import reagent.source.maybeOf
+import reagent.source.toMaybe
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -10,14 +13,14 @@ import kotlin.test.fail
 class MaybeIteratorTest {
   @Test fun item() = runTest {
     val items = mutableListOf<String>()
-    for (item in Maybe.just("Hello")) {
+    for (item in maybeOf("Hello")) {
       items.add(item)
     }
     assertEquals(listOf("Hello"), items)
   }
 
   @Test fun nothing() = runTest {
-    for (item in Maybe.empty<String>()) {
+    for (item in emptyMaybe<String>()) {
       fail()
     }
   }
@@ -25,7 +28,7 @@ class MaybeIteratorTest {
   @Test fun error() = runTest {
     val exception = RuntimeException()
     try {
-      for (item in Maybe.error<String>(exception)) {
+      for (item in exception.toMaybe<String>()) {
         fail()
       }
       fail()

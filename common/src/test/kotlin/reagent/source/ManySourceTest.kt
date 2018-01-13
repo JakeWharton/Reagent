@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.source
 
+import reagent.runTest
 import reagent.tester.testMany
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -22,7 +23,7 @@ import kotlin.test.assertTrue
 
 class ManySourceTest {
   @Test fun just() = runTest {
-    Many.just("Hello")
+    manyOf("Hello")
         .testMany {
           item("Hello")
           complete()
@@ -30,7 +31,7 @@ class ManySourceTest {
   }
 
   @Test fun fromArray() = runTest {
-    Many.fromArray("Hello", "World")
+    manyOf("Hello", "World")
         .testMany {
           item("Hello")
           item("World")
@@ -49,7 +50,7 @@ class ManySourceTest {
   }
 
   @Test fun fromIterable() = runTest {
-    Many.fromIterable(listOf("Hello", "World"))
+    listOf("Hello", "World").toMany()
         .testMany {
           item("Hello")
           item("World")
@@ -68,7 +69,7 @@ class ManySourceTest {
   }
 
   @Test fun empty() = runTest {
-    Many.empty<Any>()
+    emptyMany<Any>()
         .testMany {
           complete()
         }
@@ -76,7 +77,7 @@ class ManySourceTest {
 
   @Test fun error() = runTest {
     val exception = RuntimeException("Oops!")
-    Many.error<Any>(exception)
+    exception.toMany<Any>()
         .testMany {
           error(exception)
         }
@@ -84,7 +85,7 @@ class ManySourceTest {
 
   @Test fun returning() = runTest {
     var called = false
-    Many.returning { called = true; 0 }
+    manyReturning { called = true; 0 }
         .testMany {
           item(0)
           complete()
@@ -94,7 +95,7 @@ class ManySourceTest {
 
   @Test fun returningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    Many.returning { throw exception }
+    manyReturning { throw exception }
         .testMany {
           error(exception)
         }
@@ -102,7 +103,7 @@ class ManySourceTest {
 
   @Test fun running() = runTest {
     var called = false
-    Many.running<Any> { called = true }
+    manyRunning<Any> { called = true }
         .testMany {
           complete()
         }
@@ -111,7 +112,7 @@ class ManySourceTest {
 
   @Test fun runningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    Many.running<Any> { throw exception }
+    manyRunning<Any> { throw exception }
         .testMany {
           error(exception)
         }
@@ -119,7 +120,7 @@ class ManySourceTest {
 
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = Many.defer { called++; Many.just("Hello") }
+    val deferred = deferMany { called++; manyOf("Hello") }
     deferred.testMany {
       item("Hello")
       complete()

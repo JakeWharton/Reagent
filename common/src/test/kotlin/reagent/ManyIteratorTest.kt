@@ -1,5 +1,8 @@
 package reagent
 
+import reagent.source.emptyMany
+import reagent.source.manyOf
+import reagent.source.toMany
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,7 +15,7 @@ import kotlin.test.fail
 class ManyIteratorTest {
   @Test fun single() = runTest {
     val items = mutableListOf<String>()
-    for (item in Many.just("Hello")) {
+    for (item in manyOf("Hello")) {
       items.add(item)
     }
     assertEquals(listOf("Hello"), items)
@@ -20,14 +23,14 @@ class ManyIteratorTest {
 
   @Test fun multiple() = runTest {
     val items = mutableListOf<String>()
-    for (item in Many.fromArray("Hello", "World")) {
+    for (item in manyOf("Hello", "World")) {
       items.add(item)
     }
     assertEquals(listOf("Hello", "World"), items)
   }
 
   @Test fun empty() = runTest {
-    for (item in Many.empty<String>()) {
+    for (item in emptyMany<String>()) {
       fail()
     }
   }
@@ -35,7 +38,7 @@ class ManyIteratorTest {
   @Test fun error() = runTest {
     val exception = RuntimeException()
     try {
-      for (item in Many.error<String>(exception)) {
+      for (item in exception.toMany<String>()) {
         fail()
       }
       fail()

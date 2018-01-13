@@ -13,55 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.source
 
-import reagent.tester.testOne
+import reagent.runTest
+import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class OneSourceTest {
-  @Test fun just() = runTest {
-    One.just("Hello")
-        .testOne {
-          item("Hello")
+class TaskSourceTest {
+  @Test fun empty() = runTest {
+    emptyTask()
+        .testTask {
+          complete()
         }
   }
 
   @Test fun error() = runTest {
-    val exception = RuntimeException("Oops!")
-    One.error<Any>(exception)
-        .testOne {
+    val exception = RuntimeException("Oops")
+    exception.toTask()
+        .testTask {
           error(exception)
         }
   }
 
-  @Test fun returning() = runTest {
+  @Test fun running() = runTest {
     var called = false
-    One.returning { called = true; 0 }
-        .testOne {
-          item(0)
+    taskRunning { called = true }
+        .testTask {
+          complete()
         }
     assertTrue(called)
   }
 
-  @Test fun returningThrowing() = runTest {
+  @Test fun runningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    One.returning { throw exception }
-        .testOne {
+    taskRunning { throw exception }
+        .testTask {
           error(exception)
         }
   }
 
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = One.defer { called++; One.just("Hello") }
-    deferred.testOne {
-      item("Hello")
+    val deferred = deferTask { called++; emptyTask() }
+    deferred.testTask {
+      complete()
     }
     assertEquals(1, called)
-    deferred.testOne {
-      item("Hello")
+    deferred.testTask {
+      complete()
     }
     assertEquals(2, called)
   }

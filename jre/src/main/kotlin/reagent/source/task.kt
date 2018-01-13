@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JvmName("Ones")
-package reagent
+@file:JvmName("Tasks")
+package reagent.source
 
+import reagent.Task
 import java.util.concurrent.Callable
 
-@JvmName("fromCallable")
-fun <I> Callable<I>.asOne(): One<I> = OneFromCallable(this)
+@JvmName("fromRunnable")
+fun Runnable.asTask(): Task = TaskFromRunnable(this)
 
-internal class OneFromCallable<out I>(private val func: Callable<I>) : One<I>() {
-  override suspend fun produce() = func.call()
+internal class TaskFromRunnable(private val func: Runnable) : Task() {
+  override suspend fun run() = func.run()
+}
+
+@JvmName("fromCallable")
+fun Callable<*>.asTask(): Task = TaskFromCallable(this)
+
+internal class TaskFromCallable(private val func: Callable<*>) : Task() {
+  override suspend fun run() {
+    func.call()
+  }
 }

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.source
 
 import kotlinx.coroutines.experimental.await
+import reagent.runTest
 import reagent.tester.testOne
 import kotlin.js.Promise
 import kotlin.test.Test
@@ -42,7 +43,7 @@ class OneKtTest {
   }
 
   @Test fun itemToPromise() = runTest {
-    val value = One.just("Hello")
+    val value = oneOf("Hello")
         .toPromise()
         .await()
     assertEquals("Hello", value)
@@ -50,7 +51,7 @@ class OneKtTest {
 
   @Test fun errorToPromise() = runTest {
     val exception = RuntimeException("Hello")
-    val promise = One.error<String>(exception)
+    val promise = exception.toOne<String>()
         .toPromise()
     try {
       promise.await()

@@ -16,12 +16,15 @@
 package reagent
 
 import reagent.operator.map
+import reagent.source.emptyMany
+import reagent.source.manyOf
+import reagent.source.toMany
 import reagent.tester.testMany
 import kotlin.test.Test
 
 class ManyMapTest {
   @Test fun map() = runTest {
-    Many.fromArray("Hello", "World")
+    manyOf("Hello", "World")
         .map(String::toUpperCase)
         .testMany {
           item("HELLO")
@@ -31,7 +34,7 @@ class ManyMapTest {
   }
 
   @Test fun mapEmpty() = runTest {
-    Many.empty<Nothing>()
+    emptyMany<Nothing>()
         .map { throw AssertionError() }
         .testMany {
           complete()
@@ -40,7 +43,7 @@ class ManyMapTest {
 
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
-    Many.error<Nothing>(exception)
+    exception.toMany<Nothing>()
         .map { throw AssertionError() }
         .testMany {
           error(exception)
@@ -49,7 +52,7 @@ class ManyMapTest {
 
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    Many.fromArray("Hello", "World")
+    manyOf("Hello", "World")
         .map { throw exception }
         .testMany {
           error(exception)

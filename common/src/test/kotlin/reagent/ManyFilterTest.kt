@@ -1,12 +1,15 @@
 package reagent
 
 import reagent.operator.filter
+import reagent.source.emptyMany
+import reagent.source.manyOf
+import reagent.source.toMany
 import reagent.tester.testMany
 import kotlin.test.Test
 
 class ManyFilterTest {
   @Test fun filter() = runTest {
-    Many.fromArray("Hello", "World")
+    manyOf("Hello", "World")
         .filter { it == "Hello" }
         .testMany {
           item("Hello")
@@ -15,7 +18,7 @@ class ManyFilterTest {
   }
 
   @Test fun filterEmpty() = runTest {
-    Many.empty<Nothing>()
+    emptyMany<Nothing>()
         .filter { throw AssertionError() }
         .testMany {
           complete()
@@ -24,7 +27,7 @@ class ManyFilterTest {
 
   @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
-    Many.error<Nothing>(exception)
+    exception.toMany<Nothing>()
         .filter { throw AssertionError() }
         .testMany {
           error(exception)
@@ -33,7 +36,7 @@ class ManyFilterTest {
 
   @Test fun filterThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    Many.fromArray("Hello", "World")
+    manyOf("Hello", "World")
         .filter { throw exception }
         .testMany {
           error(exception)

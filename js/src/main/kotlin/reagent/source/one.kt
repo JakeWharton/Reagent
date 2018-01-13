@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.source
 
 import kotlin.js.Promise
 import kotlinx.coroutines.experimental.launch
+import reagent.One
 import kotlin.coroutines.experimental.suspendCoroutine
 
 @JsName("fromPromise")

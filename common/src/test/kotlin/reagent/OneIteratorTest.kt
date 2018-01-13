@@ -1,5 +1,7 @@
 package reagent
 
+import reagent.source.oneOf
+import reagent.source.toOne
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -10,7 +12,7 @@ import kotlin.test.fail
 class OneIteratorTest {
   @Test fun item() = runTest {
     val items = mutableListOf<String>()
-    for (item in One.just("Hello")) {
+    for (item in oneOf("Hello")) {
       items.add(item)
     }
     assertEquals(listOf("Hello"), items)
@@ -19,7 +21,7 @@ class OneIteratorTest {
   @Test fun error() = runTest {
     val exception = RuntimeException()
     try {
-      for (item in One.error<String>(exception)) {
+      for (item in exception.toOne<String>()) {
         fail()
       }
       fail()

@@ -1,5 +1,7 @@
 package reagent
 
+import reagent.source.emptyTask
+import reagent.source.toTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -8,7 +10,7 @@ import kotlin.test.fail
 
 class TaskIteratorTest {
   @Test fun complete() = runTest {
-    for (item in Task.empty()) {
+    for (item in emptyTask()) {
       fail()
     }
   }
@@ -16,7 +18,7 @@ class TaskIteratorTest {
   @Test fun error() = runTest {
     val exception = RuntimeException()
     try {
-      for (item in Task.error(exception)) {
+      for (item in exception.toTask()) {
         fail()
       }
       fail()

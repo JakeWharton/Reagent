@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JvmName("Maybes")
-package reagent
+@file:JvmName("Manys")
+package reagent.source
 
+import reagent.Many
 import java.util.concurrent.Callable
 
 @JvmName("fromCallable")
-fun <I> Callable<I>.asMaybe(): Maybe<I> = OneFromCallable(this)
+fun <I> Callable<I>.asMany(): Many<I> = OneFromCallable(this)
 
 @JvmName("fromRunnable")
 @Suppress("UNCHECKED_CAST") // Never emits.
-fun <I> Runnable.asMaybe(): Maybe<I> = TaskFromRunnable(this)
+fun <I> Runnable.asMany(): Many<I> = TaskFromRunnable(this)
