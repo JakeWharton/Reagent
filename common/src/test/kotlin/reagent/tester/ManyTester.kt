@@ -16,7 +16,7 @@
 package reagent.tester
 
 import reagent.Many
-import reagent.Many.Emitter
+import reagent.Emitter
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.assertTrue

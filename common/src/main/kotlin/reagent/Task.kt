@@ -16,13 +16,8 @@
 package reagent
 
 /** Signals complete or error. Has no items. */
-abstract class Task : Maybe<Nothing>() {
+expect abstract class Task() : Maybe<Nothing> {
   abstract suspend fun run()
-
-  override suspend fun produce(): Nothing? {
-    run()
-    return null
-  }
-
-  override suspend fun subscribe(emitter: Emitter<Nothing>) = run()
+  override suspend fun produce(): Nothing?
+  override suspend fun subscribe(emitter: Emitter<Nothing>)
 }

@@ -1,5 +1,6 @@
 package reagent.source
 
+import reagent.Emitter
 import reagent.Many
 
 fun <I> emptyMany(): Many<I> = TaskComplete

@@ -15,6 +15,7 @@
  */
 package reagent.operator
 
+import reagent.Emitter
 import reagent.Many
 import reagent.Maybe
 import reagent.One

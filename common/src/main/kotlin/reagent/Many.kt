@@ -16,10 +16,6 @@
 package reagent
 
 /** Emits 0 to infinite items and then signals complete or error. */
-abstract class Many<out I> {
-  interface Emitter<in I> {
-    suspend fun send(item: I)
-  }
-
+expect abstract class Many<out I>() {
   abstract suspend fun subscribe(emitter: Emitter<I>)
 }

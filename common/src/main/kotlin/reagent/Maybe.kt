@@ -16,10 +16,7 @@
 package reagent
 
 /** Emits an item, signals nothing (no item), or signals error. */
-abstract class Maybe<out I> : Many<I>() {
+expect abstract class Maybe<out I>() : Many<I> {
   abstract suspend fun produce(): I?
-
-  override suspend fun subscribe(emitter: Emitter<I>) {
-    produce()?.let { emitter.send(it) }
-  }
+  override suspend fun subscribe(emitter: Emitter<I>)
 }
