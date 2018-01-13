@@ -1,5 +1,6 @@
 package reagent.source
 
+import kotlinx.coroutines.experimental.channels.Channel
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import reagent.runTest
@@ -46,6 +47,20 @@ class ManyKtTest {
         .asMany<Any>()
         .testMany {
           error(exception)
+        }
+  }
+
+  @Test fun channel() = runTest {
+    val channel = Channel<String>(2)
+    channel.send("Hello")
+    channel.send("World")
+    channel.close()
+
+    channel.toMany()
+        .testMany {
+          item("Hello")
+          item("World")
+          complete()
         }
   }
 }

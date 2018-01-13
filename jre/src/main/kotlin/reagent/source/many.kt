@@ -16,6 +16,8 @@
 @file:JvmName("Manys")
 package reagent.source
 
+import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.channels.consumeEach
 import reagent.Emitter
 import reagent.Many
 import java.util.concurrent.Callable
@@ -27,6 +29,16 @@ fun <I> Callable<I>.asMany(): Many<I> = OneFromCallable(this)
 @Suppress("UNCHECKED_CAST") // Never emits.
 fun <I> Runnable.asMany(): Many<I> = TaskFromRunnable(this)
 
+fun <I> ReceiveChannel<I>.toMany(): Many<I> = ManyFromChannel(this)
+
 internal class ManyDeferredCallable<out I>(private val func: Callable<Many<I>>): Many<I>() {
   override suspend fun subscribe(emitter: Emitter<I>) = func.call().subscribe(emitter)
+}
+
+internal class ManyFromChannel<out I>(private val channel: ReceiveChannel<I>) : Many<I>() {
+  override suspend fun subscribe(emitter: Emitter<I>) {
+    channel.consumeEach {
+      emitter.send(it)
+    }
+  }
 }
