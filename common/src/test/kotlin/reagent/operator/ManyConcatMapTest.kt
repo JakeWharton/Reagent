@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.operator
 
-import reagent.operator.flatMap
+import reagent.runTest
 import reagent.source.emptyMany
 import reagent.source.failTask
 import reagent.source.manyOf
@@ -25,15 +25,15 @@ import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ManyFlatMapTest {
+class ManyConcatMapTest {
 // TODO overload resolution doesn't work here
-//  @Test fun flatMapMany() = runTest {
-//    val flatMapItems = mutableListOf<String>()
+//  @Test fun concatMapMany() = runTest {
+//    val concatMapItems = mutableListOf<String>()
 //    var manyCalled = 0
 //
 //    manyOf("One", "Two")
-//        .flatMap {
-//          flatMapItems.add(it)
+//        .concatMap {
+//          concatMapItems.add(it)
 //          manyReturning { ++manyCalled }
 //        }
 //        .testMany {
@@ -43,30 +43,30 @@ class ManyFlatMapTest {
 //        }
 //  }
 //
-//  @Test fun flatMapManyEmpty() = runTest {
+//  @Test fun concatMapManyEmpty() = runTest {
 //    emptyMany<String>()
-//        .flatMap { failMany<String>() }
+//        .concatMap { failMany<String>() }
 //        .testMany {
 //          complete()
 //        }
 //  }
 //
-//  @Test fun flatMapManyError() = runTest {
+//  @Test fun concatMapManyError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMany<String>()
-//        .flatMap { failMany<String>() }
+//        .concatMap { failMany<String>() }
 //        .testMany {
 //          error(exception)
 //        }
 //  }
 //
-//  @Test fun flatMapMaybe() = runTest {
-//    val flatMapItems = mutableListOf<String>()
+//  @Test fun concatMapMaybe() = runTest {
+//    val concatMapItems = mutableListOf<String>()
 //    var maybeCalled = 0
 //
 //    manyOf("One", "Two")
-//        .flatMap {
-//          flatMapItems.add(it)
+//        .concatMap {
+//          concatMapItems.add(it)
 //          maybeReturning { ++maybeCalled }
 //        }
 //        .testMany {
@@ -75,34 +75,34 @@ class ManyFlatMapTest {
 //          complete()
 //        }
 //
-//    assertEquals(listOf("One", "Two"), flatMapItems)
+//    assertEquals(listOf("One", "Two"), concatMapItems)
 //    assertEquals(2, maybeCalled)
 //  }
 //
-//  @Test fun flatMapMaybeEmpty() = runTest {
+//  @Test fun concatMapMaybeEmpty() = runTest {
 //    emptyMany<String>()
-//        .flatMap { failMaybe<String>() }
+//        .concatMap { failMaybe<String>() }
 //        .testMany {
 //          complete()
 //        }
 //  }
 //
-//  @Test fun flatMapMaybeError() = runTest {
+//  @Test fun concatMapMaybeError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMany<String>()
-//        .flatMap { failMaybe<String>() }
+//        .concatMap { failMaybe<String>() }
 //        .testMany {
 //          error(exception)
 //        }
 //  }
 //
-//  @Test fun flatMapOne() = runTest {
-//    val flatMapItems = mutableListOf<String>()
+//  @Test fun concatMapOne() = runTest {
+//    val concatMapItems = mutableListOf<String>()
 //    var oneCalled = 0
 //
 //    manyOf("One", "Two")
-//        .flatMap {
-//          flatMapItems.add(it)
+//        .concatMap {
+//          concatMapItems.add(it)
 //          oneReturning { ++oneCalled }
 //        }
 //        .testMany {
@@ -111,56 +111,56 @@ class ManyFlatMapTest {
 //          complete()
 //        }
 //
-//    assertEquals(listOf("One", "Two"), flatMapItems)
+//    assertEquals(listOf("One", "Two"), concatMapItems)
 //    assertEquals(2, oneCalled)
 //  }
 //
-//  @Test fun flatMapOneEmpty() = runTest {
+//  @Test fun concatMapOneEmpty() = runTest {
 //    emptyMany<String>()
-//        .flatMap { failOne<String>() }
+//        .concatMap { failOne<String>() }
 //        .testMany {
 //          complete()
 //        }
 //  }
 //
-//  @Test fun flatMapOneError() = runTest {
+//  @Test fun concatMapOneError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMany<String>()
-//        .flatMap { failOne<String>() }
+//        .concatMap { failOne<String>() }
 //        .testMany {
 //          error(exception)
 //        }
 //  }
 
-  @Test fun flatMapTask() = runTest {
-    val flatMapItems = mutableListOf<String>()
+  @Test fun concatMapTask() = runTest {
+    val concatMapItems = mutableListOf<String>()
     var taskCalled = 0
 
     manyOf("One", "Two")
-        .flatMap {
-          flatMapItems.add(it)
+        .concatMap {
+          concatMapItems.add(it)
           taskRunning { ++taskCalled }
         }
         .testTask {
           complete()
         }
 
-    assertEquals(listOf("One", "Two"), flatMapItems)
+    assertEquals(listOf("One", "Two"), concatMapItems)
     assertEquals(2, taskCalled)
   }
 
-  @Test fun flatMapTaskEmpty() = runTest {
+  @Test fun concatMapTaskEmpty() = runTest {
     emptyMany<String>()
-        .flatMap { failTask() }
+        .concatMap { failTask() }
         .testTask {
           complete()
         }
   }
 
-  @Test fun flatMapTaskError() = runTest {
+  @Test fun concatMapTaskError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMany<String>()
-        .flatMap { failTask() }
+        .concatMap { failTask() }
         .testTask {
           error(exception)
         }

@@ -1,6 +1,6 @@
-package reagent
+package reagent.operator
 
-import reagent.operator.filter
+import reagent.runTest
 import reagent.source.emptyMany
 import reagent.source.manyOf
 import reagent.source.toMany

@@ -1,52 +1,40 @@
-package reagent
+package reagent.operator
 
-import reagent.operator.filter
-import reagent.source.emptyMaybe
-import reagent.source.maybeOf
-import reagent.source.toMaybe
+import reagent.runTest
+import reagent.source.oneOf
+import reagent.source.toOne
 import reagent.tester.testMaybe
 import kotlin.test.Test
 import kotlin.test.fail
 
-class MaybeFilterTest {
+class OneFilterTest {
   @Test fun filter() = runTest {
-    maybeOf("Hello")
+    oneOf("Hello")
         .filter { it == "Hello" }
         .testMaybe {
           item("Hello")
         }
   }
-
   @Test fun filterOut() = runTest {
-    maybeOf("Hello")
+    oneOf("Hello")
         .filter { it != "Hello" }
         .testMaybe {
           nothing()
         }
   }
 
-  @Test
-  fun filterEmpty() = runTest {
-    emptyMaybe<Nothing>()
-        .filter { fail() }
-        .testMaybe {
-          nothing()
-        }
-  }
-
-  @Test
-  fun filterError() = runTest {
+  @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toMaybe<Nothing>()
+    exception.toOne<Nothing>()
         .filter { fail() }
         .testMaybe {
           error(exception)
         }
   }
 
-  @Test fun filterThrowing() = runTest {
+  @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    maybeOf("Hello")
+    oneOf("Hello")
         .filter { throw exception }
         .testMaybe {
           error(exception)

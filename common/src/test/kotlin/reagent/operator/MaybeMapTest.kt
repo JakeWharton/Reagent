@@ -13,38 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.operator
 
-import reagent.operator.map
-import reagent.source.oneOf
-import reagent.source.toOne
-import reagent.tester.testOne
+import reagent.runTest
+import reagent.source.emptyMaybe
+import reagent.source.maybeOf
+import reagent.source.toMaybe
+import reagent.tester.testMaybe
 import kotlin.test.Test
 import kotlin.test.fail
 
-class OneMapTest {
+class MaybeMapTest {
   @Test fun map() = runTest {
-    oneOf("Hello")
+    maybeOf("Hello")
         .map(String::toUpperCase)
-        .testOne {
+        .testMaybe {
           item("HELLO")
+        }
+  }
+
+  @Test fun mapEmpty() = runTest {
+    emptyMaybe<Nothing>()
+        .map { fail() }
+        .testMaybe {
+          nothing()
         }
   }
 
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toOne<Nothing>()
+    exception.toMaybe<Nothing>()
         .map { fail() }
-        .testOne {
+        .testMaybe {
           error(exception)
         }
   }
 
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    oneOf("Hello")
+    maybeOf("Hello")
         .map { throw exception }
-        .testOne {
+        .testMaybe {
           error(exception)
         }
   }

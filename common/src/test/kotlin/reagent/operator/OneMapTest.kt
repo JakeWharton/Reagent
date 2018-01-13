@@ -13,49 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.operator
 
-import reagent.operator.map
-import reagent.source.emptyMany
-import reagent.source.manyOf
-import reagent.source.toMany
-import reagent.tester.testMany
+import reagent.runTest
+import reagent.source.oneOf
+import reagent.source.toOne
+import reagent.tester.testOne
 import kotlin.test.Test
 import kotlin.test.fail
 
-class ManyMapTest {
+class OneMapTest {
   @Test fun map() = runTest {
-    manyOf("Hello", "World")
+    oneOf("Hello")
         .map(String::toUpperCase)
-        .testMany {
+        .testOne {
           item("HELLO")
-          item("WORLD")
-          complete()
-        }
-  }
-
-  @Test fun mapEmpty() = runTest {
-    emptyMany<Nothing>()
-        .map { fail() }
-        .testMany {
-          complete()
         }
   }
 
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toMany<Nothing>()
+    exception.toOne<Nothing>()
         .map { fail() }
-        .testMany {
+        .testOne {
           error(exception)
         }
   }
 
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    manyOf("Hello", "World")
+    oneOf("Hello")
         .map { throw exception }
-        .testMany {
+        .testOne {
           error(exception)
         }
   }

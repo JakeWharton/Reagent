@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package reagent
+package reagent.operator
 
-import reagent.operator.flatMap
+import reagent.runTest
 import reagent.source.emptyMaybe
 import reagent.source.failTask
 import reagent.source.maybeOf
