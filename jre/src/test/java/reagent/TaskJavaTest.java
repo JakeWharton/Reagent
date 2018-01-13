@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Rule;
 import org.junit.Test;
+import reagent.source.TaskCreator;
 import reagent.tester.RecordingRule;
 import reagent.tester.TaskRecorder;
 
@@ -11,6 +12,21 @@ import static org.junit.Assert.assertTrue;
 
 public final class TaskJavaTest {
   @Rule public final RecordingRule rule = new RecordingRule();
+
+  @Test public void create() {
+    TaskRecorder recorder = rule.task();
+    Task.<String>createTask(TaskCreator.Downstream::onComplete).subscribe(recorder);
+
+    recorder.assertComplete();
+  }
+
+  @Test public void createError() {
+    RuntimeException exception = new RuntimeException("Oops!");
+    TaskRecorder recorder = rule.task();
+    Task.<String>createTask(downstream -> downstream.onError(exception)).subscribe(recorder);
+
+    recorder.assertError().isSameAs(exception);
+  }
 
   @Test public void empty() {
     TaskRecorder recorder = rule.task();

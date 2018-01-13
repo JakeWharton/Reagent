@@ -3,7 +3,9 @@ package reagent
 import kotlinx.coroutines.experimental.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
+import reagent.source.MaybeCreator
 import reagent.source.MaybeDeferredCallable
+import reagent.source.MaybeFromCreator
 import reagent.source.OneError
 import reagent.source.OneFromCallable
 import reagent.source.OneJust
@@ -43,6 +45,7 @@ actual abstract class Maybe<out I> : Many<I>() {
   }
 
   companion object {
+    @JvmStatic fun <I> createMaybe(body: MaybeCreator<I>): Maybe<I> = MaybeFromCreator(body)
     @JvmStatic fun <I> empty(): Maybe<I> = TaskComplete
     @JvmStatic fun <I> just(item: I): Maybe<I> = OneJust(item)
     @JvmStatic fun <I> error(t: Throwable): Maybe<I> = OneError(t)

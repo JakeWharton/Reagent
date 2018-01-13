@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Rule;
 import org.junit.Test;
+import reagent.source.MaybeCreator;
 import reagent.tester.MaybeRecorder;
 import reagent.tester.RecordingRule;
 
@@ -15,6 +16,28 @@ import static org.junit.Assert.assertTrue;
 
 public final class MaybeJavaTest {
   @Rule public final RecordingRule rule = new RecordingRule();
+
+  @Test public void create() {
+    MaybeRecorder<String, StringSubject> recorder = rule.maybe(Truth::assertThat);
+    Maybe.<String>createMaybe(downstream -> downstream.onItem("Hello")).subscribe(recorder);
+
+    recorder.assertItem().isEqualTo("Hello");
+  }
+
+  @Test public void createNothing() {
+    MaybeRecorder<String, StringSubject> recorder = rule.maybe(Truth::assertThat);
+    Maybe.<String>createMaybe(MaybeCreator.Downstream::onNothing).subscribe(recorder);
+
+    recorder.assertComplete();
+  }
+
+  @Test public void createError() {
+    RuntimeException exception = new RuntimeException("Oops!");
+    MaybeRecorder<String, StringSubject> recorder = rule.maybe(Truth::assertThat);
+    Maybe.<String>createMaybe(downstream -> downstream.onError(exception)).subscribe(recorder);
+
+    recorder.assertError().isSameAs(exception);
+  }
 
   @Test public void empty() {
     MaybeRecorder<String, StringSubject> recorder = rule.maybe(Truth::assertThat);

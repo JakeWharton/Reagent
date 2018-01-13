@@ -3,7 +3,9 @@ package reagent
 import kotlinx.coroutines.experimental.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
+import reagent.source.ManyCreator
 import reagent.source.ManyFromArray
+import reagent.source.ManyFromCreator
 import reagent.source.ManyFromIterable
 import reagent.source.ManyDeferredCallable
 import reagent.source.OneError
@@ -41,6 +43,7 @@ actual abstract class Many<out I> {
   }
 
   companion object {
+    @JvmStatic fun <I> createMany(body: ManyCreator<I>): Many<I> = ManyFromCreator(body)
     @JvmStatic fun <I> empty(): Many<I> = TaskComplete
     @JvmStatic fun <I> just(item: I): Many<I> = OneJust(item)
     @JvmStatic fun <I> error(t: Throwable): Many<I> = OneError(t)

@@ -3,9 +3,11 @@ package reagent
 import kotlinx.coroutines.experimental.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
+import reagent.source.OneCreator
 import reagent.source.OneDeferredCallable
 import reagent.source.OneError
 import reagent.source.OneFromCallable
+import reagent.source.OneFromCreator
 import reagent.source.OneJust
 import java.util.concurrent.Callable
 
@@ -36,6 +38,7 @@ actual abstract class One<out I> : Maybe<I>() {
   }
 
   companion object {
+    @JvmStatic fun <I> createOne(body: OneCreator<I>): One<I> = OneFromCreator(body)
     @JvmStatic fun <I> just(item: I): One<I> = OneJust(item)
     @JvmStatic fun <I> error(t: Throwable): One<I> = OneError(t)
     @JvmStatic fun <I> fromCallable(callable: Callable<I>): One<I> = OneFromCallable(callable)

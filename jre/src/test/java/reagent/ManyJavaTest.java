@@ -17,6 +17,27 @@ import static org.junit.Assert.assertTrue;
 public final class ManyJavaTest {
   @Rule public final RecordingRule rule = new RecordingRule();
 
+  @Test public void create() {
+    ManyRecorder<String, StringSubject> recorder = rule.many(Truth::assertThat);
+    Many.<String>createMany(downstream -> {
+      downstream.onNext("Hello");
+      downstream.onNext("World");
+      downstream.onComplete();
+    }).subscribe(recorder);
+
+    recorder.assertItem().isEqualTo("Hello");
+    recorder.assertItem().isEqualTo("World");
+    recorder.assertComplete();
+  }
+
+  @Test public void createError() {
+    RuntimeException exception = new RuntimeException("Oops!");
+    ManyRecorder<String, StringSubject> recorder = rule.many(Truth::assertThat);
+    Many.<String>createMany(downstream -> downstream.onError(exception)).subscribe(recorder);
+
+    recorder.assertError().isSameAs(exception);
+  }
+
   @Test public void empty() {
     ManyRecorder<String, StringSubject> recorder = rule.many(Truth::assertThat);
     Many.<String>empty().subscribe(recorder);

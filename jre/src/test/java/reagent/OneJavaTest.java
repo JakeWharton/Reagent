@@ -16,6 +16,21 @@ import static org.junit.Assert.assertTrue;
 public final class OneJavaTest {
   @Rule public final RecordingRule rule = new RecordingRule();
 
+  @Test public void create() {
+    OneRecorder<String, StringSubject> recorder = rule.one(Truth::assertThat);
+    One.<String>createOne(downstream -> downstream.onItem("Hello")).subscribe(recorder);
+
+    recorder.assertItem().isEqualTo("Hello");
+  }
+
+  @Test public void createError() {
+    RuntimeException exception = new RuntimeException("Oops!");
+    OneRecorder<String, StringSubject> recorder = rule.one(Truth::assertThat);
+    One.<String>createOne(downstream -> downstream.onError(exception)).subscribe(recorder);
+
+    recorder.assertError().isSameAs(exception);
+  }
+
   @Test public void just() {
     OneRecorder<String, StringSubject> recorder = rule.one(Truth::assertThat);
     One.just("Hello").subscribe(recorder);

@@ -4,9 +4,11 @@ import kotlinx.coroutines.experimental.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
 import reagent.source.TaskComplete
+import reagent.source.TaskCreator
 import reagent.source.TaskDeferredCallable
 import reagent.source.TaskError
 import reagent.source.TaskFromCallable
+import reagent.source.TaskFromCreator
 import reagent.source.TaskFromRunnable
 import java.util.concurrent.Callable
 
@@ -40,6 +42,7 @@ actual abstract class Task : Maybe<Nothing>() {
   }
 
   companion object {
+    @JvmStatic fun createTask(body: TaskCreator): Task = TaskFromCreator(body)
     @JvmStatic fun empty(): Task = TaskComplete
     @JvmStatic fun error(t: Throwable): Task = TaskError(t)
     @JvmStatic fun fromRunnable(runnable: Runnable): Task = TaskFromRunnable(runnable)
