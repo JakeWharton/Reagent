@@ -3,7 +3,6 @@ package reagent
 import kotlinx.coroutines.experimental.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
-import reagent.source.ManyDeferredCallable
 import reagent.source.MaybeDeferredCallable
 import reagent.source.OneError
 import reagent.source.OneFromCallable
