@@ -17,6 +17,7 @@ package reagent
 
 import reagent.operator.flatMap
 import reagent.source.emptyMaybe
+import reagent.source.failTask
 import reagent.source.maybeOf
 import reagent.source.taskRunning
 import reagent.source.toMaybe
@@ -48,7 +49,7 @@ class MaybeFlatMapTest {
 //  @Test fun flatMapManyError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMaybe<String>()
-//        .flatMap { manyOf("Hello", "World") }
+//        .flatMap { failMany<String>() }
 //        .testMany {
 //          error(exception)
 //        }
@@ -73,7 +74,7 @@ class MaybeFlatMapTest {
 //  @Test fun flatMapMaybeError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMaybe<String>()
-//        .flatMap { maybeOf("Hello") }
+//        .flatMap { failMaybe<String>() }
 //        .testMaybe {
 //          error(exception)
 //        }
@@ -98,7 +99,7 @@ class MaybeFlatMapTest {
 //  @Test fun flatMapOneError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMaybe<String>()
-//        .flatMap { oneOf("Hello") }
+//        .flatMap { failOne<String>() }
 //        .testMaybe {
 //          error(exception)
 //        }
@@ -125,13 +126,11 @@ class MaybeFlatMapTest {
   }
 
   @Test fun flatMapTaskError() = runTest {
-    var called = false
     val exception = RuntimeException("Oops!")
     exception.toMaybe<String>()
-        .flatMap { taskRunning { called = true } }
+        .flatMap { failTask() }
         .testTask {
           error(exception)
         }
-    assertFalse(called)
   }
 }

@@ -15,6 +15,9 @@
  */
 package reagent.operator
 
+import kotlinx.coroutines.experimental.CoroutineStart.UNDISPATCHED
+import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.launch
 import reagent.Emitter
 import reagent.Many
 import reagent.Maybe
@@ -35,11 +38,19 @@ fun <I> Many<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
 fun <I> Maybe<I>.flatMap(func: (I) -> Task): Task = MaybeFlatMapTask(this, func)
 fun <I> One<I>.flatMap(func: (I) -> Task): Task = MaybeFlatMapTask(this, func)
 
-internal class ManyFlatMapTask<U>(
+internal class ManyFlatMapTask<in U>(
     private val upstream: Many<U>,
     private val func: (U) -> Task
-) : Task() {
-  override suspend fun run() = TODO()
+) : Task(), Emitter<U> {
+  override suspend fun run() {
+    upstream.subscribe(this)
+  }
+
+  override suspend fun send(item: U) {
+    launch(Unconfined, UNDISPATCHED) {
+      func(item).run()
+    }
+  }
 }
 
 internal class MaybeFlatMapTask<U>(

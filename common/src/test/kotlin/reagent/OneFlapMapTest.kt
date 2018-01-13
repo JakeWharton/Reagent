@@ -33,7 +33,7 @@ class OneFlapMapTest {
 //  @Test fun flatMapManyError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toOne<String>()
-//        .flatMap { Many.fromArray("Hello", "World") }
+//        .flatMap { failMany<String>() }
 //        .testMany {
 //          error(exception)
 //        }
@@ -50,7 +50,7 @@ class OneFlapMapTest {
 //  @Test fun flatMapMaybeError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toOne<String>()
-//        .flatMap { maybeOf("Hello") }
+//        .flatMap { failMaybe<String>() }
 //        .testMaybe {
 //          error(exception)
 //        }
@@ -67,7 +67,7 @@ class OneFlapMapTest {
 //  @Test fun flatMapOneError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toOne<String>()
-//        .flatMap { oneOf("Hello") }
+//        .flatMap { failOne<String>() }
 //        .testOne {
 //          error(exception)
 //        }
@@ -84,7 +84,7 @@ class OneFlapMapTest {
 //  @Test fun flatMapTaskError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toOne<String>()
-//        .flatMap { Task.empty() }
+//        .flatMap { failTask() }
 //        .testTask {
 //          error(exception)
 //        }
