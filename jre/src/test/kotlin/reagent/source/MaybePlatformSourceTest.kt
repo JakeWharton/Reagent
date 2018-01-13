@@ -7,7 +7,7 @@ import reagent.tester.testMaybe
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 
-class MaybeKtTest {
+class MaybePlatformSourceTest {
   @Test
   fun fromCallable() = runTest {
     val called = AtomicBoolean()

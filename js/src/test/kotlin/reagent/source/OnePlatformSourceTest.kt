@@ -24,7 +24,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.fail
 
-class OneKtTest {
+class OnePlatformSourceTest {
   @Test fun toOneResolve() = runTest {
     Promise.resolve("Hello")
         .toOne()

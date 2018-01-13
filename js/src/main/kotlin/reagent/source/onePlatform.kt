@@ -20,7 +20,6 @@ import kotlinx.coroutines.experimental.launch
 import reagent.One
 import kotlin.coroutines.experimental.suspendCoroutine
 
-@JsName("fromPromise")
 fun <I> Promise<I>.toOne(): One<I> = OneFromPromise(this)
 
 internal class OneFromPromise<out I>(private val promise: Promise<I>): One<I>() {

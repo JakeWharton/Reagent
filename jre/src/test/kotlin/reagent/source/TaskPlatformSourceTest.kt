@@ -7,7 +7,7 @@ import reagent.tester.testTask
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 
-class TaskKtTest {
+class TaskPlatformSourceTest {
   @Test
   fun fromRunnable() = runTest {
     val called = AtomicBoolean()

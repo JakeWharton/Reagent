@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JvmName("Ones")
 package reagent.source
 
 import reagent.One
 import java.util.concurrent.Callable
 
-@JvmName("fromCallable")
 fun <I> Callable<I>.asOne(): One<I> = OneFromCallable(this)
 
 internal class OneFromCallable<out I>(private val func: Callable<I>) : One<I>() {

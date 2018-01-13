@@ -8,7 +8,7 @@ import reagent.tester.testMany
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ManyKtTest {
+class ManyPlatformSourceTest {
   @Test fun fromCallable() = runTest {
     val called = AtomicBoolean()
     Callable { called.getAndSet(true) }

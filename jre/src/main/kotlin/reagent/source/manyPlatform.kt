@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JvmName("Manys")
 package reagent.source
 
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
@@ -22,11 +21,7 @@ import reagent.Emitter
 import reagent.Many
 import java.util.concurrent.Callable
 
-@JvmName("fromCallable")
 fun <I> Callable<I>.asMany(): Many<I> = OneFromCallable(this)
-
-@JvmName("fromRunnable")
-@Suppress("UNCHECKED_CAST") // Never emits.
 fun <I> Runnable.asMany(): Many<I> = TaskFromRunnable(this)
 
 fun <I> ReceiveChannel<I>.toMany(): Many<I> = ManyFromChannel(this)

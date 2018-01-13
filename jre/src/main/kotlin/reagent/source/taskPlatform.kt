@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JvmName("Maybes")
 package reagent.source
 
-import reagent.Maybe
+import reagent.Task
 import java.util.concurrent.Callable
 
-@JvmName("fromCallable")
-fun <I> Callable<I>.asMaybe(): Maybe<I> = OneFromCallable(this)
+fun Runnable.asTask(): Task = TaskFromRunnable(this)
+fun Callable<*>.asTask(): Task = TaskFromCallable(this)
 
-@JvmName("fromRunnable")
-@Suppress("UNCHECKED_CAST") // Never emits.
-fun <I> Runnable.asMaybe(): Maybe<I> = TaskFromRunnable(this)
+internal class TaskFromRunnable(private val func: Runnable) : Task() {
+  override suspend fun run() = func.run()
+}
 
-internal class MaybeDeferredCallable<out I>(private val func: Callable<Maybe<I>>): Maybe<I>() {
-  override suspend fun produce() = func.call().produce()
+internal class TaskFromCallable(private val func: Callable<*>) : Task() {
+  override suspend fun run() {
+    func.call()
+  }
+}
+
+internal class TaskDeferredCallable(private val func: Callable<Task>): Task() {
+  override suspend fun run() = func.call().run()
 }
