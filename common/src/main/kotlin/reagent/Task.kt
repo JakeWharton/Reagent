@@ -15,9 +15,15 @@
  */
 package reagent
 
+import kotlin.DeprecationLevel.HIDDEN
+
 /** Signals complete or error. Has no items. */
 expect abstract class Task() : Maybe<Nothing> {
   abstract suspend fun run()
+
+  @Deprecated("Optimized implementation for polymorphism.", level = HIDDEN)
   override suspend fun produce(): Nothing?
+
+  @Deprecated("Optimized implementation for polymorphism.", level = HIDDEN)
   override suspend fun subscribe(emitter: Emitter<Nothing>)
 }

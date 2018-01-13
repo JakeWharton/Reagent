@@ -15,8 +15,12 @@
  */
 package reagent
 
+import kotlin.DeprecationLevel.HIDDEN
+
 /** Emits an item, signals nothing (no item), or signals error. */
 expect abstract class Maybe<out I>() : Many<I> {
   abstract suspend fun produce(): I?
+
+  @Deprecated("Optimized implementation for polymorphism.", level = HIDDEN)
   override suspend fun subscribe(emitter: Emitter<I>)
 }
