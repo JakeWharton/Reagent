@@ -17,12 +17,13 @@ package reagent
 
 import reagent.operator.flatMap
 import reagent.source.emptyMaybe
-import reagent.source.emptyTask
 import reagent.source.maybeOf
+import reagent.source.taskRunning
 import reagent.source.toMaybe
 import reagent.tester.testTask
-import kotlin.test.Ignore
 import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class MaybeFlatMapTest {
 // TODO overload resolution doesn't work here
@@ -103,31 +104,34 @@ class MaybeFlatMapTest {
 //        }
 //  }
 
-  @Ignore // Not implemented.
   @Test fun flatMapTask() = runTest {
+    var called = false
     maybeOf("Item")
-        .flatMap { emptyTask() }
+        .flatMap { taskRunning { called = true } }
         .testTask {
           complete()
         }
+    assertTrue(called)
   }
 
-  @Ignore // Not implemented.
   @Test fun flatMapTaskComplete() = runTest {
+    var called = false
     emptyMaybe<String>()
-        .flatMap { emptyTask() }
+        .flatMap { taskRunning { called = true } }
         .testTask {
           complete()
         }
+    assertFalse(called)
   }
 
-  @Ignore // Not implemented.
   @Test fun flatMapTaskError() = runTest {
+    var called = false
     val exception = RuntimeException("Oops!")
     exception.toMaybe<String>()
-        .flatMap { emptyTask() }
+        .flatMap { taskRunning { called = true } }
         .testTask {
           error(exception)
         }
+    assertFalse(called)
   }
 }

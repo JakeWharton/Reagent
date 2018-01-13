@@ -32,14 +32,23 @@ internal class ManyFlatMapMany<U, out D>(
 }
 
 fun <I> Many<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
-fun <I> Maybe<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
-fun <I> One<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
+fun <I> Maybe<I>.flatMap(func: (I) -> Task): Task = MaybeFlatMapTask(this, func)
+fun <I> One<I>.flatMap(func: (I) -> Task): Task = MaybeFlatMapTask(this, func)
 
 internal class ManyFlatMapTask<U>(
     private val upstream: Many<U>,
     private val func: (U) -> Task
 ) : Task() {
   override suspend fun run() = TODO()
+}
+
+internal class MaybeFlatMapTask<U>(
+  private val upstream: Maybe<U>,
+    private val func: (U) -> Task
+) : Task() {
+  override suspend fun run() {
+    upstream.produce()?.let(func)?.run()
+  }
 }
 
 fun <I, O> Maybe<I>.flatMap(func: (I) -> Maybe<O>): Maybe<O> = MaybeFlatMapMaybe(this, func)
