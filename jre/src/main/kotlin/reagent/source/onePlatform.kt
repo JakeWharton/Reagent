@@ -15,10 +15,24 @@
  */
 package reagent.source
 
+import kotlinx.coroutines.experimental.delay
 import reagent.One
+import java.time.Duration
 import java.util.concurrent.Callable
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.MILLISECONDS
 
 fun <I> Callable<I>.asOne(): One<I> = OneFromCallable(this)
+
+@Deprecated(
+    "Use overload that accepts a TimeUnit.",
+    ReplaceWith("timer(delayMillis, TimeUnit.MILLISECONDS)", "java.util.concurrent.TimeUnit")
+)
+actual fun timer(delayMillis: Int): One<Unit> = OneTimerInt(delayMillis)
+
+fun timer(delay: Long, unit: TimeUnit): One<Unit> = OneTimer(delay, unit)
+
+fun Duration.asTimer(): One<Unit> = OneTimer(toMillis(), MILLISECONDS)
 
 internal class OneFromCallable<out I>(private val func: Callable<I>) : One<I>() {
   override suspend fun produce() = func.call()
@@ -26,4 +40,8 @@ internal class OneFromCallable<out I>(private val func: Callable<I>) : One<I>() 
 
 internal class OneDeferredCallable<out I>(private val func: Callable<One<I>>): One<I>() {
   override suspend fun produce() = func.call().produce()
+}
+
+internal class OneTimer(private val delay: Long, private val unit: TimeUnit): One<Unit>() {
+  override suspend fun produce() = delay(delay, unit)
 }

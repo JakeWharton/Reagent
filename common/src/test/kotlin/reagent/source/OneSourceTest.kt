@@ -17,6 +17,7 @@ package reagent.source
 
 import reagent.runTest
 import reagent.tester.testOne
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -65,5 +66,13 @@ class OneSourceTest {
       item("Hello")
     }
     assertEquals(2, called)
+  }
+
+  @Test fun timer() = runTest {
+    // TODO need virtual time context to validate this works!
+    val timer = timer(100)
+    timer.testOne {
+      item(Unit)
+    }
   }
 }
