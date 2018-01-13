@@ -17,7 +17,7 @@ import java.util.concurrent.Callable
 
 /** Emits 0 to infinite items and then signals complete or error. */
 actual abstract class Many<out I> {
-  actual abstract suspend fun subscribe(emitter: Emitter<I>)
+  actual abstract suspend fun subscribe(emit: Emitter<I>)
 
   interface Observer<in I> {
     fun onNext(item: I)
@@ -28,7 +28,9 @@ actual abstract class Many<out I> {
   fun subscribe(observer: Observer<I>): Disposable {
     val job = launch(Unconfined, UNDISPATCHED) {
       try {
-        subscribe(ObserverEmitter(observer))
+        subscribe {
+          observer.onNext(it)
+        }
       } catch (t: Throwable) {
         observer.onError(t)
         return@launch
@@ -36,10 +38,6 @@ actual abstract class Many<out I> {
       observer.onComplete()
     }
     return JobDisposable(job)
-  }
-
-  internal class ObserverEmitter<in I>(private val observer: Observer<I>) : Emitter<I> {
-    override suspend fun send(item: I) = observer.onNext(item)
   }
 
   companion object {

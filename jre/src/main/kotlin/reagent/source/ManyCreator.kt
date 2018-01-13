@@ -17,21 +17,21 @@ interface ManyCreator<out I> {
 }
 
 internal class ManyFromCreator<out I>(private val creator: ManyCreator<I>): Many<I>() {
-  override suspend fun subscribe(emitter: Emitter<I>) {
+  override suspend fun subscribe(emit: Emitter<I>) {
     suspendCancellableCoroutine<Unit> {
-      creator.subscribe(DownstreamEmitter(it, emitter))
+      creator.subscribe(DownstreamEmitter(it, emit))
     }
   }
 
   class DownstreamEmitter<in I>(
     private val continuation: CancellableContinuation<Unit>,
-    private val emitter: Emitter<I>
+    private val emit: Emitter<I>
   ) : ManyCreator.Downstream<I> {
     override val isDisposed get() = continuation.isCancelled
 
     override fun onNext(item: I) {
       launch(Unconfined, UNDISPATCHED) {
-        emitter.send(item)
+        emit(item)
       }
     }
 

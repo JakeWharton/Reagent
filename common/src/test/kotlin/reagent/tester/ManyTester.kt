@@ -39,11 +39,9 @@ suspend fun <T> Many<T>.testMany(assertions: ManyAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
   try {
-    subscribe(object : Emitter<T> {
-      override suspend fun send(item: T) {
-        events.add(Item(item))
-      }
-    })
+    subscribe {
+      events.add(Item(it))
+    }
     events.add(Complete)
   } catch (t: Throwable) {
     events.add(Error(t))

@@ -36,17 +36,8 @@ internal class ManyMap<in U, out D>(
     private val upstream: Many<U>,
     private val mapper: (U) -> D
 ) : Many<D>() {
-  override suspend fun subscribe(emitter: Emitter<D>) {
-    upstream.subscribe(Operator(emitter, mapper))
-  }
-
-  class Operator<in U, out D>(
-      private val downstream: Emitter<D>,
-      private val mapper: (U) -> D
-  ) : Emitter<U> {
-    override suspend fun send(item: U) {
-      downstream.send(mapper(item))
-    }
+  override suspend fun subscribe(emit: Emitter<D>) {
+    upstream.subscribe { emit(mapper(it)) }
   }
 }
 

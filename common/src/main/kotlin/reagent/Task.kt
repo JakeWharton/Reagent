@@ -25,5 +25,5 @@ expect abstract class Task() : Maybe<Nothing> {
   override suspend fun produce(): Nothing?
 
   @Deprecated("Optimized implementation for polymorphism.", level = HIDDEN)
-  override suspend fun subscribe(emitter: Emitter<Nothing>)
+  override suspend fun subscribe(emit: Emitter<Nothing>)
 }

@@ -21,47 +21,47 @@ fun LongProgression.toMany(): Many<Long> = ManyFromLongProgression(this)
 fun CharProgression.toMany(): Many<Char> = ManyFromCharProgression(this)
 
 internal class ManyFromArray<out I>(private val items: Array<out I>) : Many<I>() {
-  override suspend fun subscribe(emitter: Emitter<I>) {
-    items.forEach { emitter.send(it) }
+  override suspend fun subscribe(emit: Emitter<I>) {
+    items.forEach { emit(it) }
   }
 }
 
 internal class ManyFromIterable<out I>(private val iterable: Iterable<I>): Many<I>() {
-  override suspend fun subscribe(emitter: Emitter<I>) {
-    iterable.forEach { emitter.send(it) }
+  override suspend fun subscribe(emit: Emitter<I>) {
+    iterable.forEach { emit(it) }
   }
 }
 
 internal class ManyFromSequence<out I>(private val iterable: Sequence<I>): Many<I>() {
-  override suspend fun subscribe(emitter: Emitter<I>) {
-    iterable.forEach { emitter.send(it) }
+  override suspend fun subscribe(emit: Emitter<I>) {
+    iterable.forEach { emit(it) }
   }
 }
 
 internal class ManyDeferred<out I>(private val func: () -> Many<I>): Many<I>() {
-  override suspend fun subscribe(emitter: Emitter<I>) = func().subscribe(emitter)
+  override suspend fun subscribe(emit: Emitter<I>) = func().subscribe(emit)
 }
 
 internal class ManyFromIntProgression(private val progression: IntProgression): Many<Int>() {
-  override suspend fun subscribe(emitter: Emitter<Int>) {
+  override suspend fun subscribe(emit: Emitter<Int>) {
     for (value in progression) {
-      emitter.send(value)
+      emit(value)
     }
   }
 }
 
 internal class ManyFromLongProgression(private val progression: LongProgression): Many<Long>() {
-  override suspend fun subscribe(emitter: Emitter<Long>) {
+  override suspend fun subscribe(emit: Emitter<Long>) {
     for (value in progression) {
-      emitter.send(value)
+      emit(value)
     }
   }
 }
 
 internal class ManyFromCharProgression(private val progression: CharProgression): Many<Char>() {
-  override suspend fun subscribe(emitter: Emitter<Char>) {
+  override suspend fun subscribe(emit: Emitter<Char>) {
     for (value in progression) {
-      emitter.send(value)
+      emit(value)
     }
   }
 }

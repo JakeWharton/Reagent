@@ -4,7 +4,7 @@ package reagent
 actual abstract class One<out I> : Maybe<I>() {
   actual abstract override suspend fun produce(): I
 
-  actual override suspend fun subscribe(emitter: Emitter<I>) {
-    emitter.send(produce())
+  actual override suspend fun subscribe(emit: Emitter<I>) {
+    emit(produce())
   }
 }

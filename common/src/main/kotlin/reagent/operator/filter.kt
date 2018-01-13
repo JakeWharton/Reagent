@@ -36,17 +36,10 @@ internal class ManyFilter<out I>(
     private val upstream: Many<I>,
     private val predicate: (I) -> Boolean
 ) : Many<I>() {
-  override suspend fun subscribe(emitter: Emitter<I>) {
-    upstream.subscribe(Operator(emitter, predicate))
-  }
-
-  class Operator<in I>(
-      private val downstream: Emitter<I>,
-      private val predicate: (I) -> Boolean
-  ) : Emitter<I> {
-    override suspend fun send(item: I) {
-      if (predicate(item)) {
-        downstream.send(item)
+  override suspend fun subscribe(emit: Emitter<I>) {
+    upstream.subscribe {
+      if (predicate(it)) {
+        emit(it)
       }
     }
   }

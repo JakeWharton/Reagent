@@ -17,5 +17,7 @@ package reagent
 
 /** Emits 0 to infinite items and then signals complete or error. */
 expect abstract class Many<out I>() {
-  abstract suspend fun subscribe(emitter: Emitter<I>)
+  abstract suspend fun subscribe(emit: Emitter<I>)
 }
+
+typealias Emitter<I> = suspend (item: I) -> Unit

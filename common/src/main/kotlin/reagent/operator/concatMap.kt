@@ -17,8 +17,6 @@ package reagent.operator
 
 import reagent.Emitter
 import reagent.Many
-import reagent.Maybe
-import reagent.One
 import reagent.Task
 import kotlin.DeprecationLevel.ERROR
 
@@ -28,16 +26,9 @@ internal class ManyConcatMapMany<U, out D>(
   private val upstream: Many<U>,
   private val func: (U) -> Many<D>
 ) : Many<D>() {
-  override suspend fun subscribe(emitter: Emitter<D>) {
-    upstream.subscribe(OperatorEmitter(emitter, func))
-  }
-
-  class OperatorEmitter<U, D>(
-    private val downstream: Emitter<D>,
-    private val func: (U) -> Many<D>
-  ) : Emitter<U> {
-    override suspend fun send(item: U) {
-      func(item).subscribe(downstream)
+  override suspend fun subscribe(emit: Emitter<D>) {
+    upstream.subscribe {
+      func(it).subscribe(emit)
     }
   }
 }
@@ -47,13 +38,11 @@ fun <I> Many<I>.concatMap(func: (I) -> Task): Task = ManyConcatMapTask(this, fun
 internal class ManyConcatMapTask<I>(
   private val upstream: Many<I>,
   private val func: (I) -> Task
-) : Task(), Emitter<I> {
+) : Task() {
   override suspend fun run() {
-    upstream.subscribe(this)
-  }
-
-  override suspend fun send(item: I) {
-    func(item).run()
+    upstream.subscribe {
+      func(it).run()
+    }
   }
 }
 

@@ -22,5 +22,5 @@ expect abstract class Maybe<out I>() : Many<I> {
   abstract suspend fun produce(): I?
 
   @Deprecated("Optimized implementation for polymorphism.", level = HIDDEN)
-  override suspend fun subscribe(emitter: Emitter<I>)
+  override suspend fun subscribe(emit: Emitter<I>)
 }

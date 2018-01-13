@@ -22,5 +22,5 @@ expect abstract class One<out I>() : Maybe<I> {
   abstract override suspend fun produce(): I
 
   @Deprecated("Optimized implementation for polymorphism.", level = HIDDEN)
-  override suspend fun subscribe(emitter: Emitter<I>)
+  override suspend fun subscribe(emit: Emitter<I>)
 }

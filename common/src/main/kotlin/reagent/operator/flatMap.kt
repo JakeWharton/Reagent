@@ -31,7 +31,7 @@ internal class ManyFlatMapMany<U, out D>(
     private val upstream: Many<U>,
     private val func: (U) -> Many<D>
 ) : Many<D>() {
-  override suspend fun subscribe(emitter: Emitter<D>) = TODO()
+  override suspend fun subscribe(emit: Emitter<D>) = TODO()
 }
 
 fun <I> Many<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
@@ -41,14 +41,12 @@ fun <I> One<I>.flatMap(func: (I) -> Task): Task = MaybeFlatMapTask(this, func)
 internal class ManyFlatMapTask<in U>(
     private val upstream: Many<U>,
     private val func: (U) -> Task
-) : Task(), Emitter<U> {
+) : Task() {
   override suspend fun run() {
-    upstream.subscribe(this)
-  }
-
-  override suspend fun send(item: U) {
-    launch(Unconfined, UNDISPATCHED) {
-      func(item).run()
+    upstream.subscribe {
+      launch(Unconfined, UNDISPATCHED) {
+        func(it).run()
+      }
     }
   }
 }

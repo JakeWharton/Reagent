@@ -9,5 +9,5 @@ actual abstract class Task : Maybe<Nothing>() {
     return null
   }
 
-  actual override suspend fun subscribe(emitter: Emitter<Nothing>) = run()
+  actual override suspend fun subscribe(emit: Emitter<Nothing>) = run()
 }

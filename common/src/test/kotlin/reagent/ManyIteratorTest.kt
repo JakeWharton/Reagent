@@ -50,10 +50,10 @@ class ManyIteratorTest {
   @Test fun iteratorContract() = runTest {
     var called = 0
     val task = object : Many<String>() {
-      override suspend fun subscribe(emitter: Emitter<String>) {
+      override suspend fun subscribe(emit: Emitter<String>) {
         called++
-        emitter.send("Hello")
-        emitter.send("World")
+        emit("Hello")
+        emit("World")
       }
     }
 
@@ -79,10 +79,10 @@ class ManyIteratorTest {
   @Test fun iteratorContractNextOnly() = runTest {
     var called = 0
     val task = object : Many<String>() {
-      override suspend fun subscribe(emitter: Emitter<String>) {
+      override suspend fun subscribe(emit: Emitter<String>) {
         called++
-        emitter.send("Hello")
-        emitter.send("World")
+        emit("Hello")
+        emit("World")
       }
     }
 

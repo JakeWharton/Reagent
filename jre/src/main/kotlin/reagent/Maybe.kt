@@ -17,8 +17,8 @@ import java.util.concurrent.Callable
 actual abstract class Maybe<out I> : Many<I>() {
   actual abstract suspend fun produce(): I?
 
-  actual override suspend fun subscribe(emitter: Emitter<I>) {
-    produce()?.let { emitter.send(it) }
+  actual override suspend fun subscribe(emit: Emitter<I>) {
+    produce()?.let { emit(it) }
   }
 
   interface Observer<in I> {
