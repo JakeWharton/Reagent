@@ -21,6 +21,7 @@ import reagent.source.maybeOf
 import reagent.source.toMaybe
 import reagent.tester.testMaybe
 import kotlin.test.Test
+import kotlin.test.fail
 
 class MaybeMapTest {
   @Test fun map() = runTest {
@@ -33,7 +34,7 @@ class MaybeMapTest {
 
   @Test fun mapEmpty() = runTest {
     emptyMaybe<Nothing>()
-        .map { throw AssertionError() }
+        .map { fail() }
         .testMaybe {
           nothing()
         }
@@ -42,7 +43,7 @@ class MaybeMapTest {
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMaybe<Nothing>()
-        .map { throw AssertionError() }
+        .map { fail() }
         .testMaybe {
           error(exception)
         }

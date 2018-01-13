@@ -5,6 +5,7 @@ import reagent.source.oneOf
 import reagent.source.toOne
 import reagent.tester.testMaybe
 import kotlin.test.Test
+import kotlin.test.fail
 
 class OneFilterTest {
   @Test fun filter() = runTest {
@@ -25,7 +26,7 @@ class OneFilterTest {
   @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toOne<Nothing>()
-        .filter { throw AssertionError() }
+        .filter { fail() }
         .testMaybe {
           error(exception)
         }

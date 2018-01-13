@@ -151,7 +151,7 @@ class ManyFlatMapTest {
 
   @Test fun flatMapTaskEmpty() = runTest {
     emptyMany<String>()
-        .flatMap { throw AssertionError() }
+        .flatMap { failTask() }
         .testTask {
           complete()
         }

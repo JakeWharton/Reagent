@@ -151,7 +151,7 @@ class ManyConcatMapTest {
 
   @Test fun concatMapTaskEmpty() = runTest {
     emptyMany<String>()
-        .concatMap { throw AssertionError() }
+        .concatMap { failTask() }
         .testTask {
           complete()
         }

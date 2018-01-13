@@ -6,6 +6,7 @@ import reagent.source.manyOf
 import reagent.source.toMany
 import reagent.tester.testMany
 import kotlin.test.Test
+import kotlin.test.fail
 
 class ManyFilterTest {
   @Test fun filter() = runTest {
@@ -19,7 +20,7 @@ class ManyFilterTest {
 
   @Test fun filterEmpty() = runTest {
     emptyMany<Nothing>()
-        .filter { throw AssertionError() }
+        .filter { fail() }
         .testMany {
           complete()
         }
@@ -28,7 +29,7 @@ class ManyFilterTest {
   @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMany<Nothing>()
-        .filter { throw AssertionError() }
+        .filter { fail() }
         .testMany {
           error(exception)
         }

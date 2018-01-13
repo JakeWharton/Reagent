@@ -21,6 +21,7 @@ import reagent.source.manyOf
 import reagent.source.toMany
 import reagent.tester.testMany
 import kotlin.test.Test
+import kotlin.test.fail
 
 class ManyMapTest {
   @Test fun map() = runTest {
@@ -35,7 +36,7 @@ class ManyMapTest {
 
   @Test fun mapEmpty() = runTest {
     emptyMany<Nothing>()
-        .map { throw AssertionError() }
+        .map { fail() }
         .testMany {
           complete()
         }
@@ -44,7 +45,7 @@ class ManyMapTest {
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMany<Nothing>()
-        .map { throw AssertionError() }
+        .map { fail() }
         .testMany {
           error(exception)
         }

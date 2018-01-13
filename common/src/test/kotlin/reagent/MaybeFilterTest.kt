@@ -6,6 +6,7 @@ import reagent.source.maybeOf
 import reagent.source.toMaybe
 import reagent.tester.testMaybe
 import kotlin.test.Test
+import kotlin.test.fail
 
 class MaybeFilterTest {
   @Test fun filter() = runTest {
@@ -27,7 +28,7 @@ class MaybeFilterTest {
   @Test
   fun filterEmpty() = runTest {
     emptyMaybe<Nothing>()
-        .filter { throw AssertionError() }
+        .filter { fail() }
         .testMaybe {
           nothing()
         }
@@ -37,7 +38,7 @@ class MaybeFilterTest {
   fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMaybe<Nothing>()
-        .filter { throw AssertionError() }
+        .filter { fail() }
         .testMaybe {
           error(exception)
         }

@@ -20,6 +20,7 @@ import reagent.source.oneOf
 import reagent.source.toOne
 import reagent.tester.testOne
 import kotlin.test.Test
+import kotlin.test.fail
 
 class OneMapTest {
   @Test fun map() = runTest {
@@ -33,7 +34,7 @@ class OneMapTest {
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toOne<Nothing>()
-        .map { throw AssertionError() }
+        .map { fail() }
         .testOne {
           error(exception)
         }
