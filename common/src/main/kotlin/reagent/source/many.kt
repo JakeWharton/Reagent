@@ -1,5 +1,6 @@
 package reagent.source
 
+import kotlinx.coroutines.experimental.delay
 import reagent.Emitter
 import reagent.Many
 
@@ -19,6 +20,8 @@ fun <T> Sequence<T>.toMany(): Many<T> = ManyFromSequence(this)
 fun IntProgression.toMany(): Many<Int> = ManyFromIntProgression(this)
 fun LongProgression.toMany(): Many<Long> = ManyFromLongProgression(this)
 fun CharProgression.toMany(): Many<Char> = ManyFromCharProgression(this)
+
+expect fun interval(periodMillis: Int): Many<Int>
 
 internal class ManyFromArray<out I>(private val items: Array<out I>) : Many<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {
@@ -62,6 +65,16 @@ internal class ManyFromCharProgression(private val progression: CharProgression)
   override suspend fun subscribe(emit: Emitter<Char>) {
     for (value in progression) {
       emit(value)
+    }
+  }
+}
+
+internal class ManyIntervalInt(private val periodMillis: Int): Many<Int>() {
+  override suspend fun subscribe(emit: Emitter<Int>) {
+    var count = 0
+    while (true) {
+      delay(periodMillis)
+      emit(count++)
     }
   }
 }
