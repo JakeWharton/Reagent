@@ -1,4 +1,6 @@
-package reagent
+package reagent.operator
+
+import reagent.Many
 
 operator fun <I> Many<I>.iterator(): SuspendableIterator<I> = ManyIterator(this)
 

@@ -1,4 +1,6 @@
-package reagent
+package reagent.operator
+
+import reagent.Task
 
 operator fun Task.iterator(): SuspendableIterator<Nothing> = TaskIterator(this)
 

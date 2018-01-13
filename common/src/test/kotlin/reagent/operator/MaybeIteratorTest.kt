@@ -1,16 +1,28 @@
-package reagent
+package reagent.operator
 
-import reagent.source.emptyTask
-import reagent.source.toTask
+import reagent.Maybe
+import reagent.runTest
+import reagent.source.emptyMaybe
+import reagent.source.maybeOf
+import reagent.source.toMaybe
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertSame
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
-class TaskIteratorTest {
-  @Test fun complete() = runTest {
-    for (item in emptyTask()) {
+class MaybeIteratorTest {
+  @Test fun item() = runTest {
+    val items = mutableListOf<String>()
+    for (item in maybeOf("Hello")) {
+      items.add(item)
+    }
+    assertEquals(listOf("Hello"), items)
+  }
+
+  @Test fun nothing() = runTest {
+    for (item in emptyMaybe<String>()) {
       fail()
     }
   }
@@ -18,7 +30,7 @@ class TaskIteratorTest {
   @Test fun error() = runTest {
     val exception = RuntimeException()
     try {
-      for (item in exception.toTask()) {
+      for (item in exception.toMaybe<String>()) {
         fail()
       }
       fail()
@@ -29,16 +41,18 @@ class TaskIteratorTest {
 
   @Test fun iteratorContract() = runTest {
     var called = 0
-    val task = object : Task() {
-      override suspend fun run() {
+    val task = object : Maybe<String>() {
+      override suspend fun produce(): String? {
         called++
+        return "Hello"
       }
     }
 
     val iterator = task.iterator()
     assertEquals(0, called)
 
-    assertFalse(iterator.hasNext())
+    assertTrue(iterator.hasNext())
+    assertEquals("Hello", iterator.next())
     assertEquals(1, called)
 
     assertFalse(iterator.hasNext())
@@ -50,21 +64,19 @@ class TaskIteratorTest {
     assertEquals(1, called)
   }
 
-  @Test fun iteratorContractNextOnly() = runTest {
+  @Test fun iteratorNextOnly() = runTest {
     var called = 0
-    val task = object : Task() {
-      override suspend fun run() {
+    val task = object : Maybe<String>() {
+      override suspend fun produce(): String? {
         called++
+        return "Hello"
       }
     }
 
     val iterator = task.iterator()
     assertEquals(0, called)
 
-    assertFalse(iterator.hasNext())
-    assertEquals(1, called)
-
-    assertFalse(iterator.hasNext())
+    assertEquals("Hello", iterator.next())
     try {
       iterator.next()
     } catch (e: IllegalStateException) {

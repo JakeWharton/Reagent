@@ -1,4 +1,6 @@
-package reagent
+package reagent.operator
+
+import reagent.Maybe
 
 operator fun <I> Maybe<I>.iterator(): SuspendableIterator<I> = MaybeIterator(this)
 

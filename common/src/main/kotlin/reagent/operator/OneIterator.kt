@@ -1,4 +1,6 @@
-package reagent
+package reagent.operator
+
+import reagent.One
 
 operator fun <I> One<I>.iterator(): SuspendableIterator<I> = OneIterator(this)
 
