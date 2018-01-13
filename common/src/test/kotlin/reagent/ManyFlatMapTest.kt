@@ -20,22 +20,22 @@ import reagent.source.emptyMany
 import reagent.source.manyOf
 import reagent.source.taskRunning
 import reagent.source.toMany
+import reagent.tester.testMany
 import reagent.tester.testTask
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@Ignore // Not implemented
 class ManyFlatMapTest {
 // TODO overload resolution doesn't work here
 //  @Test fun flatMapMany() = runTest {
 //    val flatMapItems = mutableListOf<String>()
 //    var manyCalled = 0
 //
-//    PureMany.just("One", "Two")
-//        .flatMapMany {
+//    manyOf("One", "Two")
+//        .flatMap {
 //          flatMapItems.add(it)
-//          Many.returning { ++manyCalled }
+//          manyReturning { ++manyCalled }
 //        }
 //        .testMany {
 //          item(1)
@@ -43,32 +43,35 @@ class ManyFlatMapTest {
 //          complete()
 //        }
 //  }
-//
-//  @Test fun flatMapManyEmpty() = runTest {
-//    PureMany.empty()
-//        .flatMapMany<Any> { throw AssertionError() }
-//        .testMany {
-//          complete()
-//        }
-//  }
-//
-//  @Test fun flatMapManyError() = runTest {
-//    val exception = RuntimeException("Oops!")
-//    PureMany.error(exception)
-//        .flatMapMany<Any> { throw AssertionError() }
-//        .testMany {
-//          error(exception)
-//        }
-//  }
-//
+
+  @Ignore // Not implemented.
+  @Test fun flatMapManyEmpty() = runTest {
+    emptyMany<String>()
+        .flatMap<Any> { throw AssertionError() }
+        .testMany {
+          complete()
+        }
+  }
+
+  @Ignore // Not implemented.
+  @Test fun flatMapManyError() = runTest {
+    val exception = RuntimeException("Oops!")
+    exception.toMany<String>()
+        .flatMap { throw AssertionError() }
+        .testMany {
+          error(exception)
+        }
+  }
+
+// TODO overload resolution doesn't work here
 //  @Test fun flatMapMaybe() = runTest {
 //    val flatMapItems = mutableListOf<String>()
 //    var maybeCalled = 0
 //
-//    PureMany.just("One", "Two")
-//        .flatMapMaybe {
+//    manyOf("One", "Two")
+//        .flatMap {
 //          flatMapItems.add(it)
-//          Maybe.returning { ++maybeCalled }
+//          maybeReturning { ++maybeCalled }
 //        }
 //        .testMany {
 //          item(1)
@@ -79,32 +82,35 @@ class ManyFlatMapTest {
 //    assertEquals(listOf("One", "Two"), flatMapItems)
 //    assertEquals(2, maybeCalled)
 //  }
-//
-//  @Test fun flatMapMaybeEmpty() = runTest {
-//    PureMany.empty()
-//        .flatMapMaybe<Any> { throw AssertionError() }
-//        .testMany {
-//          complete()
-//        }
-//  }
-//
-//  @Test fun flatMapMaybeError() = runTest {
-//    val exception = RuntimeException("Oops!")
-//    PureMany.error(exception)
-//        .flatMapMaybe<Any> { throw AssertionError() }
-//        .testMany {
-//          error(exception)
-//        }
-//  }
-//
+
+  @Ignore // Not implemented.
+  @Test fun flatMapMaybeEmpty() = runTest {
+    emptyMany<String>()
+        .flatMap { throw AssertionError() }
+        .testMany {
+          complete()
+        }
+  }
+
+  @Ignore // Not implemented.
+  @Test fun flatMapMaybeError() = runTest {
+    val exception = RuntimeException("Oops!")
+    exception.toMany<String>()
+        .flatMap<Any> { throw AssertionError() }
+        .testMany {
+          error(exception)
+        }
+  }
+
+// TODO overload resolution doesn't work here
 //  @Test fun flatMapOne() = runTest {
 //    val flatMapItems = mutableListOf<String>()
 //    var oneCalled = 0
 //
-//    PureMany.just("One", "Two")
-//        .flatMapOne {
+//    manyOf("One", "Two")
+//        .flatMap {
 //          flatMapItems.add(it)
-//          One.returning { ++oneCalled }
+//          oneReturning { ++oneCalled }
 //        }
 //        .testMany {
 //          item(1)
@@ -115,24 +121,27 @@ class ManyFlatMapTest {
 //    assertEquals(listOf("One", "Two"), flatMapItems)
 //    assertEquals(2, oneCalled)
 //  }
-//
-//  @Test fun flatMapOneEmpty() = runTest {
-//    PureMany.empty()
-//        .flatMapOne<Any> { throw AssertionError() }
-//        .testMany {
-//          complete()
-//        }
-//  }
-//
-//  @Test fun flatMapOneError() = runTest {
-//    val exception = RuntimeException("Oops!")
-//    PureMany.error(exception)
-//        .flatMapOne<Any> { throw AssertionError() }
-//        .testMany {
-//          error(exception)
-//        }
-//  }
 
+  @Ignore // Not implemented.
+  @Test fun flatMapOneEmpty() = runTest {
+    emptyMany<String>()
+        .flatMap { throw AssertionError() }
+        .testMany {
+          complete()
+        }
+  }
+
+  @Ignore // Not implemented.
+  @Test fun flatMapOneError() = runTest {
+    val exception = RuntimeException("Oops!")
+    exception.toMany<String>()
+        .flatMap { throw AssertionError() }
+        .testMany {
+          error(exception)
+        }
+  }
+
+  @Ignore // Not implemented.
   @Test fun flatMapTask() = runTest {
     val flatMapItems = mutableListOf<String>()
     var taskCalled = 0
@@ -150,6 +159,7 @@ class ManyFlatMapTest {
     assertEquals(2, taskCalled)
   }
 
+  @Ignore // Not implemented.
   @Test fun flatMapTaskEmpty() = runTest {
     emptyMany<String>()
         .flatMap { throw AssertionError() }
@@ -158,6 +168,7 @@ class ManyFlatMapTest {
         }
   }
 
+  @Ignore // Not implemented.
   @Test fun flatMapTaskError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMany<String>()

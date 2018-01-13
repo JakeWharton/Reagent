@@ -15,11 +15,14 @@
  */
 package reagent
 
+import kotlin.test.Ignore
+
 // TODO overload resolution doesn't work here
-//class OneFlapMapTest {
+@Ignore
+class OneFlapMapTest {
 //  @Test fun flatMapMany() = runTest {
-//    PureOne.just("Item")
-//        .flatMap { Many.fromArray("Hello", "World") }
+//    oneOf("Item")
+//        .flatMap { manyOf("Hello", "World") }
 //        .testMany {
 //          item("Hello")
 //          item("World")
@@ -29,7 +32,7 @@ package reagent
 //
 //  @Test fun flatMapManyError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    PureOne.error(exception)
+//    exception.toOne<String>()
 //        .flatMap { Many.fromArray("Hello", "World") }
 //        .testMany {
 //          error(exception)
@@ -37,8 +40,8 @@ package reagent
 //  }
 //
 //  @Test fun flatMapMaybe() = runTest {
-//    PureOne.just("Item")
-//        .flatMap { Maybe.just("Hello") }
+//    oneOf("Item")
+//        .flatMap { maybeOf("Hello") }
 //        .testMaybe {
 //          item("Hello")
 //        }
@@ -46,16 +49,16 @@ package reagent
 //
 //  @Test fun flatMapMaybeError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    PureOne.error(exception)
-//        .flatMap { Maybe.just("Hello") }
+//    exception.toOne<String>()
+//        .flatMap { maybeOf("Hello") }
 //        .testMaybe {
 //          error(exception)
 //        }
 //  }
 //
 //  @Test fun flatMapOne() = runTest {
-//    PureOne.just("Item")
-//        .flatMap { One.just("Hello") }
+//    oneOf("Item")
+//        .flatMap { oneOf("Hello") }
 //        .testOne {
 //          item("Hello")
 //        }
@@ -63,16 +66,16 @@ package reagent
 //
 //  @Test fun flatMapOneError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    PureOne.error(exception)
-//        .flatMap { One.just("Hello") }
+//    exception.toOne<String>()
+//        .flatMap { oneOf("Hello") }
 //        .testOne {
 //          error(exception)
 //        }
 //  }
 //
 //  @Test fun flatMapTask() = runTest {
-//    One.just("Item")
-//        .flatMap { Task.empty() }
+//    oneOf("Item")
+//        .flatMap { emptyTask() }
 //        .testTask {
 //          complete()
 //        }
@@ -80,10 +83,10 @@ package reagent
 //
 //  @Test fun flatMapTaskError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    One.error<String>(exception)
+//    exception.toOne<String>()
 //        .flatMap { Task.empty() }
 //        .testTask {
 //          error(exception)
 //        }
 //  }
-//}
+}

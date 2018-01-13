@@ -24,12 +24,11 @@ import reagent.tester.testTask
 import kotlin.test.Ignore
 import kotlin.test.Test
 
-@Ignore // Not implemented
 class MaybeFlatMapTest {
 // TODO overload resolution doesn't work here
 //  @Test fun flatMapMany() = runTest {
-//    PureMaybe.just("Item")
-//        .flatMap { Many.fromArray("Hello", "World") }
+//    maybeOf("Item")
+//        .flatMap { manyOf("Hello", "World") }
 //        .testMany {
 //          item("Hello")
 //          item("World")
@@ -38,8 +37,8 @@ class MaybeFlatMapTest {
 //  }
 //
 //  @Test fun flatMapManyNothing() = runTest {
-//    PureMaybe.empty()
-//        .flatMap { Many.fromArray("Hello", "World") }
+//    emptyMaybe<String>()
+//        .flatMap { manyOf("Hello", "World") }
 //        .testMany {
 //          complete()
 //        }
@@ -47,24 +46,24 @@ class MaybeFlatMapTest {
 //
 //  @Test fun flatMapManyError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    PureMaybe.error(exception)
-//        .flatMap { Many.fromArray("Hello", "World") }
+//    exception.toMaybe<String>()
+//        .flatMap { manyOf("Hello", "World") }
 //        .testMany {
 //          error(exception)
 //        }
 //  }
 //
 //  @Test fun flatMapMaybe() = runTest {
-//    PureMaybe.just("Item")
-//        .flatMap { Maybe.just("Hello") }
+//    maybeOf("Item")
+//        .flatMap { maybeOf("Hello") }
 //        .testMaybe {
 //          item("Hello")
 //        }
 //  }
 //
 //  @Test fun flatMapMaybeNothing() = runTest {
-//    PureMaybe.empty()
-//        .flatMap { Maybe.just("Hello") }
+//    emptyMaybe<String>()
+//        .flatMap { maybeOf("Hello") }
 //        .testMaybe {
 //          nothing()
 //        }
@@ -72,24 +71,24 @@ class MaybeFlatMapTest {
 //
 //  @Test fun flatMapMaybeError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    PureMaybe.error(exception)
-//        .flatMap { Maybe.just("Hello") }
+//    exception.toMaybe<String>()
+//        .flatMap { maybeOf("Hello") }
 //        .testMaybe {
 //          error(exception)
 //        }
 //  }
 //
 //  @Test fun flatMapOne() = runTest {
-//    PureMaybe.just("Item")
-//        .flatMap { One.just("Hello") }
+//    maybeOf("Item")
+//        .flatMap { oneOf("Hello") }
 //        .testMaybe {
 //          item("Hello")
 //        }
 //  }
 //
 //  @Test fun flatMapOneComplete() = runTest {
-//    PureMaybe.empty()
-//        .flatMap { One.just("Hello") }
+//    emptyMaybe<String>()
+//        .flatMap { oneOf("Hello") }
 //        .testMaybe {
 //          nothing()
 //        }
@@ -97,13 +96,14 @@ class MaybeFlatMapTest {
 //
 //  @Test fun flatMapOneError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    PureMaybe.error(exception)
-//        .flatMap { One.just("Hello") }
+//    exception.toMaybe<String>()
+//        .flatMap { oneOf("Hello") }
 //        .testMaybe {
 //          error(exception)
 //        }
 //  }
 
+  @Ignore // Not implemented.
   @Test fun flatMapTask() = runTest {
     maybeOf("Item")
         .flatMap { emptyTask() }
@@ -112,6 +112,7 @@ class MaybeFlatMapTest {
         }
   }
 
+  @Ignore // Not implemented.
   @Test fun flatMapTaskComplete() = runTest {
     emptyMaybe<String>()
         .flatMap { emptyTask() }
@@ -120,6 +121,7 @@ class MaybeFlatMapTest {
         }
   }
 
+  @Ignore // Not implemented.
   @Test fun flatMapTaskError() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMaybe<String>()
