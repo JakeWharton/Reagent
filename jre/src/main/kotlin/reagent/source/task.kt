@@ -34,3 +34,7 @@ internal class TaskFromCallable(private val func: Callable<*>) : Task() {
     func.call()
   }
 }
+
+internal class TaskDeferredCallable(private val func: Callable<Task>): Task() {
+  override suspend fun run() = func.call().run()
+}

@@ -25,3 +25,7 @@ fun <I> Callable<I>.asMaybe(): Maybe<I> = OneFromCallable(this)
 @JvmName("fromRunnable")
 @Suppress("UNCHECKED_CAST") // Never emits.
 fun <I> Runnable.asMaybe(): Maybe<I> = TaskFromRunnable(this)
+
+internal class MaybeDeferredCallable<out I>(private val func: Callable<Maybe<I>>): Maybe<I>() {
+  override suspend fun produce() = func.call().produce()
+}

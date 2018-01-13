@@ -23,6 +23,7 @@ buildscript {
               'js': "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${versions.coroutines}",
           ],
       ],
+      'truth': 'com.google.truth:truth:0.39',
   ]
 
   dependencies {

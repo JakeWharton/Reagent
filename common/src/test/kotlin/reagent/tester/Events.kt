@@ -15,6 +15,6 @@
  */
 package reagent.tester
 
-internal data class Item<T>(val item: T)
-internal object Complete
-internal data class Error(val t: Throwable)
+data class Item<out T>(val item: T)
+object Complete
+data class Error(val t: Throwable)

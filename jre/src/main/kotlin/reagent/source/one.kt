@@ -25,3 +25,7 @@ fun <I> Callable<I>.asOne(): One<I> = OneFromCallable(this)
 internal class OneFromCallable<out I>(private val func: Callable<I>) : One<I>() {
   override suspend fun produce() = func.call()
 }
+
+internal class OneDeferredCallable<out I>(private val func: Callable<One<I>>): One<I>() {
+  override suspend fun produce() = func.call().produce()
+}

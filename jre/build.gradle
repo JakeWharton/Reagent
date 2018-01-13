@@ -11,6 +11,7 @@ dependencies {
   api deps.kotlin.stdLib.jre
   api deps.kotlin.coroutines.jre
   testImplementation deps.kotlin.test.jre
+  testImplementation deps.truth
 }
 
 kotlin {
@@ -23,4 +24,9 @@ test {
   testLogging {
     events 'passed', 'skipped', 'failed'
   }
+}
+
+compileTestJava {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
 }

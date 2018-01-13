@@ -16,6 +16,7 @@
 @file:JvmName("Manys")
 package reagent.source
 
+import reagent.Emitter
 import reagent.Many
 import java.util.concurrent.Callable
 
@@ -25,3 +26,7 @@ fun <I> Callable<I>.asMany(): Many<I> = OneFromCallable(this)
 @JvmName("fromRunnable")
 @Suppress("UNCHECKED_CAST") // Never emits.
 fun <I> Runnable.asMany(): Many<I> = TaskFromRunnable(this)
+
+internal class ManyDeferredCallable<out I>(private val func: Callable<Many<I>>): Many<I>() {
+  override suspend fun subscribe(emitter: Emitter<I>) = func.call().subscribe(emitter)
+}
