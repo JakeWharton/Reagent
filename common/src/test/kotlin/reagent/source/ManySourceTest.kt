@@ -132,4 +132,39 @@ class ManySourceTest {
     }
     assertEquals(2, called)
   }
+
+  @Test fun intProgression() = runTest {
+    (10 downTo 1 step 3).toMany()
+        .testMany {
+          item(10)
+          item(7)
+          item(4)
+          item(1)
+          complete()
+        }
+  }
+
+  @Test fun longProgression() = runTest {
+    (10L downTo 1L step 3L).toMany()
+        .testMany {
+          item(10L)
+          item(7L)
+          item(4L)
+          item(1L)
+          complete()
+        }
+  }
+
+  @Test fun charProgression() = runTest {
+    ('z' downTo 'a' step 5).toMany()
+        .testMany {
+          item('z')
+          item('u')
+          item('p')
+          item('k')
+          item('f')
+          item('a')
+          complete()
+        }
+  }
 }
