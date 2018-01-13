@@ -49,8 +49,9 @@ class ManySourceTest {
         }
   }
 
-  @Test fun fromIterable() = runTest {
-    listOf("Hello", "World").toMany()
+  @Test fun iterableToMany() = runTest {
+    listOf("Hello", "World")
+        .toMany()
         .testMany {
           item("Hello")
           item("World")
@@ -58,12 +59,14 @@ class ManySourceTest {
         }
   }
 
-  @Test fun iterableToMany() = runTest {
-    listOf("Hello", "World")
+  @Test fun sequenceToMany() = runTest {
+    sequenceOf(1, 2, 4, 8)
         .toMany()
         .testMany {
-          item("Hello")
-          item("World")
+          item(1)
+          item(2)
+          item(4)
+          item(8)
           complete()
         }
   }

@@ -14,6 +14,7 @@ fun <I> deferMany(func: () -> Many<I>): Many<I> = ManyDeferred(func)
 fun <I> Throwable.toMany(): Many<I> = OneError(this)
 fun <T> Array<T>.toMany(): Many<T> = ManyFromArray(this)
 fun <T> Iterable<T>.toMany(): Many<T> = ManyFromIterable(this)
+fun <T> Sequence<T>.toMany(): Many<T> = ManyFromSequence(this)
 
 fun IntProgression.toMany(): Many<Int> = ManyFromIntProgression(this)
 fun LongProgression.toMany(): Many<Long> = ManyFromLongProgression(this)
@@ -26,6 +27,12 @@ internal class ManyFromArray<out I>(private val items: Array<out I>) : Many<I>()
 }
 
 internal class ManyFromIterable<out I>(private val iterable: Iterable<I>): Many<I>() {
+  override suspend fun subscribe(emitter: Emitter<I>) {
+    iterable.forEach { emitter.send(it) }
+  }
+}
+
+internal class ManyFromSequence<out I>(private val iterable: Sequence<I>): Many<I>() {
   override suspend fun subscribe(emitter: Emitter<I>) {
     iterable.forEach { emitter.send(it) }
   }
