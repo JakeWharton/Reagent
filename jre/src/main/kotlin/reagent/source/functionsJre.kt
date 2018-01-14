@@ -38,7 +38,7 @@ fun <I> ReceiveChannel<I>.toMany(): Observable<I> = ObservableFromChannel(this)
 
 @Deprecated(
     "Use overload that accepts a TimeUnit.",
-    ReplaceWith("interval(periodMillis, TimeUnit.MILLISECONDS)", "java.util.concurrent.TimeUnit")
+    ReplaceWith("interval(periodMillis, MILLISECONDS)", "java.util.concurrent.TimeUnit.MILLISECONDS")
 )
 actual fun interval(periodMillis: Int): Observable<Int> = ObservableIntervalInt(periodMillis)
 fun interval(period: Long, unit: TimeUnit): Observable<Int> = ObservableInterval(period, unit)
@@ -46,7 +46,7 @@ fun Duration.asInterval(): Observable<Int> = ObservableInterval(toMillis(), MILL
 
 @Deprecated(
     "Use overload that accepts a TimeUnit.",
-    ReplaceWith("timer(delayMillis, TimeUnit.MILLISECONDS)", "java.util.concurrent.TimeUnit")
+    ReplaceWith("timer(delayMillis, MILLISECONDS)", "java.util.concurrent.TimeUnit.MILLISECONDS")
 )
 actual fun timer(delayMillis: Int): One<Unit> = OneTimerInt(delayMillis)
 fun timer(delay: Long, unit: TimeUnit): One<Unit> = OneTimer(delay, unit)
