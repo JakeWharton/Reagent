@@ -8,7 +8,11 @@ fun <I> many(body: suspend (emit: Emitter<I>) -> Unit): Many<I> = ManyFromSuspen
 
 fun <I> emptyMany(): Many<I> = TaskComplete
 fun <I> manyOf(item: I): Many<I> = OneJust(item)
-fun <I> manyOf(vararg items: I): Many<I> = ManyFromArray(items)
+fun <I> manyOf(vararg items: I): Many<I> = when (items.size) {
+  0 -> TaskComplete
+  1 -> OneJust(items[0])
+  else -> ManyFromArray(items)
+}
 fun <I> manyReturning(func: () -> I): Many<I> = OneFromLambda(func)
 fun <I> manyRunning(func: () -> Unit): Many<I> = TaskFromLambda(func)
 
