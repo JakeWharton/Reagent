@@ -1,4 +1,4 @@
-package reagent.source
+package reagent.source.test
 
 import reagent.Many
 import reagent.Maybe

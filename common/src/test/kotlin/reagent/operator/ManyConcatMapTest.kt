@@ -17,9 +17,9 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.emptyMany
-import reagent.source.failTask
 import reagent.source.manyOf
 import reagent.source.taskRunning
+import reagent.source.test.failTask
 import reagent.source.toMany
 import reagent.tester.testTask
 import kotlin.test.Test

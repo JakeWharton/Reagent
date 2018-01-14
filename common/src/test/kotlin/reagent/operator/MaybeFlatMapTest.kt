@@ -17,9 +17,9 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.emptyMaybe
-import reagent.source.failTask
 import reagent.source.maybeOf
 import reagent.source.taskRunning
+import reagent.source.test.failTask
 import reagent.source.toMaybe
 import reagent.tester.testTask
 import kotlin.test.Test
