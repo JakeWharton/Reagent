@@ -1,10 +1,10 @@
 package reagent.source
 
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 
-internal class ManyFromSuspendingLambda<out I>(
+internal class ObservableFromSuspendingLambda<out I>(
   private val body: suspend (emit: Emitter<I>) -> Unit
-): Many<I>() {
+): Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) = body(emit)
 }

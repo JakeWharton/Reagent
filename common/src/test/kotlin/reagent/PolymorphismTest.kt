@@ -15,14 +15,14 @@
  */
 package reagent
 
-import reagent.source.emptyMaybe
-import reagent.source.emptyTask
-import reagent.source.maybeOf
-import reagent.source.oneOf
-import reagent.source.toMaybe
+import reagent.source.emptyObservable
+import reagent.source.observableOf
+import reagent.source.test.emptyMaybe
+import reagent.source.test.maybeOf
+import reagent.source.test.toMaybe
 import reagent.source.toOne
 import reagent.source.toTask
-import reagent.tester.testMany
+import reagent.tester.testObservable
 import reagent.tester.testMaybe
 import reagent.tester.testOne
 import reagent.tester.testTask
@@ -30,14 +30,14 @@ import kotlin.test.Test
 
 class PolymorphismTest {
   @Test fun taskComplete() = runTest {
-    val task = emptyTask()
+    val task = emptyObservable()
     task.testTask {
       complete()
     }
     task.testMaybe {
       nothing()
     }
-    task.testMany {
+    task.testObservable {
       complete()
     }
   }
@@ -57,14 +57,14 @@ class PolymorphismTest {
   }
 
   @Test fun oneItem() = runTest {
-    val one = oneOf("Hello")
+    val one = observableOf("Hello")
     one.testOne {
       item("Hello")
     }
     one.testMaybe {
       item("Hello")
     }
-    one.testMany {
+    one.testObservable {
       item("Hello")
       complete()
     }
@@ -79,7 +79,7 @@ class PolymorphismTest {
     one.testMaybe {
       error(exception)
     }
-    one.testMany {
+    one.testObservable {
       error(exception)
     }
   }
@@ -89,7 +89,7 @@ class PolymorphismTest {
     maybe.testMaybe {
       item("Hello")
     }
-    maybe.testMany {
+    maybe.testObservable {
       item("Hello")
       complete()
     }
@@ -100,7 +100,7 @@ class PolymorphismTest {
     maybe.testMaybe {
       nothing()
     }
-    maybe.testMany {
+    maybe.testObservable {
       complete()
     }
   }
@@ -111,7 +111,7 @@ class PolymorphismTest {
     maybe.testMaybe {
       error(exception)
     }
-    maybe.testMany {
+    maybe.testObservable {
       error(exception)
     }
   }

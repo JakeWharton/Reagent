@@ -18,7 +18,6 @@ package reagent.source
 import kotlinx.coroutines.experimental.delay
 import reagent.runTest
 import reagent.tester.testOne
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -34,7 +33,7 @@ class OneSourceTest {
   }
 
   @Test fun of() = runTest {
-    oneOf("Hello")
+    observableOf("Hello")
         .testOne {
           item("Hello")
         }
@@ -50,7 +49,7 @@ class OneSourceTest {
 
   @Test fun returning() = runTest {
     var called = false
-    oneReturning { called = true; 0 }
+    observableReturning { called = true; 0 }
         .testOne {
           item(0)
         }
@@ -59,7 +58,7 @@ class OneSourceTest {
 
   @Test fun returningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    oneReturning { throw exception }
+    observableReturning { throw exception }
         .testOne {
           error(exception)
         }
@@ -67,7 +66,7 @@ class OneSourceTest {
 
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = deferOne { called++; oneOf("Hello") }
+    val deferred = deferOne { called++; observableOf("Hello") }
     deferred.testOne {
       item("Hello")
     }

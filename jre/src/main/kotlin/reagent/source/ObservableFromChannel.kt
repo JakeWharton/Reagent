@@ -3,9 +3,9 @@ package reagent.source
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 
-internal class ManyFromChannel<out I>(private val channel: ReceiveChannel<I>) : Many<I>() {
+internal class ObservableFromChannel<out I>(private val channel: ReceiveChannel<I>) : Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {
     channel.consumeEach {
       emit(it)

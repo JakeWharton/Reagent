@@ -6,10 +6,10 @@ import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import reagent.Emitter
-import reagent.Many
-import reagent.source.ManyCreator.Downstream
+import reagent.Observable
+import reagent.source.ObservableCreator.Downstream
 
-internal class ManyFromCreator<out I>(private val creator: ManyCreator<I>): Many<I>() {
+internal class ObservableFromCreator<out I>(private val creator: ObservableCreator<I>): Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {
     suspendCancellableCoroutine<Unit> {
       creator.subscribe(DownstreamEmitter(it, emit))

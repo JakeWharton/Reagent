@@ -16,16 +16,16 @@
 package reagent.operator
 
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 import reagent.Task
 import kotlin.DeprecationLevel.ERROR
 
-fun <I, O> Many<I>.concatMap(func: (I) -> Many<O>): Many<O> = ManyConcatMapMany(this, func)
+fun <I, O> Observable<I>.concatMap(func: (I) -> Observable<O>): Observable<O> = ObservableConcatMapObservable(this, func)
 
-internal class ManyConcatMapMany<U, out D>(
-  private val upstream: Many<U>,
-  private val func: (U) -> Many<D>
-) : Many<D>() {
+internal class ObservableConcatMapObservable<U, out D>(
+  private val upstream: Observable<U>,
+  private val func: (U) -> Observable<D>
+) : Observable<D>() {
   override suspend fun subscribe(emit: Emitter<D>) {
     upstream.subscribe {
       func(it).subscribe(emit)
@@ -33,10 +33,10 @@ internal class ManyConcatMapMany<U, out D>(
   }
 }
 
-fun <I> Many<I>.concatMap(func: (I) -> Task): Task = ManyConcatMapTask(this, func)
+fun <I> Observable<I>.concatMap(func: (I) -> Task): Task = ObservableConcatMapTask(this, func)
 
-internal class ManyConcatMapTask<I>(
-  private val upstream: Many<I>,
+internal class ObservableConcatMapTask<I>(
+  private val upstream: Observable<I>,
   private val func: (I) -> Task
 ) : Task() {
   override suspend fun run() {
@@ -47,4 +47,4 @@ internal class ManyConcatMapTask<I>(
 }
 
 @Deprecated("Task produces no items so mapping has no effect.", level = ERROR)
-fun Task.concatMap(func: (Nothing) -> Many<*>): Task = this
+fun Task.concatMap(func: (Nothing) -> Observable<*>): Task = this

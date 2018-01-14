@@ -1,11 +1,11 @@
 package reagent.operator
 
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 import reagent.runTest
-import reagent.source.emptyMany
-import reagent.source.manyOf
-import reagent.source.toMany
+import reagent.source.observableOf
+import reagent.source.test.emptyMany
+import reagent.source.test.toMany
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,10 +15,10 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 @Ignore
-class ManyIteratorTest {
+class ObservableIteratorTest {
   @Test fun single() = runTest {
     val items = mutableListOf<String>()
-    for (item in manyOf("Hello")) {
+    for (item in observableOf("Hello")) {
       items.add(item)
     }
     assertEquals(listOf("Hello"), items)
@@ -26,7 +26,7 @@ class ManyIteratorTest {
 
   @Test fun multiple() = runTest {
     val items = mutableListOf<String>()
-    for (item in manyOf("Hello", "World")) {
+    for (item in observableOf("Hello", "World")) {
       items.add(item)
     }
     assertEquals(listOf("Hello", "World"), items)
@@ -52,7 +52,7 @@ class ManyIteratorTest {
 
   @Test fun iteratorContract() = runTest {
     var called = 0
-    val task = object : Many<String>() {
+    val task = object : Observable<String>() {
       override suspend fun subscribe(emit: Emitter<String>) {
         called++
         emit("Hello")
@@ -81,7 +81,7 @@ class ManyIteratorTest {
 
   @Test fun iteratorContractNextOnly() = runTest {
     var called = 0
-    val task = object : Many<String>() {
+    val task = object : Observable<String>() {
       override suspend fun subscribe(emit: Emitter<String>) {
         called++
         emit("Hello")

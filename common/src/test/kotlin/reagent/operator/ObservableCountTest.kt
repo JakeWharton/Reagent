@@ -1,13 +1,12 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.emptyMany
-import reagent.source.manyOf
+import reagent.source.test.emptyMany
+import reagent.source.observableOf
 import reagent.tester.testOne
 import kotlin.test.Test
-import kotlin.test.fail
 
-class ManyCountTest {
+class ObservableCountTest {
   @Test fun empty() = runTest {
     emptyMany<Any>()
         .count()
@@ -17,7 +16,7 @@ class ManyCountTest {
   }
 
   @Test fun nonEmpty() = runTest {
-    manyOf(1, 2, 3)
+    observableOf(1, 2, 3)
         .count()
         .testOne {
           item(3)

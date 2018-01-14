@@ -1,18 +1,18 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.emptyMany
-import reagent.source.manyOf
-import reagent.source.toMany
-import reagent.tester.testMany
+import reagent.source.observableOf
+import reagent.source.test.emptyMany
+import reagent.source.test.toMany
+import reagent.tester.testObservable
 import kotlin.test.Test
 import kotlin.test.fail
 
-class ManyFilterTest {
+class ObservableFilterTest {
   @Test fun filter() = runTest {
-    manyOf("Hello", "World")
+    observableOf("Hello", "World")
         .filter { it == "Hello" }
-        .testMany {
+        .testObservable {
           item("Hello")
           complete()
         }
@@ -21,7 +21,7 @@ class ManyFilterTest {
   @Test fun filterEmpty() = runTest {
     emptyMany<Nothing>()
         .filter { fail() }
-        .testMany {
+        .testObservable {
           complete()
         }
   }
@@ -30,16 +30,16 @@ class ManyFilterTest {
     val exception = RuntimeException("Oops!")
     exception.toMany<Nothing>()
         .filter { fail() }
-        .testMany {
+        .testObservable {
           error(exception)
         }
   }
 
   @Test fun filterThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    manyOf("Hello", "World")
+    observableOf("Hello", "World")
         .filter { throw exception }
-        .testMany {
+        .testObservable {
           error(exception)
         }
   }

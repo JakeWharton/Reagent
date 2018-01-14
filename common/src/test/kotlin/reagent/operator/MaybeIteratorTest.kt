@@ -2,9 +2,9 @@ package reagent.operator
 
 import reagent.Maybe
 import reagent.runTest
-import reagent.source.emptyMaybe
-import reagent.source.maybeOf
-import reagent.source.toMaybe
+import reagent.source.test.emptyMaybe
+import reagent.source.test.maybeOf
+import reagent.source.test.toMaybe
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

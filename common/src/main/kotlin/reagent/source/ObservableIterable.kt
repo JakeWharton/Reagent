@@ -1,9 +1,9 @@
 package reagent.source
 
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 
-internal class ManyFromSequence<out I>(private val iterable: Sequence<I>): Many<I>() {
+internal class ObservableIterable<out I>(private val iterable: Iterable<I>): Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {
     iterable.forEach { emit(it) }
   }

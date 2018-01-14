@@ -2,7 +2,7 @@ package reagent.operator
 
 import reagent.Task
 import reagent.runTest
-import reagent.source.emptyTask
+import reagent.source.emptyObservable
 import reagent.source.toTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,7 +12,7 @@ import kotlin.test.fail
 
 class TaskIteratorTest {
   @Test fun complete() = runTest {
-    for (item in emptyTask()) {
+    for (item in emptyObservable()) {
       fail()
     }
   }

@@ -1,9 +1,9 @@
 package reagent.source
 
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 
-internal class ManyFromCharProgression(private val progression: CharProgression): Many<Char>() {
+internal class ObservableCharProgression(private val progression: CharProgression): Observable<Char>() {
   override suspend fun subscribe(emit: Emitter<Char>) {
     for (value in progression) {
       emit(value)

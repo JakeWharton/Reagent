@@ -1,6 +1,6 @@
 package reagent.operator
 
-import reagent.Many
+import reagent.Observable
 import reagent.Maybe
 import reagent.One
 import reagent.Task
@@ -10,12 +10,12 @@ interface SuspendableIterator<out I> {
   suspend operator fun next(): I
 }
 
-operator fun <I> Many<I>.iterator(): SuspendableIterator<I> = ManyIterator(this)
+operator fun <I> Observable<I>.iterator(): SuspendableIterator<I> = ObservableIterator(this)
 operator fun <I> Maybe<I>.iterator(): SuspendableIterator<I> = MaybeIterator(this)
 operator fun <I> One<I>.iterator(): SuspendableIterator<I> = OneIterator(this)
 operator fun Task.iterator(): SuspendableIterator<Nothing> = TaskIterator(this)
 
-internal class ManyIterator<out I>(private val many: Many<I>) : SuspendableIterator<I> {
+internal class ObservableIterator<out I>(private val observable: Observable<I>) : SuspendableIterator<I> {
   // TODO i_have_no_idea_what_im_doing.gif
 
   override suspend fun hasNext() = TODO()

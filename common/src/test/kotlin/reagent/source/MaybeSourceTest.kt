@@ -20,7 +20,6 @@ import reagent.runTest
 import reagent.tester.testMaybe
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class MaybeSourceTest {
   @Test fun suspendingLambda() = runTest {
@@ -32,65 +31,9 @@ class MaybeSourceTest {
     }
   }
 
-  @Test fun of() = runTest {
-    maybeOf("Hello")
-        .testMaybe {
-          item("Hello")
-        }
-  }
-
-  @Test fun empty() = runTest {
-    emptyMaybe<Any>()
-        .testMaybe {
-          nothing()
-        }
-  }
-
-  @Test fun throwable() = runTest {
-    val exception = RuntimeException("Oops!")
-    exception.toMaybe<Any>()
-        .testMaybe {
-          error(exception)
-        }
-  }
-
-  @Test fun returning() = runTest {
-    var called = false
-    maybeReturning { called = true; 0 }
-        .testMaybe {
-          item(0)
-        }
-    assertTrue(called)
-  }
-
-  @Test fun returningThrowing() = runTest {
-    val exception = RuntimeException("Oops!")
-    maybeReturning { throw exception }
-        .testMaybe {
-          error(exception)
-        }
-  }
-
-  @Test fun running() = runTest {
-    var called = false
-    maybeRunning<Any> { called = true }
-        .testMaybe {
-          nothing()
-        }
-    assertTrue(called)
-  }
-
-  @Test fun runningThrowing() = runTest {
-    val exception = RuntimeException("Oops!")
-    maybeRunning<Any> { throw exception }
-        .testMaybe {
-          error(exception)
-        }
-  }
-
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = deferMaybe { called++; maybeOf("Hello") }
+    val deferred = deferMaybe { called++; observableOf("Hello") }
     deferred.testMaybe {
       item("Hello")
     }

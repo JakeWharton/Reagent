@@ -17,33 +17,32 @@ package reagent.source
 
 import kotlinx.coroutines.experimental.delay
 import reagent.runTest
-import reagent.tester.testMany
+import reagent.tester.testObservable
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
-class ManySourceTest {
+class ObservableSourceTest {
   @Test fun suspendingLambda() = runTest {
-    many<String> { emit ->
+    observable<String> { emit ->
       delay(10)
       emit("Hello")
-    }.testMany {
+    }.testObservable {
       item("Hello")
       complete()
     }
   }
 
   @Test fun ofSingle() = runTest {
-    manyOf("Hello")
-        .testMany {
+    observableOf("Hello")
+        .testObservable {
           item("Hello")
           complete()
         }
   }
 
   @Test fun ofMultiple() = runTest {
-    manyOf("Hello", "World")
-        .testMany {
+    observableOf("Hello", "World")
+        .testObservable {
           item("Hello")
           item("World")
           complete()
@@ -51,16 +50,16 @@ class ManySourceTest {
   }
 
   @Test fun ofEmpty() = runTest {
-    manyOf<Any>()
-        .testMany {
+    observableOf()
+        .testObservable {
           complete()
         }
   }
 
   @Test fun array() = runTest {
     arrayOf("Hello", "World")
-        .toMany()
-        .testMany {
+        .toObservable()
+        .testObservable {
           item("Hello")
           item("World")
           complete()
@@ -69,8 +68,8 @@ class ManySourceTest {
 
   @Test fun iterable() = runTest {
     listOf("Hello", "World")
-        .toMany()
-        .testMany {
+        .toObservable()
+        .testObservable {
           item("Hello")
           item("World")
           complete()
@@ -79,8 +78,8 @@ class ManySourceTest {
 
   @Test fun sequence() = runTest {
     sequenceOf(1, 2, 4, 8)
-        .toMany()
-        .testMany {
+        .toObservable()
+        .testObservable {
           item(1)
           item(2)
           item(4)
@@ -89,65 +88,15 @@ class ManySourceTest {
         }
   }
 
-  @Test fun empty() = runTest {
-    emptyMany<Any>()
-        .testMany {
-          complete()
-        }
-  }
-
-  @Test fun throwable() = runTest {
-    val exception = RuntimeException("Oops!")
-    exception.toMany<Any>()
-        .testMany {
-          error(exception)
-        }
-  }
-
-  @Test fun returning() = runTest {
-    var called = false
-    manyReturning { called = true; 0 }
-        .testMany {
-          item(0)
-          complete()
-        }
-    assertTrue(called)
-  }
-
-  @Test fun returningThrowing() = runTest {
-    val exception = RuntimeException("Oops!")
-    manyReturning { throw exception }
-        .testMany {
-          error(exception)
-        }
-  }
-
-  @Test fun running() = runTest {
-    var called = false
-    manyRunning<Any> { called = true }
-        .testMany {
-          complete()
-        }
-    assertTrue(called)
-  }
-
-  @Test fun runningThrowing() = runTest {
-    val exception = RuntimeException("Oops!")
-    manyRunning<Any> { throw exception }
-        .testMany {
-          error(exception)
-        }
-  }
-
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = deferMany { called++; manyOf("Hello") }
-    deferred.testMany {
+    val deferred = deferMany { called++; observableOf("Hello") }
+    deferred.testObservable {
       item("Hello")
       complete()
     }
     assertEquals(1, called)
-    deferred.testMany {
+    deferred.testObservable {
       item("Hello")
       complete()
     }
@@ -155,8 +104,8 @@ class ManySourceTest {
   }
 
   @Test fun intProgression() = runTest {
-    (10 downTo 1 step 3).toMany()
-        .testMany {
+    (10 downTo 1 step 3).toObservable()
+        .testObservable {
           item(10)
           item(7)
           item(4)
@@ -166,8 +115,8 @@ class ManySourceTest {
   }
 
   @Test fun longProgression() = runTest {
-    (10L downTo 1L step 3L).toMany()
-        .testMany {
+    (10L downTo 1L step 3L).toObservable()
+        .testObservable {
           item(10L)
           item(7L)
           item(4L)
@@ -177,8 +126,8 @@ class ManySourceTest {
   }
 
   @Test fun charProgression() = runTest {
-    ('z' downTo 'a' step 5).toMany()
-        .testMany {
+    ('z' downTo 'a' step 5).toObservable()
+        .testObservable {
           item('z')
           item('u')
           item('p')

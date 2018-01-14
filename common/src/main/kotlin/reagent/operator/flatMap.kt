@@ -19,27 +19,27 @@ import kotlinx.coroutines.experimental.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 import reagent.Maybe
 import reagent.One
 import reagent.Task
 import kotlin.DeprecationLevel.ERROR
 
-fun <I, O> Many<I>.flatMap(func: (I) -> Many<O>): Many<O> = ManyFlatMapMany(this, func)
+fun <I, O> Observable<I>.flatMap(func: (I) -> Observable<O>): Observable<O> = ObservableFlatMapObservable(this, func)
 
-internal class ManyFlatMapMany<U, out D>(
-    private val upstream: Many<U>,
-    private val func: (U) -> Many<D>
-) : Many<D>() {
+internal class ObservableFlatMapObservable<U, out D>(
+    private val upstream: Observable<U>,
+    private val func: (U) -> Observable<D>
+) : Observable<D>() {
   override suspend fun subscribe(emit: Emitter<D>) = TODO()
 }
 
-fun <I> Many<I>.flatMap(func: (I) -> Task): Task = ManyFlatMapTask(this, func)
+fun <I> Observable<I>.flatMap(func: (I) -> Task): Task = ObservableFlatMapTask(this, func)
 fun <I> Maybe<I>.flatMap(func: (I) -> Task): Task = MaybeFlatMapTask(this, func)
 fun <I> One<I>.flatMap(func: (I) -> Task): Task = MaybeFlatMapTask(this, func)
 
-internal class ManyFlatMapTask<in U>(
-    private val upstream: Many<U>,
+internal class ObservableFlatMapTask<in U>(
+    private val upstream: Observable<U>,
     private val func: (U) -> Task
 ) : Task() {
   override suspend fun run() {
@@ -79,4 +79,4 @@ internal class OneFlatMapOne<U, D>(
 }
 
 @Deprecated("Task produces no items so mapping has no effect.", level = ERROR)
-fun Task.flatMap(func: (Nothing) -> Many<*>): Task = this
+fun Task.flatMap(func: (Nothing) -> Observable<*>): Task = this

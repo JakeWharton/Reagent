@@ -15,13 +15,12 @@
  */
 package reagent.tester
 
-import reagent.Many
-import reagent.Emitter
+import reagent.Observable
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
-class ManyAsserter<T>(private val events: MutableList<Any>) {
+class ObservableAsserter<T>(private val events: MutableList<Any>) {
   fun item(item: T) {
     assertEquals(Item(item), events.removeAt(0))
   }
@@ -35,7 +34,7 @@ class ManyAsserter<T>(private val events: MutableList<Any>) {
   }
 }
 
-suspend fun <T> Many<T>.testMany(assertions: ManyAsserter<T>.() -> Unit) {
+suspend fun <T> Observable<T>.testObservable(assertions: ObservableAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
   try {
@@ -47,7 +46,7 @@ suspend fun <T> Many<T>.testMany(assertions: ManyAsserter<T>.() -> Unit) {
     events.add(Error(t))
   }
 
-  ManyAsserter<T>(events).assertions()
+  ObservableAsserter<T>(events).assertions()
 
   assertTrue(events.isEmpty(), "Unconsumed events: $events")
 }

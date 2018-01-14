@@ -16,13 +16,13 @@
 package reagent.operator
 
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 import reagent.Maybe
 import reagent.One
 import reagent.Task
 import kotlin.DeprecationLevel.ERROR
 
-fun <I, O> Many<I>.map(mapper: (I) -> O): Many<O> = ManyMap(this, mapper)
+fun <I, O> Observable<I>.map(mapper: (I) -> O): Observable<O> = ObservableMap(this, mapper)
 
 fun <I, O> Maybe<I>.map(mapper: (I) -> O): Maybe<O> = MaybeMap(this, mapper)
 
@@ -32,10 +32,10 @@ fun <I, O> One<I>.map(mapper: (I) -> O): One<O> = OneMap(this, mapper)
 @Deprecated("Task has no items so mapping does not make sense.", level = ERROR)
 fun <O> Task.map(mapper: (Nothing) -> O): Task = this
 
-internal class ManyMap<in U, out D>(
-    private val upstream: Many<U>,
+internal class ObservableMap<in U, out D>(
+    private val upstream: Observable<U>,
     private val mapper: (U) -> D
-) : Many<D>() {
+) : Observable<D>() {
   override suspend fun subscribe(emit: Emitter<D>) {
     upstream.subscribe { emit(mapper(it)) }
   }

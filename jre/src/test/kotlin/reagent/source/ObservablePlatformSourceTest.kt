@@ -4,16 +4,16 @@ import kotlinx.coroutines.experimental.channels.Channel
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import reagent.runTest
-import reagent.tester.testMany
+import reagent.tester.testObservable
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ManyPlatformSourceTest {
+class ObservablePlatformSourceTest {
   @Test fun fromCallable() = runTest {
     val called = AtomicBoolean()
     Callable { called.getAndSet(true) }
         .asMany()
-        .testMany {
+        .testObservable {
           item(false)
           complete()
         }
@@ -24,7 +24,7 @@ class ManyPlatformSourceTest {
     val exception = RuntimeException("Oops!")
     Callable { throw exception }
         .asMany()
-        .testMany {
+        .testObservable {
           error(exception)
         }
   }
@@ -34,7 +34,7 @@ class ManyPlatformSourceTest {
     val called = AtomicBoolean()
     Runnable { called.set(true) }
         .asMany<Any>()
-        .testMany {
+        .testObservable {
           complete()
         }
     assertTrue(called.get())
@@ -45,7 +45,7 @@ class ManyPlatformSourceTest {
     val exception = RuntimeException("Oops!")
     Runnable { throw exception }
         .asMany<Any>()
-        .testMany {
+        .testObservable {
           error(exception)
         }
   }
@@ -57,7 +57,7 @@ class ManyPlatformSourceTest {
     channel.close()
 
     channel.toMany()
-        .testMany {
+        .testObservable {
           item("Hello")
           item("World")
           complete()

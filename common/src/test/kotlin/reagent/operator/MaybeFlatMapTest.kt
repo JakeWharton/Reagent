@@ -16,11 +16,11 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.emptyMaybe
-import reagent.source.maybeOf
-import reagent.source.taskRunning
+import reagent.source.observableRunning
+import reagent.source.test.emptyMaybe
 import reagent.source.test.failTask
-import reagent.source.toMaybe
+import reagent.source.test.maybeOf
+import reagent.source.test.toMaybe
 import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -30,8 +30,8 @@ class MaybeFlatMapTest {
 // TODO overload resolution doesn't work here
 //  @Test fun flatMapMany() = runTest {
 //    maybeOf("Item")
-//        .flatMap { manyOf("Hello", "World") }
-//        .testMany {
+//        .flatMap { observableOf("Hello", "World") }
+//        .testObservable {
 //          item("Hello")
 //          item("World")
 //          complete()
@@ -40,8 +40,8 @@ class MaybeFlatMapTest {
 //
 //  @Test fun flatMapManyNothing() = runTest {
 //    emptyMaybe<String>()
-//        .flatMap { manyOf("Hello", "World") }
-//        .testMany {
+//        .flatMap { observableOf("Hello", "World") }
+//        .testObservable {
 //          complete()
 //        }
 //  }
@@ -50,7 +50,7 @@ class MaybeFlatMapTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMaybe<String>()
 //        .flatMap { failMany<String>() }
-//        .testMany {
+//        .testObservable {
 //          error(exception)
 //        }
 //  }
@@ -108,7 +108,7 @@ class MaybeFlatMapTest {
   @Test fun flatMapTask() = runTest {
     var called = false
     maybeOf("Item")
-        .flatMap { taskRunning { called = true } }
+        .flatMap { observableRunning { called = true } }
         .testTask {
           complete()
         }
@@ -118,7 +118,7 @@ class MaybeFlatMapTest {
   @Test fun flatMapTaskComplete() = runTest {
     var called = false
     emptyMaybe<String>()
-        .flatMap { taskRunning { called = true } }
+        .flatMap { observableRunning { called = true } }
         .testTask {
           complete()
         }

@@ -16,7 +16,7 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.oneOf
+import reagent.source.observableOf
 import reagent.source.toOne
 import reagent.tester.testOne
 import kotlin.test.Test
@@ -24,7 +24,7 @@ import kotlin.test.fail
 
 class OneMapTest {
   @Test fun map() = runTest {
-    oneOf("Hello")
+    observableOf("Hello")
         .map(String::toUpperCase)
         .testOne {
           item("HELLO")
@@ -42,7 +42,7 @@ class OneMapTest {
 
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    oneOf("Hello")
+    observableOf("Hello")
         .map { throw exception }
         .testOne {
           error(exception)

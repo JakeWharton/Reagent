@@ -1,13 +1,13 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.manyOf
+import reagent.source.observableOf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ManyToListTest {
+class ObservableToListTest {
   @Test fun toList() = runTest {
-    val list = manyOf(1, 2, 3).toList()
+    val list = observableOf(1, 2, 3).toList()
     assertEquals(listOf(1, 2, 3), list)
   }
 }

@@ -1,13 +1,13 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.emptyMany
-import reagent.source.manyOf
+import reagent.source.observableOf
+import reagent.source.test.emptyMany
 import reagent.tester.testOne
 import kotlin.test.Test
 import kotlin.test.fail
 
-class ManyAnyTest {
+class ObservableAnyTest {
   @Test fun empty() = runTest {
     emptyMany<Any>()
         .any { fail() }
@@ -17,7 +17,7 @@ class ManyAnyTest {
   }
 
   @Test fun success() = runTest {
-    manyOf(1, 2, 3)
+    observableOf(1, 2, 3)
         .any { it == 2 }
         .testOne {
           item(true)
@@ -25,7 +25,7 @@ class ManyAnyTest {
   }
 
   @Test fun failure() = runTest {
-    manyOf(1, 2, 3)
+    observableOf(1, 2, 3)
         .all { false }
         .testOne {
           item(false)

@@ -43,7 +43,7 @@ class OnePlatformSourceTest {
   }
 
   @Test fun itemToPromise() = runTest {
-    val value = oneOf("Hello")
+    val value = observableOf("Hello")
         .toPromise()
         .await()
     assertEquals("Hello", value)

@@ -17,10 +17,10 @@ package reagent.source
 
 import kotlin.js.Promise
 import kotlinx.coroutines.experimental.launch
-import reagent.Many
+import reagent.Observable
 import reagent.One
 
-actual fun interval(periodMillis: Int): Many<Int> = ManyIntervalInt(periodMillis)
+actual fun interval(periodMillis: Int): Observable<Int> = ObservableIntervalInt(periodMillis)
 actual fun timer(delayMillis: Int): One<Unit> = OneTimerInt(delayMillis)
 
 fun <I> Promise<I>.toOne(): One<I> = OneFromPromise(this)

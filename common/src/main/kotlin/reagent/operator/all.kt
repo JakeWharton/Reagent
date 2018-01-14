@@ -1,12 +1,12 @@
 package reagent.operator
 
-import reagent.Many
+import reagent.Observable
 import reagent.One
 
-fun <I> Many<I>.all(predicate: (I) -> Boolean): One<Boolean> = ManyAll(this, predicate)
+fun <I> Observable<I>.all(predicate: (I) -> Boolean): One<Boolean> = ObservableAll(this, predicate)
 
-internal class ManyAll<out I>(
-  private val upstream: Many<I>,
+internal class ObservableAll<out I>(
+  private val upstream: Observable<I>,
   private val predicate: (I) -> Boolean
 ) : One<Boolean>() {
   override suspend fun produce(): Boolean {

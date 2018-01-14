@@ -1,8 +1,8 @@
 package reagent.source
 
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 
-internal class ManyDeferred<out I>(private val func: () -> Many<I>): Many<I>() {
+internal class ObservableDeferred<out I>(private val func: () -> Observable<I>): Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) = func().subscribe(emit)
 }

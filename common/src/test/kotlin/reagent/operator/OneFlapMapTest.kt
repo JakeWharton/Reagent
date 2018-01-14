@@ -22,8 +22,8 @@ import kotlin.test.Ignore
 class OneFlapMapTest {
 //  @Test fun flatMapMany() = runTest {
 //    oneOf("Item")
-//        .flatMap { manyOf("Hello", "World") }
-//        .testMany {
+//        .flatMap { observableOf("Hello", "World") }
+//        .testObservable {
 //          item("Hello")
 //          item("World")
 //          complete()
@@ -34,7 +34,7 @@ class OneFlapMapTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toOne<String>()
 //        .flatMap { failMany<String>() }
-//        .testMany {
+//        .testObservable {
 //          error(exception)
 //        }
 //  }
@@ -75,7 +75,7 @@ class OneFlapMapTest {
 //
 //  @Test fun flatMapTask() = runTest {
 //    oneOf("Item")
-//        .flatMap { emptyTask() }
+//        .flatMap { emptyObservable() }
 //        .testTask {
 //          complete()
 //        }

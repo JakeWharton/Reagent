@@ -32,7 +32,14 @@ class TaskSourceTest {
   }
 
   @Test fun empty() = runTest {
-    emptyTask()
+    emptyObservable()
+        .testTask {
+          complete()
+        }
+  }
+
+  @Test fun noItems() = runTest {
+    observableOf()
         .testTask {
           complete()
         }
@@ -48,7 +55,7 @@ class TaskSourceTest {
 
   @Test fun running() = runTest {
     var called = false
-    taskRunning { called = true }
+    observableRunning { called = true }
         .testTask {
           complete()
         }
@@ -57,7 +64,7 @@ class TaskSourceTest {
 
   @Test fun runningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    taskRunning { throw exception }
+    observableRunning { throw exception }
         .testTask {
           error(exception)
         }
@@ -65,7 +72,7 @@ class TaskSourceTest {
 
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = deferTask { called++; emptyTask() }
+    val deferred = deferTask { called++; emptyObservable() }
     deferred.testTask {
       complete()
     }

@@ -16,13 +16,13 @@
 package reagent.operator
 
 import reagent.Emitter
-import reagent.Many
+import reagent.Observable
 import reagent.Maybe
 import reagent.One
 import reagent.Task
 import kotlin.DeprecationLevel.ERROR
 
-fun <I> Many<I>.filter(predicate: (I) -> Boolean): Many<I> = ManyFilter(this, predicate)
+fun <I> Observable<I>.filter(predicate: (I) -> Boolean): Observable<I> = ObservableFilter(this, predicate)
 
 fun <I> Maybe<I>.filter(predicate: (I) -> Boolean): Maybe<I> = MaybeFilter(this, predicate)
 
@@ -32,10 +32,10 @@ fun <I> One<I>.filter(predicate: (I) -> Boolean): Maybe<I> = OneFilter(this, pre
 @Deprecated("Task has no items so filtering does not make sense.", level = ERROR)
 fun Task.filter(predicate: (Nothing) -> Boolean) = this
 
-internal class ManyFilter<out I>(
-    private val upstream: Many<I>,
+internal class ObservableFilter<out I>(
+    private val upstream: Observable<I>,
     private val predicate: (I) -> Boolean
-) : Many<I>() {
+) : Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {
     upstream.subscribe {
       if (predicate(it)) {

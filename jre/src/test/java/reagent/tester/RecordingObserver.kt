@@ -6,7 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import reagent.Many
+import reagent.Observable
 import reagent.Maybe
 import reagent.One
 import reagent.Task
@@ -32,7 +32,7 @@ class RecordingRule : TestRule {
     }
   }
 
-  fun <I, S : Subject<S, I>> many(asserter: (I) -> S) = ManyRecorder(asserter).also { recorders.add(it) }
+  fun <I, S : Subject<S, I>> observable(asserter: (I) -> S) = ObservableRecorder(asserter).also { recorders.add(it) }
   fun <I, S : Subject<S, I>> maybe(asserter: (I) -> S) = MaybeRecorder(asserter).also { recorders.add(it) }
   fun <I, S : Subject<S, I>> one(asserter: (I) -> S) = OneRecorder(asserter).also { recorders.add(it) }
   fun task() = TaskRecorder().also { recorders.add(it) }
@@ -74,9 +74,9 @@ abstract class Recorder<I, S : Subject<S, I>>(
   }
 }
 
-class ManyRecorder<I, S : Subject<S, I>>(
+class ObservableRecorder<I, S : Subject<S, I>>(
   asserter: (I) -> S
-) : Recorder<I, S>(asserter), Many.Observer<I> {
+) : Recorder<I, S>(asserter), Observable.Observer<I> {
   override fun onNext(item: I) = event(Item(item))
   override fun onComplete() = event(Complete)
   override fun onError(t: Throwable) = event(Error(t))

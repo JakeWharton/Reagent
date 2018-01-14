@@ -16,18 +16,18 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.emptyMany
-import reagent.source.manyOf
-import reagent.source.toMany
-import reagent.tester.testMany
+import reagent.source.observableOf
+import reagent.source.test.emptyMany
+import reagent.source.test.toMany
+import reagent.tester.testObservable
 import kotlin.test.Test
 import kotlin.test.fail
 
-class ManyMapTest {
+class ObservableMapTest {
   @Test fun map() = runTest {
-    manyOf("Hello", "World")
+    observableOf("Hello", "World")
         .map(String::toUpperCase)
-        .testMany {
+        .testObservable {
           item("HELLO")
           item("WORLD")
           complete()
@@ -37,7 +37,7 @@ class ManyMapTest {
   @Test fun mapEmpty() = runTest {
     emptyMany<Nothing>()
         .map { fail() }
-        .testMany {
+        .testObservable {
           complete()
         }
   }
@@ -46,16 +46,16 @@ class ManyMapTest {
     val exception = RuntimeException("Oops!")
     exception.toMany<Nothing>()
         .map { fail() }
-        .testMany {
+        .testObservable {
           error(exception)
         }
   }
 
   @Test fun mapThrowing() = runTest {
     val exception = RuntimeException("Oops!")
-    manyOf("Hello", "World")
+    observableOf("Hello", "World")
         .map { throw exception }
-        .testMany {
+        .testObservable {
           error(exception)
         }
   }

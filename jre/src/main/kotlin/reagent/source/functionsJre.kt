@@ -16,7 +16,7 @@
 package reagent.source
 
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
-import reagent.Many
+import reagent.Observable
 import reagent.Maybe
 import reagent.One
 import reagent.Task
@@ -25,24 +25,24 @@ import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-fun <I> Callable<I>.asMany(): Many<I> = OneFromCallable(this)
+fun <I> Callable<I>.asMany(): Observable<I> = OneFromCallable(this)
 fun <I> Callable<I>.asMaybe(): Maybe<I> = OneFromCallable(this)
 fun <I> Callable<I>.asOne(): One<I> = OneFromCallable(this)
 fun Callable<*>.asTask(): Task = TaskFromCallable(this)
 
-fun <I> Runnable.asMany(): Many<I> = TaskFromRunnable(this)
+fun <I> Runnable.asMany(): Observable<I> = TaskFromRunnable(this)
 fun <I> Runnable.asMaybe(): Maybe<I> = TaskFromRunnable(this)
 fun Runnable.asTask(): Task = TaskFromRunnable(this)
 
-fun <I> ReceiveChannel<I>.toMany(): Many<I> = ManyFromChannel(this)
+fun <I> ReceiveChannel<I>.toMany(): Observable<I> = ObservableFromChannel(this)
 
 @Deprecated(
     "Use overload that accepts a TimeUnit.",
     ReplaceWith("interval(periodMillis, TimeUnit.MILLISECONDS)", "java.util.concurrent.TimeUnit")
 )
-actual fun interval(periodMillis: Int): Many<Int> = ManyIntervalInt(periodMillis)
-fun interval(period: Long, unit: TimeUnit): Many<Int> = ManyInterval(period, unit)
-fun Duration.asInterval(): Many<Int> = ManyInterval(toMillis(), MILLISECONDS)
+actual fun interval(periodMillis: Int): Observable<Int> = ObservableIntervalInt(periodMillis)
+fun interval(period: Long, unit: TimeUnit): Observable<Int> = ObservableInterval(period, unit)
+fun Duration.asInterval(): Observable<Int> = ObservableInterval(toMillis(), MILLISECONDS)
 
 @Deprecated(
     "Use overload that accepts a TimeUnit.",

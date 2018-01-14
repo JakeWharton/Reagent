@@ -16,27 +16,27 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.emptyMany
-import reagent.source.manyOf
-import reagent.source.taskRunning
+import reagent.source.observableOf
+import reagent.source.observableRunning
+import reagent.source.test.emptyMany
 import reagent.source.test.failTask
-import reagent.source.toMany
+import reagent.source.test.toMany
 import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ManyConcatMapTest {
+class ObservableConcatMapTest {
 // TODO overload resolution doesn't work here
 //  @Test fun concatMapMany() = runTest {
 //    val concatMapItems = mutableListOf<String>()
-//    var manyCalled = 0
+//    var observableCalled = 0
 //
-//    manyOf("One", "Two")
+//    observableOf("One", "Two")
 //        .concatMap {
 //          concatMapItems.add(it)
-//          manyReturning { ++manyCalled }
+//          observableReturning { ++observableCalled }
 //        }
-//        .testMany {
+//        .testObservable {
 //          item(1)
 //          item(2)
 //          complete()
@@ -46,7 +46,7 @@ class ManyConcatMapTest {
 //  @Test fun concatMapManyEmpty() = runTest {
 //    emptyMany<String>()
 //        .concatMap { failMany<String>() }
-//        .testMany {
+//        .testObservable {
 //          complete()
 //        }
 //  }
@@ -55,7 +55,7 @@ class ManyConcatMapTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMany<String>()
 //        .concatMap { failMany<String>() }
-//        .testMany {
+//        .testObservable {
 //          error(exception)
 //        }
 //  }
@@ -64,12 +64,12 @@ class ManyConcatMapTest {
 //    val concatMapItems = mutableListOf<String>()
 //    var maybeCalled = 0
 //
-//    manyOf("One", "Two")
+//    observableOf("One", "Two")
 //        .concatMap {
 //          concatMapItems.add(it)
 //          maybeReturning { ++maybeCalled }
 //        }
-//        .testMany {
+//        .testObservable {
 //          item(1)
 //          item(2)
 //          complete()
@@ -82,7 +82,7 @@ class ManyConcatMapTest {
 //  @Test fun concatMapMaybeEmpty() = runTest {
 //    emptyMany<String>()
 //        .concatMap { failMaybe<String>() }
-//        .testMany {
+//        .testObservable {
 //          complete()
 //        }
 //  }
@@ -91,7 +91,7 @@ class ManyConcatMapTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMany<String>()
 //        .concatMap { failMaybe<String>() }
-//        .testMany {
+//        .testObservable {
 //          error(exception)
 //        }
 //  }
@@ -100,12 +100,12 @@ class ManyConcatMapTest {
 //    val concatMapItems = mutableListOf<String>()
 //    var oneCalled = 0
 //
-//    manyOf("One", "Two")
+//    observableOf("One", "Two")
 //        .concatMap {
 //          concatMapItems.add(it)
-//          oneReturning { ++oneCalled }
+//          observableReturning { ++oneCalled }
 //        }
-//        .testMany {
+//        .testObservable {
 //          item(1)
 //          item(2)
 //          complete()
@@ -118,7 +118,7 @@ class ManyConcatMapTest {
 //  @Test fun concatMapOneEmpty() = runTest {
 //    emptyMany<String>()
 //        .concatMap { failOne<String>() }
-//        .testMany {
+//        .testObservable {
 //          complete()
 //        }
 //  }
@@ -127,7 +127,7 @@ class ManyConcatMapTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMany<String>()
 //        .concatMap { failOne<String>() }
-//        .testMany {
+//        .testObservable {
 //          error(exception)
 //        }
 //  }
@@ -136,10 +136,10 @@ class ManyConcatMapTest {
     val concatMapItems = mutableListOf<String>()
     var taskCalled = 0
 
-    manyOf("One", "Two")
+    observableOf("One", "Two")
         .concatMap {
           concatMapItems.add(it)
-          taskRunning { ++taskCalled }
+          observableRunning { ++taskCalled }
         }
         .testTask {
           complete()
