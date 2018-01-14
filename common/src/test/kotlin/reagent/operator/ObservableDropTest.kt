@@ -5,6 +5,8 @@ import reagent.source.emptyObservable
 import reagent.source.observableOf
 import reagent.tester.testObservable
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ObservableDropTest {
   @Test fun emptyDrop() = runTest {
@@ -19,7 +21,10 @@ class ObservableDropTest {
     emptyObservable()
         .dropOrError(1)
         .testObservable {
-          error { it is NoSuchElementException && it.message == "Drop wanted at least 1 item but saw 0" }
+          error {
+            assertTrue(it is NoSuchElementException)
+            assertEquals("Drop wanted at least 1 item but saw 0", it.message)
+          }
         }
   }
 
