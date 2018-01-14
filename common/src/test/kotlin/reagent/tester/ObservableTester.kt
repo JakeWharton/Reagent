@@ -32,6 +32,10 @@ class ObservableAsserter<T>(private val events: MutableList<Any>) {
   fun error(t: Throwable) {
     assertEquals(Error(t), events.removeAt(0))
   }
+
+  fun error(asserter: (Throwable) -> Boolean) {
+    assertTrue(asserter((events.removeAt(0) as Error).t))
+  }
 }
 
 suspend fun <T> Observable<T>.testObservable(assertions: ObservableAsserter<T>.() -> Unit) {
