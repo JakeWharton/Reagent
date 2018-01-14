@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class TaskSourceTest {
-  @Test fun task() = runTest {
+  @Test fun suspendingLambda() = runTest {
     task {
       delay(10)
     }.testTask {
@@ -38,7 +38,7 @@ class TaskSourceTest {
         }
   }
 
-  @Test fun error() = runTest {
+  @Test fun throwable() = runTest {
     val exception = RuntimeException("Oops")
     exception.toTask()
         .testTask {

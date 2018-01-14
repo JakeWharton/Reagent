@@ -24,7 +24,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class OneSourceTest {
-  @Test fun one() = runTest {
+  @Test fun suspendingLambda() = runTest {
     one {
       delay(10)
       "Hello"
@@ -33,14 +33,14 @@ class OneSourceTest {
     }
   }
 
-  @Test fun just() = runTest {
+  @Test fun of() = runTest {
     oneOf("Hello")
         .testOne {
           item("Hello")
         }
   }
 
-  @Test fun error() = runTest {
+  @Test fun throwable() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toOne<Any>()
         .testOne {

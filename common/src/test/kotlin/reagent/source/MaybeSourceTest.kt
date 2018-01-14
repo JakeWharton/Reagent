@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class MaybeSourceTest {
-  @Test fun maybe() = runTest {
+  @Test fun suspendingLambda() = runTest {
     maybe {
       delay(10)
       "Hello"
@@ -32,7 +32,7 @@ class MaybeSourceTest {
     }
   }
 
-  @Test fun just() = runTest {
+  @Test fun of() = runTest {
     maybeOf("Hello")
         .testMaybe {
           item("Hello")
@@ -46,7 +46,7 @@ class MaybeSourceTest {
         }
   }
 
-  @Test fun error() = runTest {
+  @Test fun throwable() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMaybe<Any>()
         .testMaybe {

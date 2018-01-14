@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class ManySourceTest {
-  @Test fun many() = runTest {
+  @Test fun suspendingLambda() = runTest {
     many<String> { emit ->
       delay(10)
       emit("Hello")
@@ -33,7 +33,7 @@ class ManySourceTest {
     }
   }
 
-  @Test fun just() = runTest {
+  @Test fun ofSingle() = runTest {
     manyOf("Hello")
         .testMany {
           item("Hello")
@@ -41,7 +41,7 @@ class ManySourceTest {
         }
   }
 
-  @Test fun fromArray() = runTest {
+  @Test fun ofMultiple() = runTest {
     manyOf("Hello", "World")
         .testMany {
           item("Hello")
@@ -50,7 +50,14 @@ class ManySourceTest {
         }
   }
 
-  @Test fun arrayToMany() = runTest {
+  @Test fun ofEmpty() = runTest {
+    manyOf<Any>()
+        .testMany {
+          complete()
+        }
+  }
+
+  @Test fun array() = runTest {
     arrayOf("Hello", "World")
         .toMany()
         .testMany {
@@ -60,7 +67,7 @@ class ManySourceTest {
         }
   }
 
-  @Test fun iterableToMany() = runTest {
+  @Test fun iterable() = runTest {
     listOf("Hello", "World")
         .toMany()
         .testMany {
@@ -70,7 +77,7 @@ class ManySourceTest {
         }
   }
 
-  @Test fun sequenceToMany() = runTest {
+  @Test fun sequence() = runTest {
     sequenceOf(1, 2, 4, 8)
         .toMany()
         .testMany {
@@ -89,7 +96,7 @@ class ManySourceTest {
         }
   }
 
-  @Test fun error() = runTest {
+  @Test fun throwable() = runTest {
     val exception = RuntimeException("Oops!")
     exception.toMany<Any>()
         .testMany {
