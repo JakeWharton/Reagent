@@ -8,7 +8,7 @@ import reagent.tester.testOne
 import kotlin.test.Test
 import kotlin.test.fail
 
-class MaybeToOneTest {
+class MaybeItemTest {
   @Test fun nothingItem() = runTest {
     emptyMaybe<Nothing>()
         .item()

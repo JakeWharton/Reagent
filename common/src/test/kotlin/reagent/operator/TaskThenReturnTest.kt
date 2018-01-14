@@ -7,7 +7,7 @@ import reagent.tester.testOne
 import kotlin.test.Test
 import kotlin.test.fail
 
-class TaskToOneTest {
+class TaskThenReturnTest {
   @Test fun nothingThenReturnUnit() = runTest {
     emptyObservable()
         .thenReturnUnit()
