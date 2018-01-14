@@ -6,6 +6,8 @@ import reagent.source.test.maybeOf
 import reagent.source.test.toMaybe
 import reagent.tester.testOne
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class MaybeItemTest {
@@ -13,7 +15,10 @@ class MaybeItemTest {
     emptyMaybe<Nothing>()
         .item()
         .testOne {
-          error { it is NoSuchElementException && it.message == "Maybe was empty." }
+          error {
+            assertTrue(it is NoSuchElementException)
+            assertEquals("Maybe was empty.", it.message)
+          }
         }
   }
 

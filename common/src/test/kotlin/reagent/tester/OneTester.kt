@@ -28,8 +28,8 @@ class OneAsserter<T>(private val events: MutableList<Any>) {
     assertEquals(Error(t), events.removeAt(0))
   }
 
-  fun error(asserter: (Throwable) -> Boolean) {
-    assertTrue(asserter((events.removeAt(0) as Error).t))
+  fun error(asserter: (Throwable) -> Unit) {
+    asserter((events.removeAt(0) as Error).t)
   }
 }
 
