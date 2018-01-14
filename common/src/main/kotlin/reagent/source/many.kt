@@ -4,6 +4,8 @@ import kotlinx.coroutines.experimental.delay
 import reagent.Emitter
 import reagent.Many
 
+fun <I> many(body: suspend (emit: Emitter<I>) -> Unit): Many<I> = ManyFromSuspendingLambda(body)
+
 fun <I> emptyMany(): Many<I> = TaskComplete
 fun <I> manyOf(item: I): Many<I> = OneJust(item)
 fun <I> manyOf(vararg items: I): Many<I> = ManyFromArray(items)
@@ -22,6 +24,12 @@ fun LongProgression.toMany(): Many<Long> = ManyFromLongProgression(this)
 fun CharProgression.toMany(): Many<Char> = ManyFromCharProgression(this)
 
 expect fun interval(periodMillis: Int): Many<Int>
+
+internal class ManyFromSuspendingLambda<out I>(
+  private val body: suspend (emit: Emitter<I>) -> Unit
+): Many<I>() {
+  override suspend fun subscribe(emit: Emitter<I>) = body(emit)
+}
 
 internal class ManyFromArray<out I>(private val items: Array<out I>) : Many<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {

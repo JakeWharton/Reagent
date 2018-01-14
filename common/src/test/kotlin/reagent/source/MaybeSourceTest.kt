@@ -15,6 +15,7 @@
  */
 package reagent.source
 
+import kotlinx.coroutines.experimental.delay
 import reagent.runTest
 import reagent.tester.testMaybe
 import kotlin.test.Test
@@ -22,6 +23,15 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class MaybeSourceTest {
+  @Test fun maybe() = runTest {
+    maybe {
+      delay(10)
+      "Hello"
+    }.testMaybe {
+      item("Hello")
+    }
+  }
+
   @Test fun just() = runTest {
     maybeOf("Hello")
         .testMaybe {

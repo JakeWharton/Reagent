@@ -15,6 +15,7 @@
  */
 package reagent.source
 
+import kotlinx.coroutines.experimental.delay
 import reagent.runTest
 import reagent.tester.testOne
 import kotlin.test.Ignore
@@ -23,6 +24,15 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class OneSourceTest {
+  @Test fun one() = runTest {
+    one {
+      delay(10)
+      "Hello"
+    }.testOne {
+      item("Hello")
+    }
+  }
+
   @Test fun just() = runTest {
     oneOf("Hello")
         .testOne {

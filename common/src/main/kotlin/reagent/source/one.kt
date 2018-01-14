@@ -3,6 +3,8 @@ package reagent.source
 import kotlinx.coroutines.experimental.delay
 import reagent.One
 
+fun <I> one(body: suspend () -> I): One<I> = OneFromSuspendingLambda(body)
+
 fun <I> oneOf(item: I): One<I> = OneJust(item)
 fun <I> oneReturning(func: () -> I): One<I> = OneFromLambda(func)
 
@@ -14,6 +16,10 @@ expect fun timer(delayMillis: Int): One<Unit>
 
 internal class OneError<out I>(private val t: Throwable) : One<I>() {
   override suspend fun produce() = throw t
+}
+
+internal class OneFromSuspendingLambda<out I>(private val body: suspend () -> I): One<I>() {
+  override suspend fun produce() = body()
 }
 
 internal class OneFromLambda<out I>(private val func: () -> I) : One<I>() {

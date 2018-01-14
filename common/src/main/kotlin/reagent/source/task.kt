@@ -2,6 +2,8 @@ package reagent.source
 
 import reagent.Task
 
+fun task(body: suspend () -> Unit): Task = TaskFromSuspendingLambda(body)
+
 fun emptyTask(): Task = TaskComplete
 fun taskRunning(func: () -> Unit): Task = TaskFromLambda(func)
 
@@ -17,10 +19,14 @@ internal class TaskError(private val t: Throwable) : Task() {
   override suspend fun run() = throw t
 }
 
+internal class TaskFromSuspendingLambda(private val body: suspend () -> Unit) : Task() {
+  override suspend fun run() = body()
+}
+
 internal class TaskFromLambda(private val func: () -> Unit) : Task() {
   override suspend fun run() = func()
 }
 
-internal class TaskDeferred(private val func: () -> Task): Task() {
+internal class TaskDeferred(private val func: () -> Task) : Task() {
   override suspend fun run() = func().run()
 }

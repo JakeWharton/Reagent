@@ -15,6 +15,7 @@
  */
 package reagent.source
 
+import kotlinx.coroutines.experimental.delay
 import reagent.runTest
 import reagent.tester.testMany
 import kotlin.test.Test
@@ -22,6 +23,16 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class ManySourceTest {
+  @Test fun many() = runTest {
+    many<String> { emit ->
+      delay(10)
+      emit("Hello")
+    }.testMany {
+      item("Hello")
+      complete()
+    }
+  }
+
   @Test fun just() = runTest {
     manyOf("Hello")
         .testMany {

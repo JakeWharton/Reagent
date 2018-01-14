@@ -15,6 +15,7 @@
  */
 package reagent.source
 
+import kotlinx.coroutines.experimental.delay
 import reagent.runTest
 import reagent.tester.testTask
 import kotlin.test.Test
@@ -22,6 +23,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class TaskSourceTest {
+  @Test fun task() = runTest {
+    task {
+      delay(10)
+    }.testTask {
+      complete()
+    }
+  }
+
   @Test fun empty() = runTest {
     emptyTask()
         .testTask {
