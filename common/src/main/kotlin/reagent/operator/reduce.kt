@@ -33,7 +33,7 @@ internal class ObservableReduce<out R, out I : R>(
   private val upstream: Observable<I>,
   private val operation: (accumulator: R, item: I) -> R
 ) : One<R>() {
-  @Suppress("UNCHECKED_CAST") // Value is set to an instance of R before any cast occurs.
+  @Suppress("UNCHECKED_CAST") // 'accumulator' is set to an R instance before cast occurs.
   override suspend fun produce(): R {
     var first = true
     var accumulator: Any? = null
