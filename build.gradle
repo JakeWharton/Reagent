@@ -39,6 +39,9 @@ buildscript {
 }
 
 subprojects {
+  group = GROUP
+  version = VERSION_NAME
+
   repositories {
     mavenCentral()
     maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }

@@ -43,3 +43,5 @@ task runTests(type: NodeTask, dependsOn: [compileTestKotlin2Js, populateNodeModu
 }
 
 test.dependsOn(runTests)
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

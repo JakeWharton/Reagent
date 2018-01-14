@@ -12,3 +12,5 @@ kotlin {
     coroutines 'enable'
   }
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
