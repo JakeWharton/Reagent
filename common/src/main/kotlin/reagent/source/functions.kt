@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE") // Public API convenience aliases.
+
 package reagent.source
 
 import reagent.Emitter
@@ -41,3 +43,10 @@ fun CharProgression.toObservable(): Observable<Char> = ObservableCharProgression
 
 expect fun interval(periodMillis: Int): Observable<Int>
 expect fun timer(delayMillis: Int): One<Unit>
+
+inline fun <I> concat(first: Observable<I>, second: Observable<I>) = concat(listOf(first, second))
+fun <I> concat(vararg observables: Observable<I>): Observable<I> = ObservableConcat(observables.toList())
+fun <I> concat(observables: Iterable<Observable<I>>): Observable<I> = ObservableConcat(observables.toList())
+inline fun concat(first: Task, second: Task) = concat(listOf(first, second))
+fun concat(vararg tasks: Task): Task = TaskConcat(tasks.toList())
+fun concat(tasks: Iterable<Task>): Task = TaskConcat(tasks.toList())

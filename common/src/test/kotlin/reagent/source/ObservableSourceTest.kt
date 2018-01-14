@@ -16,6 +16,7 @@
 package reagent.source
 
 import kotlinx.coroutines.experimental.delay
+import reagent.Observable
 import reagent.runTest
 import reagent.tester.testObservable
 import kotlin.test.Test
@@ -136,5 +137,27 @@ class ObservableSourceTest {
           item('a')
           complete()
         }
+  }
+
+  @Test fun concatEmpty() = runTest {
+    concat(emptyList<Observable<Nothing>>())
+        .testObservable {
+          complete()
+        }
+  }
+
+  @Test fun concat() = runTest {
+    concat(
+        observableOf(1),
+        observableOf(2),
+        observableOf(3),
+        observableOf(4)
+    ).testObservable {
+      item(1)
+      item(2)
+      item(3)
+      item(4)
+      complete()
+    }
   }
 }

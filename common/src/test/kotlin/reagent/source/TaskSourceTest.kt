@@ -16,7 +16,9 @@
 package reagent.source
 
 import kotlinx.coroutines.experimental.delay
+import reagent.Task
 import reagent.runTest
+import reagent.tester.testObservable
 import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -81,5 +83,25 @@ class TaskSourceTest {
       complete()
     }
     assertEquals(2, called)
+  }
+
+  @Test fun concatEmpty() = runTest {
+    concat(emptyList())
+        .testTask {
+          complete()
+        }
+  }
+
+  @Test fun concat() = runTest {
+    var called = 0
+    concat(
+        observableRunning { called++ },
+        observableRunning { called++ },
+        observableRunning { called++ },
+        observableRunning { called++ }
+    ).testObservable {
+      complete()
+    }
+    assertEquals(4, called)
   }
 }
