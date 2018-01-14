@@ -8,52 +8,52 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-class ObservableTakeWhileTest {
+class ObservableDropWhileTest {
   @Test fun empty() = runTest {
     emptyObservable()
-        .takeWhile { fail() }
+        .dropWhile { fail() }
         .testObservable {
           complete()
         }
   }
 
-  @Test fun takeNone() = runTest {
+  @Test fun dropAll() = runTest {
     var called = 0
     observableOf(1, 2, 3)
-        .takeWhile { called++; false }
+        .dropWhile { called++; true }
         .testObservable {
           complete()
         }
-    assertEquals(1, called)
+    assertEquals(3, called)
   }
 
-  @Test fun takeSome() = runTest {
+  @Test fun dropSome() = runTest {
     observableOf(1, 2, 3)
-        .takeWhile { it < 3 }
+        .dropWhile { it < 2 }
         .testObservable {
-          item(1)
           item(2)
+          item(3)
           complete()
         }
   }
 
-  @Test fun takeAll() = runTest {
+  @Test fun dropNone() = runTest {
     var called = 0
     observableOf(1, 2, 3)
-        .takeWhile { called++; true }
+        .dropWhile { called++; false }
         .testObservable {
           item(1)
           item(2)
           item(3)
           complete()
         }
-    assertEquals(3, called)
+    assertEquals(1, called)
   }
 
-  @Test fun takeThrowing() = runTest {
+  @Test fun dropThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     observableOf(1, 2, 3)
-        .takeWhile { throw exception }
+        .dropWhile { throw exception }
         .testObservable {
           error(exception)
         }
