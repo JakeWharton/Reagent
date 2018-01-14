@@ -17,16 +17,13 @@ package reagent.source
 
 import kotlin.js.Promise
 import kotlinx.coroutines.experimental.launch
+import reagent.Many
 import reagent.One
-import kotlin.coroutines.experimental.suspendCoroutine
+
+actual fun interval(periodMillis: Int): Many<Int> = ManyIntervalInt(periodMillis)
+actual fun timer(delayMillis: Int): One<Unit> = OneTimerInt(delayMillis)
 
 fun <I> Promise<I>.toOne(): One<I> = OneFromPromise(this)
-
-internal class OneFromPromise<out I>(private val promise: Promise<I>): One<I>() {
-  override suspend fun produce() = suspendCoroutine<I> { continuation ->
-    promise.then(continuation::resume, continuation::resumeWithException)
-  }
-}
 
 fun <I> One<I>.toPromise(): Promise<I> = Promise { resolve, reject ->
   launch {
