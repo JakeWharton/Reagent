@@ -8,10 +8,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-class ObservableAllTest {
+class ObservableNoneTest {
   @Test fun empty() = runTest {
     emptyMany<Any>()
-        .all { fail() }
+        .none { fail() }
         .testOne {
           item(true)
         }
@@ -20,7 +20,7 @@ class ObservableAllTest {
   @Test fun success() = runTest {
     var called = 0
     observableOf(1, 2, 3)
-        .all { called++; true }
+        .none { called++; false }
         .testOne {
           item(true)
         }
@@ -30,7 +30,7 @@ class ObservableAllTest {
   @Test fun failure() = runTest {
     var called = 0
     observableOf(1, 2, 3)
-        .all { called++; it % 2 == 1 }
+        .none { called++; it % 2 == 0 }
         .testOne {
           item(false)
         }
