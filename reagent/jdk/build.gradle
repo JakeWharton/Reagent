@@ -8,9 +8,9 @@ archivesBaseName = 'reagent'
 
 dependencies {
   expectedBy project(':reagent:common')
-  api deps.kotlin.stdLib.jre
-  api deps.kotlin.coroutines.jre
-  testImplementation deps.kotlin.test.jre
+  api deps.kotlin.stdLib.jdk
+  api deps.kotlin.coroutines.jdk
+  testImplementation deps.kotlin.test.jdk
   testImplementation deps.truth
 }
 

@@ -5,10 +5,10 @@ sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
 dependencies {
-  api project(':reagent:jre')
+  api project(':reagent:jdk')
   api deps.rxjava2
 
-  testImplementation deps.kotlin.test.jre
+  testImplementation deps.kotlin.test.jdk
 }
 
 kotlin {
