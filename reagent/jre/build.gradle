@@ -1,0 +1,34 @@
+apply plugin: 'java-library'
+apply plugin: 'org.jetbrains.kotlin.platform.jvm'
+
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
+
+archivesBaseName = 'reagent'
+
+dependencies {
+  expectedBy project(':reagent:common')
+  api deps.kotlin.stdLib.jre
+  api deps.kotlin.coroutines.jre
+  testImplementation deps.kotlin.test.jre
+  testImplementation deps.truth
+}
+
+kotlin {
+  experimental {
+    coroutines 'enable'
+  }
+}
+
+test {
+  testLogging {
+    events 'passed', 'skipped', 'failed'
+  }
+}
+
+compileTestJava {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

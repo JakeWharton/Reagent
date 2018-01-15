@@ -1,5 +1,7 @@
-rootProject.name = 'reagent'
+rootProject.name = 'reagent-root'
 
-include ':common'
-include ':jre'
-include ':js'
+include ':reagent:common'
+include ':reagent:jre'
+include ':reagent:js'
+
+include ':reagent-rxjava2'
