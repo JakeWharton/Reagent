@@ -6,6 +6,7 @@ import io.reactivex.exceptions.Exceptions
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.experimental.CoroutineStart.LAZY
+import kotlinx.coroutines.experimental.JobCancellationException
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
 import reagent.Observable
@@ -19,6 +20,8 @@ internal class ObservableReagentToRx<I : Any>(
         upstream.subscribe {
           observer.onNext(it)
         }
+      } catch (ignored: JobCancellationException) {
+        return@launch
       } catch (t: Throwable) {
         Exceptions.throwIfFatal(t)
         try {
