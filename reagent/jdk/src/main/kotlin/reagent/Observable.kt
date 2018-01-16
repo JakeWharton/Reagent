@@ -41,7 +41,7 @@ actual abstract class Observable<out I> {
   }
 
   companion object {
-    @JvmStatic fun <I> createMany(body: ObservableCreator<I>): Observable<I> = ObservableFromCreator(body)
+    @JvmStatic fun <I> createObservable(body: ObservableCreator<I>): Observable<I> = ObservableFromCreator(body)
     @JvmStatic fun <I> empty(): Observable<I> = TaskComplete
     @JvmStatic fun <I> just(item: I): Observable<I> = OneJust(item)
     @JvmStatic fun <I> error(t: Throwable): Observable<I> = OneError(t)
@@ -49,6 +49,6 @@ actual abstract class Observable<out I> {
     @JvmStatic fun <I> fromIterable(items: Iterable<I>): Observable<I> = ObservableIterable(items)
     @JvmStatic fun <I> fromRunnable(runnable: Runnable): Observable<I> = TaskFromRunnable(runnable)
     @JvmStatic fun <I> fromCallable(callable: Callable<I>): Observable<I> = OneFromCallable(callable)
-    @JvmStatic fun <I> deferMany(callable: Callable<Observable<I>>): Observable<I> = ObservableDeferredCallable(callable)
+    @JvmStatic fun <I> deferObservable(callable: Callable<Observable<I>>): Observable<I> = ObservableDeferredCallable(callable)
   }
 }

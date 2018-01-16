@@ -1,14 +1,14 @@
 package reagent.operator
 
 import reagent.runTest
-import reagent.source.test.emptyMany
+import reagent.source.test.emptyActualObservable
 import reagent.source.observableOf
 import reagent.tester.testOne
 import kotlin.test.Test
 
 class ObservableCountTest {
   @Test fun empty() = runTest {
-    emptyMany<Any>()
+    emptyActualObservable<Any>()
         .count()
         .testOne {
           item(0)

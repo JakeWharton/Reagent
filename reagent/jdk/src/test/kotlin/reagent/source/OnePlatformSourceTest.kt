@@ -11,22 +11,20 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.measureTimeMillis
 
 class OnePlatformSourceTest {
-  @Test
-  fun fromCallable() = runTest {
+  @Test fun fromCallable() = runTest {
     val called = AtomicBoolean()
     Callable { called.getAndSet(true) }
-        .asOne()
+        .asObservable()
         .testOne {
           item(false)
         }
     assertTrue(called.get())
   }
 
-  @Test
-  fun fromCallableThrowing() = runTest {
+  @Test fun fromCallableThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     Callable { throw exception }
-        .asOne()
+        .asObservable()
         .testOne {
           error(exception)
         }

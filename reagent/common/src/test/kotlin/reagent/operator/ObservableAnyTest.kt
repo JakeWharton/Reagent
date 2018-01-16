@@ -2,14 +2,14 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.observableOf
-import reagent.source.test.emptyMany
+import reagent.source.test.emptyActualObservable
 import reagent.tester.testOne
 import kotlin.test.Test
 import kotlin.test.fail
 
 class ObservableAnyTest {
   @Test fun empty() = runTest {
-    emptyMany<Any>()
+    emptyActualObservable<Any>()
         .any { fail() }
         .testOne {
           item(false)

@@ -28,7 +28,7 @@ import kotlin.test.assertTrue
 
 class MaybeFlatMapTest {
 // TODO overload resolution doesn't work here
-//  @Test fun flatMapMany() = runTest {
+//  @Test fun flatMapObservable() = runTest {
 //    maybeOf("Item")
 //        .flatMap { observableOf("Hello", "World") }
 //        .testObservable {
@@ -38,7 +38,7 @@ class MaybeFlatMapTest {
 //        }
 //  }
 //
-//  @Test fun flatMapManyNothing() = runTest {
+//  @Test fun flatMapObservableNothing() = runTest {
 //    emptyMaybe<String>()
 //        .flatMap { observableOf("Hello", "World") }
 //        .testObservable {
@@ -46,10 +46,10 @@ class MaybeFlatMapTest {
 //        }
 //  }
 //
-//  @Test fun flatMapManyError() = runTest {
+//  @Test fun flatMapObservableError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toMaybe<String>()
-//        .flatMap { failMany<String>() }
+//        .flatMap { failObservable<String>() }
 //        .testObservable {
 //          error(exception)
 //        }

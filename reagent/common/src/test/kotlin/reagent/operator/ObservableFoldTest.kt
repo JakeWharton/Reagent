@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-class ManyFoldTest {
+class ObservableFoldTest {
   @Test fun empty() = runTest {
     emptyObservable()
         .fold("Hello") { _, _ -> fail() }

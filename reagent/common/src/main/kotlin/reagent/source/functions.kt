@@ -25,7 +25,7 @@ fun <I> observableOf(vararg items: I): Observable<I> = when (items.size) {
 fun <I> observableReturning(func: () -> I): One<I> = OneFromLambda(func)
 fun observableRunning(func: () -> Unit): Task = TaskFromLambda(func)
 
-fun <I> deferMany(func: () -> Observable<I>): Observable<I> = ObservableDeferred(func)
+fun <I> deferObservable(func: () -> Observable<I>): Observable<I> = ObservableDeferred(func)
 fun <I> deferMaybe(func: () -> Maybe<I>): Maybe<I> = MaybeDeferred(func)
 fun <I> deferOne(func: () -> One<I>): One<I> = OneDeferred(func)
 fun deferTask(func: () -> Task): Task = TaskDeferred(func)

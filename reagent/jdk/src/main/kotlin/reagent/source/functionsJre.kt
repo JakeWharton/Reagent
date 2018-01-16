@@ -25,16 +25,10 @@ import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-fun <I> Callable<I>.asMany(): Observable<I> = OneFromCallable(this)
-fun <I> Callable<I>.asMaybe(): Maybe<I> = OneFromCallable(this)
-fun <I> Callable<I>.asOne(): One<I> = OneFromCallable(this)
-fun Callable<*>.asTask(): Task = TaskFromCallable(this)
+fun <I> Callable<I>.asObservable(): One<I> = OneFromCallable(this)
+fun Runnable.asObservable(): Task = TaskFromRunnable(this)
 
-fun <I> Runnable.asMany(): Observable<I> = TaskFromRunnable(this)
-fun <I> Runnable.asMaybe(): Maybe<I> = TaskFromRunnable(this)
-fun Runnable.asTask(): Task = TaskFromRunnable(this)
-
-fun <I> ReceiveChannel<I>.toMany(): Observable<I> = ObservableFromChannel(this)
+fun <I> ReceiveChannel<I>.toObservable(): Observable<I> = ObservableFromChannel(this)
 
 @Deprecated(
     "Use overload that accepts a TimeUnit.",

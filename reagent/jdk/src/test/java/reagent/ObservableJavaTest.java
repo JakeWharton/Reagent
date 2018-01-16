@@ -19,7 +19,7 @@ public final class ObservableJavaTest {
 
   @Test public void create() {
     ObservableRecorder<String, StringSubject> recorder = rule.observable(Truth::assertThat);
-    Observable.<String>createMany(downstream -> {
+    Observable.<String>createObservable(downstream -> {
       downstream.onNext("Hello");
       downstream.onNext("World");
       downstream.onComplete();
@@ -33,7 +33,7 @@ public final class ObservableJavaTest {
   @Test public void createError() {
     RuntimeException exception = new RuntimeException("Oops!");
     ObservableRecorder<String, StringSubject> recorder = rule.observable(Truth::assertThat);
-    Observable.<String>createMany(downstream -> downstream.onError(exception)).subscribe(recorder);
+    Observable.<String>createObservable(downstream -> downstream.onError(exception)).subscribe(recorder);
 
     recorder.assertError().isSameAs(exception);
   }
@@ -81,7 +81,7 @@ public final class ObservableJavaTest {
 
   @Test public void defer() {
     AtomicInteger count = new AtomicInteger();
-    Observable<Integer> deferred = Observable.deferMany(() -> Observable.just(count.incrementAndGet()));
+    Observable<Integer> deferred = Observable.deferObservable(() -> Observable.just(count.incrementAndGet()));
 
     ObservableRecorder<Integer, IntegerSubject> recorder1 = rule.observable(Truth::assertThat);
     deferred.subscribe(recorder1);

@@ -20,7 +20,7 @@ import kotlin.test.Ignore
 // TODO overload resolution doesn't work here
 @Ignore
 class OneFlapMapTest {
-//  @Test fun flatMapMany() = runTest {
+//  @Test fun flatMapObservable() = runTest {
 //    oneOf("Item")
 //        .flatMap { observableOf("Hello", "World") }
 //        .testObservable {
@@ -30,10 +30,10 @@ class OneFlapMapTest {
 //        }
 //  }
 //
-//  @Test fun flatMapManyError() = runTest {
+//  @Test fun flatMapObservableError() = runTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toOne<String>()
-//        .flatMap { failMany<String>() }
+//        .flatMap { failObservable<String>() }
 //        .testObservable {
 //          error(exception)
 //        }

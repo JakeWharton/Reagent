@@ -2,8 +2,8 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.observableOf
-import reagent.source.test.emptyMany
-import reagent.source.test.toMany
+import reagent.source.test.emptyActualObservable
+import reagent.source.test.toActualObservable
 import reagent.tester.testObservable
 import kotlin.test.Test
 import kotlin.test.fail
@@ -19,7 +19,7 @@ class ObservableFilterTest {
   }
 
   @Test fun filterEmpty() = runTest {
-    emptyMany<Nothing>()
+    emptyActualObservable<Nothing>()
         .filter { fail() }
         .testObservable {
           complete()
@@ -28,7 +28,7 @@ class ObservableFilterTest {
 
   @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toMany<Nothing>()
+    exception.toActualObservable<Nothing>()
         .filter { fail() }
         .testObservable {
           error(exception)

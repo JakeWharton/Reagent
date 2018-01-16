@@ -91,7 +91,7 @@ class ObservableSourceTest {
 
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = deferMany { called++; observableOf("Hello") }
+    val deferred = deferObservable { called++; observableOf("Hello") }
     deferred.testObservable {
       item("Hello")
       complete()

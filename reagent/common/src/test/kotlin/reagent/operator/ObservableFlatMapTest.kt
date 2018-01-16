@@ -18,16 +18,16 @@ package reagent.operator
 import reagent.runTest
 import reagent.source.observableOf
 import reagent.source.observableRunning
-import reagent.source.test.emptyMany
+import reagent.source.test.emptyActualObservable
 import reagent.source.test.failTask
-import reagent.source.test.toMany
+import reagent.source.test.toActualObservable
 import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ObservableFlatMapTest {
 // TODO overload resolution doesn't work here
-//  @Test fun flatMapMany() = runTest {
+//  @Test fun flatMapObservable() = runTest {
 //    val flatMapItems = mutableListOf<String>()
 //    var observableCalled = 0
 //
@@ -43,18 +43,18 @@ class ObservableFlatMapTest {
 //        }
 //  }
 //
-//  @Test fun flatMapManyEmpty() = runTest {
-//    emptyMany<String>()
-//        .flatMap { failMany<String>() }
+//  @Test fun flatMapObservableEmpty() = runTest {
+//    emptyActualObservable<String>()
+//        .flatMap { failObservable<String>() }
 //        .testObservable {
 //          complete()
 //        }
 //  }
 //
-//  @Test fun flatMapManyError() = runTest {
+//  @Test fun flatMapObservableError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    exception.toMany<String>()
-//        .flatMap { failMany<String>() }
+//    exception.toActualObservable<String>()
+//        .flatMap { failObservable<String>() }
 //        .testObservable {
 //          error(exception)
 //        }
@@ -80,7 +80,7 @@ class ObservableFlatMapTest {
 //  }
 //
 //  @Test fun flatMapMaybeEmpty() = runTest {
-//    emptyMany<String>()
+//    emptyActualObservable<String>()
 //        .flatMap { failMaybe<String>() }
 //        .testObservable {
 //          complete()
@@ -89,7 +89,7 @@ class ObservableFlatMapTest {
 //
 //  @Test fun flatMapMaybeError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    exception.toMany<String>()
+//    exception.toActualObservable<String>()
 //        .flatMap { failMaybe<String>() }
 //        .testObservable {
 //          error(exception)
@@ -116,7 +116,7 @@ class ObservableFlatMapTest {
 //  }
 //
 //  @Test fun flatMapOneEmpty() = runTest {
-//    emptyMany<String>()
+//    emptyActualObservable<String>()
 //        .flatMap { failOne<String>() }
 //        .testObservable {
 //          complete()
@@ -125,7 +125,7 @@ class ObservableFlatMapTest {
 //
 //  @Test fun flatMapOneError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    exception.toMany<String>()
+//    exception.toActualObservable<String>()
 //        .flatMap { failOne<String>() }
 //        .testObservable {
 //          error(exception)
@@ -150,7 +150,7 @@ class ObservableFlatMapTest {
   }
 
   @Test fun flatMapTaskEmpty() = runTest {
-    emptyMany<String>()
+    emptyActualObservable<String>()
         .flatMap { failTask() }
         .testTask {
           complete()
@@ -159,7 +159,7 @@ class ObservableFlatMapTest {
 
   @Test fun flatMapTaskError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toMany<String>()
+    exception.toActualObservable<String>()
         .flatMap { failTask() }
         .testTask {
           error(exception)

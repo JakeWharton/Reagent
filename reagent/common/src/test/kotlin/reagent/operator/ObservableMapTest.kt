@@ -17,8 +17,8 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.observableOf
-import reagent.source.test.emptyMany
-import reagent.source.test.toMany
+import reagent.source.test.emptyActualObservable
+import reagent.source.test.toActualObservable
 import reagent.tester.testObservable
 import kotlin.test.Test
 import kotlin.test.fail
@@ -35,7 +35,7 @@ class ObservableMapTest {
   }
 
   @Test fun mapEmpty() = runTest {
-    emptyMany<Nothing>()
+    emptyActualObservable<Nothing>()
         .map { fail() }
         .testObservable {
           complete()
@@ -44,7 +44,7 @@ class ObservableMapTest {
 
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toMany<Nothing>()
+    exception.toActualObservable<Nothing>()
         .map { fail() }
         .testObservable {
           error(exception)

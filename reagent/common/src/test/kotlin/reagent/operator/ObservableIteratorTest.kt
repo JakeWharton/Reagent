@@ -4,8 +4,8 @@ import reagent.Emitter
 import reagent.Observable
 import reagent.runTest
 import reagent.source.observableOf
-import reagent.source.test.emptyMany
-import reagent.source.test.toMany
+import reagent.source.test.emptyActualObservable
+import reagent.source.test.toActualObservable
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -33,7 +33,7 @@ class ObservableIteratorTest {
   }
 
   @Test fun empty() = runTest {
-    for (item in emptyMany<String>()) {
+    for (item in emptyActualObservable<String>()) {
       fail()
     }
   }
@@ -41,7 +41,7 @@ class ObservableIteratorTest {
   @Test fun error() = runTest {
     val exception = RuntimeException()
     try {
-      for (item in exception.toMany<String>()) {
+      for (item in exception.toActualObservable<String>()) {
         fail()
       }
       fail()
