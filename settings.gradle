@@ -5,3 +5,4 @@ include ':reagent:jdk'
 include ':reagent:js'
 
 include ':reagent-rxjava2'
+include ':reagent-rxjs6'
