@@ -1,6 +1,6 @@
 buildscript {
   ext.versions = [
-      'kotlin': '1.2.20-eap-71',
+      'kotlin': '1.2.20',
       'coroutines': '0.21.2',
   ]
 
@@ -35,7 +35,6 @@ buildscript {
   repositories {
     mavenCentral()
     gradlePluginPortal()
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
   }
 }
 
@@ -45,6 +44,5 @@ subprojects {
 
   repositories {
     mavenCentral()
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
   }
 }
