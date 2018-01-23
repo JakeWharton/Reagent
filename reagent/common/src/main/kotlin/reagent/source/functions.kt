@@ -37,10 +37,6 @@ fun <T> Array<T>.toObservable(): Observable<T> = ObservableArray(this)
 fun <T> Iterable<T>.toObservable(): Observable<T> = ObservableIterable(this)
 fun <T> Sequence<T>.toObservable(): Observable<T> = ObservableSequence(this)
 
-fun IntProgression.toObservable(): Observable<Int> = ObservableIntProgression(this)
-fun LongProgression.toObservable(): Observable<Long> = ObservableLongProgression(this)
-fun CharProgression.toObservable(): Observable<Char> = ObservableCharProgression(this)
-
 expect fun interval(periodMillis: Int): Observable<Int>
 expect fun timer(delayMillis: Int): One<Unit>
 
