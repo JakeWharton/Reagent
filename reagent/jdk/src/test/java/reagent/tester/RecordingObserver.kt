@@ -7,9 +7,7 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import reagent.Observable
-import reagent.Maybe
 import reagent.One
-import reagent.Task
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.DeprecationLevel.ERROR
@@ -33,9 +31,7 @@ class RecordingRule : TestRule {
   }
 
   fun <I, S : Subject<S, I>> observable(asserter: (I) -> S) = ObservableRecorder(asserter).also { recorders.add(it) }
-  fun <I, S : Subject<S, I>> maybe(asserter: (I) -> S) = MaybeRecorder(asserter).also { recorders.add(it) }
   fun <I, S : Subject<S, I>> one(asserter: (I) -> S) = OneRecorder(asserter).also { recorders.add(it) }
-  fun task() = TaskRecorder().also { recorders.add(it) }
 }
 
 abstract class Recorder<I, S : Subject<S, I>>(
@@ -82,14 +78,6 @@ class ObservableRecorder<I, S : Subject<S, I>>(
   override fun onError(t: Throwable) = event(Error(t))
 }
 
-class MaybeRecorder<I, S : Subject<S, I>>(
-  asserter: (I) -> S
-) : Recorder<I, S>(asserter), Maybe.Observer<I> {
-  override fun onItem(item: I) = event(Item(item))
-  override fun onNothing() = event(Complete)
-  override fun onError(t: Throwable) = event(Error(t))
-}
-
 class OneRecorder<I, S : Subject<S, I>>(
   asserter: (I) -> S
 ) : Recorder<I, S>(asserter), One.Observer<I> {
@@ -98,12 +86,4 @@ class OneRecorder<I, S : Subject<S, I>>(
 
   @Deprecated("One does not have complete events.", level = ERROR)
   override fun assertComplete() = fail()
-}
-
-class TaskRecorder : Recorder<Nothing, Nothing>({ fail() }), Task.Observer {
-  override fun onComplete() = event(Complete)
-  override fun onError(t: Throwable) = event(Error(t))
-
-  @Deprecated("Task has does not have item events.", level = ERROR)
-  override fun assertItem() = fail()
 }

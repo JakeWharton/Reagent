@@ -17,16 +17,14 @@ package reagent.source
 
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import reagent.Observable
-import reagent.Maybe
 import reagent.One
-import reagent.Task
 import java.time.Duration
 import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 fun <I> Callable<I>.asObservable(): One<I> = OneFromCallable(this)
-fun Runnable.asObservable(): Task = TaskFromRunnable(this)
+fun Runnable.asObservable(): Observable<Nothing> = ObservableFromRunnable(this)
 
 fun <I> ReceiveChannel<I>.toObservable(): Observable<I> = ObservableFromChannel(this)
 

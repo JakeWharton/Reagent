@@ -33,7 +33,7 @@ class OneMapTest {
 
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toOne<Nothing>()
+    exception.toOne()
         .map { fail() }
         .testOne {
           error(exception)

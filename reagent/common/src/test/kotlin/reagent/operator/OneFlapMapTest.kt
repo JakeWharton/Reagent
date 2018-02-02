@@ -39,23 +39,6 @@ class OneFlapMapTest {
 //        }
 //  }
 //
-//  @Test fun flatMapMaybe() = runTest {
-//    oneOf("Item")
-//        .flatMap { maybeOf("Hello") }
-//        .testMaybe {
-//          item("Hello")
-//        }
-//  }
-//
-//  @Test fun flatMapMaybeError() = runTest {
-//    val exception = RuntimeException("Oops!")
-//    exception.toOne<String>()
-//        .flatMap { failMaybe<String>() }
-//        .testMaybe {
-//          error(exception)
-//        }
-//  }
-//
 //  @Test fun flatMapOne() = runTest {
 //    oneOf("Item")
 //        .flatMap { oneOf("Hello") }

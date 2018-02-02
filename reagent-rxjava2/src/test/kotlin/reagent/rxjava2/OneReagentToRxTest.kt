@@ -15,7 +15,7 @@ class OneReagentToRxTest {
 
   @Test fun error() {
     val exception = RuntimeException("Oops!")
-    exception.toOne<Nothing>()
+    exception.toOne()
         .toRx()
         .test()
         .assertError(exception)

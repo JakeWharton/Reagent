@@ -17,7 +17,6 @@ package reagent.operator
 
 import reagent.Observable
 import reagent.One
-import reagent.Task
 import kotlin.DeprecationLevel.ERROR
 import kotlin.DeprecationLevel.WARNING
 
@@ -25,9 +24,6 @@ fun <R, I : R> Observable<I>.reduce(operation: (accumulator: R, item: I) -> R): 
 
 @Deprecated("Reduce has no effect on single-element stream types", level = WARNING)
 fun <R, I : R> One<I>.reduce(operation: (accumulator: R, item: I) -> R): One<R> = this
-
-@Deprecated("Reduce requires a non-empty stream", level = ERROR)
-fun Task.reduce(operation: (accumulator: Nothing, item: Nothing) -> Nothing): One<Nothing> = ObservableReduce(this, operation)
 
 internal class ObservableReduce<out R, out I : R>(
   private val upstream: Observable<I>,

@@ -41,7 +41,7 @@ class OneSourceTest {
 
   @Test fun throwable() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toOne<Any>()
+    exception.toOne()
         .testOne {
           error(exception)
         }

@@ -17,20 +17,12 @@ package reagent.operator
 
 import reagent.Emitter
 import reagent.Observable
-import reagent.Maybe
 import reagent.One
-import reagent.Task
 import kotlin.DeprecationLevel.ERROR
 
 fun <I> Observable<I>.filter(predicate: (I) -> Boolean): Observable<I> = ObservableFilter(this, predicate)
 
-fun <I> Maybe<I>.filter(predicate: (I) -> Boolean): Maybe<I> = MaybeFilter(this, predicate)
-
-fun <I> One<I>.filter(predicate: (I) -> Boolean): Maybe<I> = OneFilter(this, predicate)
-
-@Suppress("DeprecatedCallableAddReplaceWith") // TODO https://youtrack.jetbrains.com/issue/KT-19512
-@Deprecated("Task has no items so filtering does not make sense.", level = ERROR)
-fun Task.filter(predicate: (Nothing) -> Boolean) = this
+fun <I : Any> One<I>.filter(predicate: (I) -> Boolean): One<I?> = OneFilter(this, predicate)
 
 internal class ObservableFilter<out I>(
     private val upstream: Observable<I>,
@@ -45,20 +37,10 @@ internal class ObservableFilter<out I>(
   }
 }
 
-internal class MaybeFilter<out I>(
-    private val upstream: Maybe<I>,
-    private val predicate: (I) -> Boolean
-) : Maybe<I>() {
-  override suspend fun produce(): I? {
-    upstream.produce()?.let { if (predicate(it)) return it }
-    return null
-  }
-}
-
-internal class OneFilter<out I>(
+internal class OneFilter<out I : Any>(
     private val upstream: One<I>,
     private val predicate: (I) -> Boolean
-) : Maybe<I>() {
+) : One<I?>() {
   override suspend fun produce(): I? {
     val value = upstream.produce()
     return if (predicate(value)) value else null

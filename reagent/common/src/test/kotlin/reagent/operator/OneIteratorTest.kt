@@ -23,7 +23,7 @@ class OneIteratorTest {
   @Test fun error() = runTest {
     val exception = RuntimeException()
     try {
-      for (item in exception.toOne<String>()) {
+      for (item in exception.toOne()) {
         fail()
       }
       fail()

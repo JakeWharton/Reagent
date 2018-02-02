@@ -15,16 +15,6 @@
  */
 package reagent.operator
 
-import reagent.runTest
-import reagent.source.observableOf
-import reagent.source.observableRunning
-import reagent.source.test.emptyActualObservable
-import reagent.source.test.failTask
-import reagent.source.test.toActualObservable
-import reagent.tester.testTask
-import kotlin.test.Test
-import kotlin.test.assertEquals
-
 class ObservableFlatMapTest {
 // TODO overload resolution doesn't work here
 //  @Test fun flatMapObservable() = runTest {
@@ -55,42 +45,6 @@ class ObservableFlatMapTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toActualObservable<String>()
 //        .flatMap { failObservable<String>() }
-//        .testObservable {
-//          error(exception)
-//        }
-//  }
-//
-//  @Test fun flatMapMaybe() = runTest {
-//    val flatMapItems = mutableListOf<String>()
-//    var maybeCalled = 0
-//
-//    observableOf("One", "Two")
-//        .flatMap {
-//          flatMapItems.add(it)
-//          maybeReturning { ++maybeCalled }
-//        }
-//        .testObservable {
-//          item(1)
-//          item(2)
-//          complete()
-//        }
-//
-//    assertEquals(listOf("One", "Two"), flatMapItems)
-//    assertEquals(2, maybeCalled)
-//  }
-//
-//  @Test fun flatMapMaybeEmpty() = runTest {
-//    emptyActualObservable<String>()
-//        .flatMap { failMaybe<String>() }
-//        .testObservable {
-//          complete()
-//        }
-//  }
-//
-//  @Test fun flatMapMaybeError() = runTest {
-//    val exception = RuntimeException("Oops!")
-//    exception.toActualObservable<String>()
-//        .flatMap { failMaybe<String>() }
 //        .testObservable {
 //          error(exception)
 //        }
@@ -131,38 +85,4 @@ class ObservableFlatMapTest {
 //          error(exception)
 //        }
 //  }
-
-  @Test fun flatMapTask() = runTest {
-    val flatMapItems = mutableListOf<String>()
-    var taskCalled = 0
-
-    observableOf("One", "Two")
-        .flatMap {
-          flatMapItems.add(it)
-          observableRunning { ++taskCalled }
-        }
-        .testTask {
-          complete()
-        }
-
-    assertEquals(listOf("One", "Two"), flatMapItems)
-    assertEquals(2, taskCalled)
-  }
-
-  @Test fun flatMapTaskEmpty() = runTest {
-    emptyActualObservable<String>()
-        .flatMap { failTask() }
-        .testTask {
-          complete()
-        }
-  }
-
-  @Test fun flatMapTaskError() = runTest {
-    val exception = RuntimeException("Oops!")
-    exception.toActualObservable<String>()
-        .flatMap { failTask() }
-        .testTask {
-          error(exception)
-        }
-  }
 }

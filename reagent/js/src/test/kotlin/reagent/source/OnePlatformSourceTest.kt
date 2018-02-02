@@ -51,7 +51,7 @@ class OnePlatformSourceTest {
 
   @Test fun errorToPromise() = runTest {
     val exception = RuntimeException("Hello")
-    val promise = exception.toOne<String>()
+    val promise = exception.toOne()
         .toPromise()
     try {
       promise.await()

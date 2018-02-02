@@ -2,6 +2,6 @@ package reagent.source
 
 import reagent.One
 
-internal class OneError<out I>(private val t: Throwable) : One<I>() {
+internal class OneError(private val t: Throwable) : One<Nothing>() {
   override suspend fun produce() = throw t
 }

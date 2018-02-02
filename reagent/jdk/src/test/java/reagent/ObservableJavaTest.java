@@ -1,6 +1,7 @@
 package reagent;
 
 import com.google.common.truth.BooleanSubject;
+import com.google.common.truth.DefaultSubject;
 import com.google.common.truth.IntegerSubject;
 import com.google.common.truth.StringSubject;
 import com.google.common.truth.Truth;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import reagent.tester.ObservableRecorder;
 import reagent.tester.RecordingRule;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public final class ObservableJavaTest {
@@ -114,8 +116,8 @@ public final class ObservableJavaTest {
 
   @Test public void fromRunnable() {
     AtomicBoolean called = new AtomicBoolean();
-    ObservableRecorder<String, StringSubject> recorder = rule.observable(Truth::assertThat);
-    Observable.<String>fromRunnable(() -> called.compareAndSet(false, true)).subscribe(recorder);
+    ObservableRecorder<Object, DefaultSubject> recorder = rule.observable(ObservableJavaTest::assertThat);
+    Observable.fromRunnable(() -> called.compareAndSet(false, true)).subscribe(recorder);
     assertTrue(called.get());
 
     recorder.assertComplete();
@@ -123,9 +125,13 @@ public final class ObservableJavaTest {
 
   @Test public void fromRunnableThrowing() {
     RuntimeException exception = new RuntimeException("Oops!");
-    ObservableRecorder<String, StringSubject> recorder = rule.observable(Truth::assertThat);
-    Observable.<String>fromRunnable(() -> { throw exception; }).subscribe(recorder);
+    ObservableRecorder<Object, DefaultSubject> recorder = rule.observable(ObservableJavaTest::assertThat);
+    Observable.fromRunnable(() -> { throw exception; }).subscribe(recorder);
 
     recorder.assertError().isSameAs(exception);
+  }
+
+  private static DefaultSubject assertThat(Object value) {
+    return (DefaultSubject) Truth.assertThat(value);
   }
 }

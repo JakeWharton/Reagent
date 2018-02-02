@@ -4,11 +4,11 @@ import org.junit.Test
 import reagent.Observable
 import reagent.source.emptyObservable
 import reagent.source.observableOf
-import reagent.source.toTask
+import reagent.source.toOne
 
 class ObservableReagentToRxTest {
   @Test fun empty() {
-    (emptyObservable() as Observable<Nothing>)
+    emptyObservable()
         .toRx()
         .test()
         .assertComplete()
@@ -32,7 +32,7 @@ class ObservableReagentToRxTest {
 
   @Test fun error() {
     val exception = RuntimeException("Oops!")
-    (exception.toTask() as Observable<Nothing>)
+    exception.toOne()
         .toRx()
         .test()
         .assertError(exception)

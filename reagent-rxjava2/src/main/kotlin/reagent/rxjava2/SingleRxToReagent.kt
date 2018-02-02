@@ -2,13 +2,13 @@ package reagent.rxjava2
 
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
-import reagent.Task
-import io.reactivex.Completable as RxCompletable
-import io.reactivex.CompletableObserver as RxCompletableObserver
+import reagent.One
+import io.reactivex.Single as RxSingle
+import io.reactivex.SingleObserver as RxSingleObserver
 
-internal class TaskRxToReagent(private val upstream: RxCompletable) : Task() {
-  override suspend fun run() = suspendCancellableCoroutine<Unit> { continuation ->
-    upstream.subscribe(object : RxCompletableObserver {
+internal class SingleRxToReagent<I>(private val upstream: RxSingle<I>) : One<I>() {
+  override suspend fun produce() = suspendCancellableCoroutine<I> { continuation ->
+    upstream.subscribe(object : RxSingleObserver<I> {
       override fun onSubscribe(d: Disposable) {
         continuation.invokeOnCompletion {
           if (continuation.isCancelled) {
@@ -17,8 +17,8 @@ internal class TaskRxToReagent(private val upstream: RxCompletable) : Task() {
         }
       }
 
-      override fun onComplete() {
-        continuation.resume(Unit)
+      override fun onSuccess(item: I) {
+        continuation.resume(item)
       }
 
       override fun onError(e: Throwable) {

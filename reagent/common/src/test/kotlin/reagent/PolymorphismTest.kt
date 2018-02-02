@@ -15,53 +15,16 @@
  */
 package reagent
 
-import reagent.source.emptyObservable
 import reagent.source.observableOf
-import reagent.source.test.emptyMaybe
-import reagent.source.test.maybeOf
-import reagent.source.test.toMaybe
 import reagent.source.toOne
-import reagent.source.toTask
 import reagent.tester.testObservable
-import reagent.tester.testMaybe
 import reagent.tester.testOne
-import reagent.tester.testTask
 import kotlin.test.Test
 
 class PolymorphismTest {
-  @Test fun taskComplete() = runTest {
-    val task = emptyObservable()
-    task.testTask {
-      complete()
-    }
-    task.testMaybe {
-      nothing()
-    }
-    task.testObservable {
-      complete()
-    }
-  }
-
-  @Test fun taskError() = runTest {
-    val exception = RuntimeException("Oops")
-    val task = exception.toTask()
-    task.testTask {
-      error(exception)
-    }
-    task.testMaybe {
-      error(exception)
-    }
-    task.testMaybe {
-      error(exception)
-    }
-  }
-
   @Test fun oneItem() = runTest {
     val one = observableOf("Hello")
     one.testOne {
-      item("Hello")
-    }
-    one.testMaybe {
       item("Hello")
     }
     one.testObservable {
@@ -72,46 +35,11 @@ class PolymorphismTest {
 
   @Test fun oneError() = runTest {
     val exception = RuntimeException("Oops")
-    val one = exception.toOne<Any>()
+    val one = exception.toOne()
     one.testOne {
       error(exception)
     }
-    one.testMaybe {
-      error(exception)
-    }
     one.testObservable {
-      error(exception)
-    }
-  }
-
-  @Test fun maybeItem() = runTest {
-    val maybe = maybeOf("Hello")
-    maybe.testMaybe {
-      item("Hello")
-    }
-    maybe.testObservable {
-      item("Hello")
-      complete()
-    }
-  }
-
-  @Test fun maybeNothing() = runTest {
-    val maybe = emptyMaybe<Any>()
-    maybe.testMaybe {
-      nothing()
-    }
-    maybe.testObservable {
-      complete()
-    }
-  }
-
-  @Test fun maybeError() = runTest {
-    val exception = RuntimeException("Oops")
-    val maybe = exception.toMaybe<Any>()
-    maybe.testMaybe {
-      error(exception)
-    }
-    maybe.testObservable {
       error(exception)
     }
   }

@@ -12,7 +12,7 @@ import kotlin.test.fail
 
 class ObservableReduceTest {
   @Test fun empty() = runTest {
-    (emptyObservable() as Observable<Nothing>)
+    emptyObservable()
         .reduce { _, _ -> fail() }
         .testOne {
           error {

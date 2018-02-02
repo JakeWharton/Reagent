@@ -15,16 +15,6 @@
  */
 package reagent.operator
 
-import reagent.runTest
-import reagent.source.observableOf
-import reagent.source.observableRunning
-import reagent.source.test.emptyActualObservable
-import reagent.source.test.failTask
-import reagent.source.test.toActualObservable
-import reagent.tester.testTask
-import kotlin.test.Test
-import kotlin.test.assertEquals
-
 class ObservableConcatMapTest {
 // TODO overload resolution doesn't work here
 //  @Test fun concatMapObservable() = runTest {
@@ -55,42 +45,6 @@ class ObservableConcatMapTest {
 //    val exception = RuntimeException("Oops!")
 //    exception.toActualObservable<String>()
 //        .concatMap { failObservable<String>() }
-//        .testObservable {
-//          error(exception)
-//        }
-//  }
-//
-//  @Test fun concatMapMaybe() = runTest {
-//    val concatMapItems = mutableListOf<String>()
-//    var maybeCalled = 0
-//
-//    observableOf("One", "Two")
-//        .concatMap {
-//          concatMapItems.add(it)
-//          maybeReturning { ++maybeCalled }
-//        }
-//        .testObservable {
-//          item(1)
-//          item(2)
-//          complete()
-//        }
-//
-//    assertEquals(listOf("One", "Two"), concatMapItems)
-//    assertEquals(2, maybeCalled)
-//  }
-//
-//  @Test fun concatMapMaybeEmpty() = runTest {
-//    emptyActualObservable<String>()
-//        .concatMap { failMaybe<String>() }
-//        .testObservable {
-//          complete()
-//        }
-//  }
-//
-//  @Test fun concatMapMaybeError() = runTest {
-//    val exception = RuntimeException("Oops!")
-//    exception.toActualObservable<String>()
-//        .concatMap { failMaybe<String>() }
 //        .testObservable {
 //          error(exception)
 //        }
@@ -131,38 +85,4 @@ class ObservableConcatMapTest {
 //          error(exception)
 //        }
 //  }
-
-  @Test fun concatMapTask() = runTest {
-    val concatMapItems = mutableListOf<String>()
-    var taskCalled = 0
-
-    observableOf("One", "Two")
-        .concatMap {
-          concatMapItems.add(it)
-          observableRunning { ++taskCalled }
-        }
-        .testTask {
-          complete()
-        }
-
-    assertEquals(listOf("One", "Two"), concatMapItems)
-    assertEquals(2, taskCalled)
-  }
-
-  @Test fun concatMapTaskEmpty() = runTest {
-    emptyActualObservable<String>()
-        .concatMap { failTask() }
-        .testTask {
-          complete()
-        }
-  }
-
-  @Test fun concatMapTaskError() = runTest {
-    val exception = RuntimeException("Oops!")
-    exception.toActualObservable<String>()
-        .concatMap { failTask() }
-        .testTask {
-          error(exception)
-        }
-  }
 }

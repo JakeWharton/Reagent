@@ -18,8 +18,8 @@ package reagent
 import kotlin.DeprecationLevel.HIDDEN
 
 /** Emits a single item or errors. */
-expect abstract class One<out I>() : Maybe<I> {
-  abstract override suspend fun produce(): I
+expect abstract class One<out I>() : Observable<I> {
+  abstract suspend fun produce(): I
 
   @Deprecated("Optimized implementation for polymorphism.", level = HIDDEN)
   override suspend fun subscribe(emit: Emitter<I>)
