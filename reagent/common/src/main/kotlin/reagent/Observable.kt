@@ -20,4 +20,4 @@ expect abstract class Observable<out I>() {
   abstract suspend fun subscribe(emit: Emitter<I>)
 }
 
-typealias Emitter<I> = suspend (item: I) -> Unit
+typealias Emitter<I> = suspend (item: I) -> Boolean

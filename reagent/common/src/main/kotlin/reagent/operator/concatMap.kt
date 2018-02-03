@@ -26,8 +26,16 @@ internal class ObservableConcatMapObservable<U, out D>(
   private val func: (U) -> Observable<D>
 ) : Observable<D>() {
   override suspend fun subscribe(emit: Emitter<D>) {
-    upstream.subscribe {
-      func(it).subscribe(emit)
+    upstream.subscribe upstream@ {
+      var more = true
+      func(it).subscribe inner@ {
+        if (!emit(it)) {
+          more = false
+          return@inner false
+        }
+        return@inner true
+      }
+      return@upstream more
     }
   }
 }

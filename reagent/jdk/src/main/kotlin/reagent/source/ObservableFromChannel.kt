@@ -7,8 +7,10 @@ import reagent.Observable
 
 internal class ObservableFromChannel<out I>(private val channel: ReceiveChannel<I>) : Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {
-    channel.consumeEach {
-      emit(it)
+    for (item in channel) {
+      if (!emit(item)) {
+        return
+      }
     }
   }
 }

@@ -9,6 +9,6 @@ internal class ObservableIgnoreElements(
   private val upstream: Observable<*>
 ): Observable<Nothing>() {
   override suspend fun subscribe(emit: Emitter<Nothing>) {
-    upstream.subscribe { }
+    upstream.subscribe { true }
   }
 }

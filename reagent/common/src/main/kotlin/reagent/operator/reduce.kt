@@ -40,6 +40,7 @@ internal class ObservableReduce<out R, out I : R>(
       } else {
         accumulator = operation(accumulator as R, it)
       }
+      return@subscribe true
     }
     if (first) {
       throw NoSuchElementException("Reduce requires a non-empty Observable")

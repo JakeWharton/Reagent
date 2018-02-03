@@ -18,6 +18,8 @@ internal class ObservableTake<out I>(
     upstream.subscribe {
       if (seen++ < count) {
         emit(it)
+      } else {
+        false
       }
     }
     if (require && seen < count) {
@@ -33,15 +35,15 @@ internal class ObservableTakeWhile<out I>(
 ) : Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {
     var taking = true
-    upstream.subscribe {
+    upstream.subscribe upstream@ {
       if (taking) {
         if (predicate(it)) {
-          emit(it)
+          return@upstream emit(it)
         } else {
           taking = false
-          // TODO this should break out
         }
       }
+      return@upstream false
     }
   }
 }

@@ -1,6 +1,7 @@
 package reagent.rxjava2
 
 import io.reactivex.Observer
+import io.reactivex.disposables.Disposables
 import io.reactivex.exceptions.CompositeException
 import io.reactivex.exceptions.Exceptions
 import io.reactivex.exceptions.UndeliverableException
@@ -19,6 +20,8 @@ internal class ObservableReagentToRx<I : Any>(
       try {
         upstream.subscribe {
           observer.onNext(it)
+          println("ISACTIVE $isActive")
+          return@subscribe isActive
         }
       } catch (ignored: JobCancellationException) {
         return@launch

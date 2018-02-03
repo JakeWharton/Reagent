@@ -22,6 +22,8 @@ internal class ObservableDistinctUntilChanged<out I>(
       } else if (selected != previous) {
         previous = selected
         emit(it)
+      } else {
+        true
       }
     }
   }

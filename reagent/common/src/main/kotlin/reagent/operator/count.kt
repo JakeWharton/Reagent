@@ -12,6 +12,7 @@ internal class ObservableCount<out I>(
     var count = 0
     upstream.subscribe {
       count++
+      return@subscribe true
     }
     return count
   }

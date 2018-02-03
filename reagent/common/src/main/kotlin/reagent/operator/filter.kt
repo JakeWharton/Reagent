@@ -32,6 +32,8 @@ internal class ObservableFilter<out I>(
     upstream.subscribe {
       if (predicate(it)) {
         emit(it)
+      } else {
+        true
       }
     }
   }

@@ -30,6 +30,7 @@ actual abstract class Observable<out I> {
       try {
         subscribe {
           observer.onNext(it)
+          true // TODO hook up Disposable-like thing
         }
       } catch (t: Throwable) {
         observer.onError(t)

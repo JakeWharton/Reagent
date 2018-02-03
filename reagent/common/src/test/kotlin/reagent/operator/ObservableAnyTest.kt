@@ -2,9 +2,12 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.observableOf
+import reagent.source.observable
 import reagent.source.test.emptyActualObservable
+import reagent.tester.testObservable
 import reagent.tester.testOne
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.fail
 
 class ObservableAnyTest {
@@ -30,5 +33,18 @@ class ObservableAnyTest {
         .testOne {
           item(false)
         }
+  }
+
+  @Test fun emitterReturnValue() = runTest {
+    var result: Boolean? = null
+    observable<Int> {
+      result = it(1)
+    }.any {
+      true
+    }.testObservable {
+      item(true)
+      complete()
+    }
+    assertEquals(false, result)
   }
 }

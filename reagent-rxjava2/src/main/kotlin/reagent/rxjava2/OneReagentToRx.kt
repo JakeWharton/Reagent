@@ -2,6 +2,7 @@ package reagent.rxjava2
 
 import io.reactivex.Single
 import io.reactivex.SingleObserver
+import io.reactivex.disposables.Disposables
 import io.reactivex.exceptions.CompositeException
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins

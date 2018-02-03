@@ -25,6 +25,7 @@ internal class ObservableComparing<out I, in S : Comparable<S>>(
       } else if (selector(it).compareTo(selector(max as I)).sign == order) {
         max = it
       }
+      return@subscribe true
     }
     if (first) {
       throw NoSuchElementException("No elements to compare")

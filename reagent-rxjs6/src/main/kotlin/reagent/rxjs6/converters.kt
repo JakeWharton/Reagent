@@ -12,6 +12,7 @@ fun <I> Observable<I>.toRx(): dynamic {
       try {
         this@toRx.subscribe {
           observer.onNext(it)
+          true // TODO
         }
       } catch (ignored: JobCancellationException) {
         return@launch

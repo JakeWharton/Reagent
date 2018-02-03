@@ -14,8 +14,9 @@ internal class ObserableAny<out I>(
     upstream.subscribe {
       if (predicate(it)) {
         result = true
-        // TODO this needs to be return@produce true
+        return@subscribe false
       }
+      return@subscribe true
     }
     return result
   }

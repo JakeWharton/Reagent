@@ -14,8 +14,9 @@ internal class ObservableAll<out I>(
     upstream.subscribe {
       if (result && !predicate(it)) {
         result = false
-        // TODO this needs to be return@produce false
+        return@subscribe false
       }
+      return@subscribe true
     }
     return result
   }

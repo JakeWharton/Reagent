@@ -3,8 +3,10 @@ package reagent.rxjava2
 import org.junit.Test
 import reagent.Observable
 import reagent.source.emptyObservable
+import reagent.source.observable
 import reagent.source.observableOf
 import reagent.source.toOne
+import kotlin.test.assertEquals
 
 class ObservableReagentToRxTest {
   @Test fun empty() {
@@ -36,5 +38,17 @@ class ObservableReagentToRxTest {
         .toRx()
         .test()
         .assertError(exception)
+  }
+
+  @Test fun upstreamNotified() {
+    println("START")
+    val results = mutableListOf<Boolean>()
+    observable<Int> {
+      for (i in 1..2) {
+        results.add(it(i))
+      }
+    }.toRx().take(2).test().assertValues(1, 2).assertComplete()
+    println("STOP")
+    assertEquals(listOf(true, false), results)
   }
 }

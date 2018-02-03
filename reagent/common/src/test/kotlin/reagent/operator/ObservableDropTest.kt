@@ -2,6 +2,7 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.emptyObservable
+import reagent.source.observable
 import reagent.source.observableOf
 import reagent.tester.testObservable
 import kotlin.test.Test
@@ -60,5 +61,18 @@ class ObservableDropTest {
           item(2)
           complete()
         }
+  }
+
+  @Test fun emitterReturnValue() = runTest {
+    val emits = mutableListOf<Boolean>()
+    observable<Int> {
+      for (i in 1..4) {
+        emits.add(it(i))
+      }
+    }.drop(2).take(1).testObservable {
+      item(3)
+      complete()
+    }
+    assertEquals(listOf(true, true, true, false), emits)
   }
 }

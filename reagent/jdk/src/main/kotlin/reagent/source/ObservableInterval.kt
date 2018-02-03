@@ -10,7 +10,9 @@ internal class ObservableInterval(private val period: Long, private val unit: Ti
     var count = 0
     while (true) {
       delay(period, unit)
-      emit(count++)
+      if (!emit(count++)) {
+        return
+      }
     }
   }
 }

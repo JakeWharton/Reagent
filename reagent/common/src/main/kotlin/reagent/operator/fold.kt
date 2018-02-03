@@ -29,6 +29,7 @@ internal class ObservableFold<out I, R>(
     var value = initial
     upstream.subscribe {
       value = operation(value, it)
+      return@subscribe true
     }
     return value
   }

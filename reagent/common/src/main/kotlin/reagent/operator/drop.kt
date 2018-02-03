@@ -18,6 +18,8 @@ internal class ObservableDrop<out I>(
     upstream.subscribe {
       if (++seen > count) {
         emit(it)
+      } else {
+        true
       }
     }
     if (require && seen < count) {
@@ -36,11 +38,11 @@ internal class ObservableDropWhile<out I>(
     upstream.subscribe upstream@ {
       if (!taking) {
         if (predicate(it)) {
-          return@upstream
+          return@upstream true
         }
         taking = true
       }
-      emit(it)
+      return@upstream emit(it)
     }
   }
 }

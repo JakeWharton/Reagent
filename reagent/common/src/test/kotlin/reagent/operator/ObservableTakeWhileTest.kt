@@ -2,6 +2,7 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.emptyObservable
+import reagent.source.observable
 import reagent.source.observableOf
 import reagent.tester.testObservable
 import kotlin.test.Test
@@ -57,5 +58,18 @@ class ObservableTakeWhileTest {
         .testObservable {
           error(exception)
         }
+  }
+
+  @Test fun emitterReturnValue() = runTest {
+    val emits = mutableListOf<Boolean>()
+    observable<Int> {
+      for (i in 1..2) {
+        emits.add(it(i))
+      }
+    }.takeWhile { it < 2 }.testObservable {
+      item(1)
+      complete()
+    }
+    assertEquals(listOf(true, false), emits)
   }
 }

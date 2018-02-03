@@ -12,10 +12,11 @@ internal class ObservableDistinct<out I>(
 ) : Observable<I>() {
   override suspend fun subscribe(emit: Emitter<I>) {
     val seen = mutableSetOf<Any?>()
-    upstream.subscribe {
+    upstream.subscribe upstream@ {
       if (seen.add(selector(it))) {
-        emit(it)
+        return@upstream emit(it)
       }
+      return@upstream true
     }
   }
 }
