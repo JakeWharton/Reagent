@@ -41,14 +41,12 @@ class ObservableReagentToRxTest {
   }
 
   @Test fun upstreamNotified() {
-    println("START")
     val results = mutableListOf<Boolean>()
     observable<Int> {
       for (i in 1..2) {
         results.add(it(i))
       }
     }.toRx().take(2).test().assertValues(1, 2).assertComplete()
-    println("STOP")
     assertEquals(listOf(true, false), results)
   }
 }

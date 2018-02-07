@@ -20,7 +20,6 @@ internal class ObservableReagentToRx<I : Any>(
       try {
         upstream.subscribe {
           observer.onNext(it)
-          println("ISACTIVE $isActive")
           return@subscribe isActive
         }
       } catch (ignored: JobCancellationException) {
