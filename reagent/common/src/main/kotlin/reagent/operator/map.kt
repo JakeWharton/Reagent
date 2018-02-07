@@ -17,12 +17,11 @@ package reagent.operator
 
 import reagent.Emitter
 import reagent.Observable
-import reagent.One
-import kotlin.DeprecationLevel.ERROR
+import reagent.Task
 
 fun <I, O> Observable<I>.map(mapper: (I) -> O): Observable<O> = ObservableMap(this, mapper)
 
-fun <I, O> One<I>.map(mapper: (I) -> O): One<O> = OneMap(this, mapper)
+fun <I, O> Task<I>.map(mapper: (I) -> O): Task<O> = TaskMap(this, mapper)
 
 internal class ObservableMap<in U, out D>(
     private val upstream: Observable<U>,
@@ -33,9 +32,9 @@ internal class ObservableMap<in U, out D>(
   }
 }
 
-internal class OneMap<in U, out D>(
-    private val upstream: One<U>,
+internal class TaskMap<in U, out D>(
+    private val upstream: Task<U>,
     private val mapper: (U) -> D
-) : One<D>() {
+) : Task<D>() {
   override suspend fun produce() = mapper(upstream.produce())
 }

@@ -16,15 +16,15 @@
 package reagent.operator
 
 import reagent.Observable
-import reagent.One
+import reagent.Task
 
-fun <I, R> Observable<I>.fold(initial: R, operation: (accumulator: R, item: I) -> R): One<R> = ObservableFold(this, initial, operation)
+fun <I, R> Observable<I>.fold(initial: R, operation: (accumulator: R, item: I) -> R): Task<R> = ObservableFold(this, initial, operation)
 
 internal class ObservableFold<out I, R>(
   private val upstream: Observable<I>,
   private val initial: R,
   private val operation: (accumulator: R, item: I) -> R
-) : One<R>() {
+) : Task<R>() {
   override suspend fun produce(): R {
     var value = initial
     upstream.subscribe {

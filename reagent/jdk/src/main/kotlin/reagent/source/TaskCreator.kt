@@ -1,11 +1,11 @@
 package reagent.source
 
-import reagent.One
+import reagent.Task
 
-interface OneCreator<out I> {
+interface TaskCreator<out I> {
   fun subscribe(downstream: Downstream<I>)
 
-  interface Downstream<in I> : One.Observer<I> {
+  interface Downstream<in I> : Task.Observer<I> {
     val isDisposed: Boolean
   }
 }

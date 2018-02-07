@@ -2,11 +2,11 @@ package reagent.rxjava2
 
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
-import reagent.One
+import reagent.Task
 import io.reactivex.Completable as RxCompletable
 import io.reactivex.CompletableObserver as RxCompletableObserver
 
-internal class CompletableRxToReagent(private val upstream: RxCompletable) : One<Unit>() {
+internal class CompletableRxToReagent(private val upstream: RxCompletable) : Task<Unit>() {
   override suspend fun produce() = suspendCancellableCoroutine<Unit> { continuation ->
     upstream.subscribe(object : RxCompletableObserver {
       override fun onSubscribe(d: Disposable) {

@@ -1,13 +1,13 @@
 package reagent.operator
 
 import reagent.Observable
-import reagent.One
+import reagent.Task
 
-fun <I> Observable<I>.count(): One<Int> = ObservableCount(this)
+fun <I> Observable<I>.count(): Task<Int> = ObservableCount(this)
 
 internal class ObservableCount<out I>(
   private val upstream: Observable<I>
-) : One<Int>() {
+) : Task<Int>() {
   override suspend fun produce(): Int {
     var count = 0
     upstream.subscribe {

@@ -2,9 +2,9 @@ package reagent.rxjava2
 
 import org.junit.Test
 import reagent.source.observableOf
-import reagent.source.toOne
+import reagent.source.toTask
 
-class OneReagentToRxTest {
+class TaskReagentToRxTest {
   @Test fun item() {
     observableOf(1)
         .toRx()
@@ -15,7 +15,7 @@ class OneReagentToRxTest {
 
   @Test fun error() {
     val exception = RuntimeException("Oops!")
-    exception.toOne()
+    exception.toTask()
         .toRx()
         .test()
         .assertError(exception)

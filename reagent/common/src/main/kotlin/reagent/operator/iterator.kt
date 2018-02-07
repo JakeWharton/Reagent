@@ -1,7 +1,7 @@
 package reagent.operator
 
 import reagent.Observable
-import reagent.One
+import reagent.Task
 
 interface SuspendableIterator<out I> {
   suspend operator fun hasNext(): Boolean
@@ -9,7 +9,7 @@ interface SuspendableIterator<out I> {
 }
 
 operator fun <I> Observable<I>.iterator(): SuspendableIterator<I> = ObservableIterator(this)
-operator fun <I> One<I>.iterator(): SuspendableIterator<I> = OneIterator(this)
+operator fun <I> Task<I>.iterator(): SuspendableIterator<I> = TaskIterator(this)
 
 internal class ObservableIterator<out I>(private val observable: Observable<I>) : SuspendableIterator<I> {
   // TODO i_have_no_idea_what_im_doing.gif
@@ -18,7 +18,7 @@ internal class ObservableIterator<out I>(private val observable: Observable<I>) 
   override suspend fun next() = TODO()
 }
 
-internal class OneIterator<out I>(private val one: One<I>) : SuspendableIterator<I> {
+internal class TaskIterator<out I>(private val task: Task<I>) : SuspendableIterator<I> {
   private var done = false
 
   override suspend fun hasNext() = !done
@@ -26,6 +26,6 @@ internal class OneIterator<out I>(private val one: One<I>) : SuspendableIterator
   override suspend fun next(): I {
     if (done) throw IllegalStateException("Must call hasNext() before next()")
     done = true
-    return one.produce()
+    return task.produce()
   }
 }

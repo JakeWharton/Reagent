@@ -3,19 +3,19 @@ package reagent.source
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import reagent.runTest
-import reagent.tester.testOne
+import reagent.tester.testTask
 import java.time.Duration
 import java.util.concurrent.Callable
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.measureTimeMillis
 
-class OnePlatformSourceTest {
+class TaskPlatformSourceTest {
   @Test fun fromCallable() = runTest {
     val called = AtomicBoolean()
     Callable { called.getAndSet(true) }
         .asObservable()
-        .testOne {
+        .testTask {
           item(false)
         }
     assertTrue(called.get())
@@ -25,7 +25,7 @@ class OnePlatformSourceTest {
     val exception = RuntimeException("Oops!")
     Callable { throw exception }
         .asObservable()
-        .testOne {
+        .testTask {
           error(exception)
         }
   }
@@ -34,7 +34,7 @@ class OnePlatformSourceTest {
     // TODO need virtual time context to validate this works!
     val timer = timer(100, MILLISECONDS)
     val took = measureTimeMillis {
-      timer.testOne { item(Unit) }
+      timer.testTask { item(Unit) }
     }
     assertTrue(took >= 100)
   }
@@ -43,7 +43,7 @@ class OnePlatformSourceTest {
     // TODO need virtual time context to validate this works!
     val timer = Duration.ofMillis(100).asTimer()
     val took = measureTimeMillis {
-      timer.testOne { item(Unit) }
+      timer.testTask { item(Unit) }
     }
     assertTrue(took >= 100)
   }

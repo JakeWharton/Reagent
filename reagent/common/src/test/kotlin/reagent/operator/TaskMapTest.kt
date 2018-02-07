@@ -17,25 +17,25 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.observableOf
-import reagent.source.toOne
-import reagent.tester.testOne
+import reagent.source.toTask
+import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.fail
 
-class OneMapTest {
+class TaskMapTest {
   @Test fun map() = runTest {
     observableOf("Hello")
         .map(String::toUpperCase)
-        .testOne {
+        .testTask {
           item("HELLO")
         }
   }
 
   @Test fun mapError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toOne()
+    exception.toTask()
         .map { fail() }
-        .testOne {
+        .testTask {
           error(exception)
         }
   }
@@ -44,7 +44,7 @@ class OneMapTest {
     val exception = RuntimeException("Oops!")
     observableOf("Hello")
         .map { throw exception }
-        .testOne {
+        .testTask {
           error(exception)
         }
   }

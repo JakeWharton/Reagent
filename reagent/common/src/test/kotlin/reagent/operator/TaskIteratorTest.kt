@@ -1,9 +1,9 @@
 package reagent.operator
 
-import reagent.One
+import reagent.Task
 import reagent.runTest
 import reagent.source.observableOf
-import reagent.source.toOne
+import reagent.source.toTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -11,7 +11,7 @@ import kotlin.test.assertSame
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-class OneIteratorTest {
+class TaskIteratorTest {
   @Test fun item() = runTest {
     val items = mutableListOf<String>()
     for (item in observableOf("Hello")) {
@@ -23,7 +23,7 @@ class OneIteratorTest {
   @Test fun error() = runTest {
     val exception = RuntimeException()
     try {
-      for (item in exception.toOne()) {
+      for (item in exception.toTask()) {
         fail()
       }
       fail()
@@ -34,7 +34,7 @@ class OneIteratorTest {
 
   @Test fun iteratorContract() = runTest {
     var called = 0
-    val task = object : One<String>() {
+    val task = object : Task<String>() {
       override suspend fun produce(): String {
         called++
         return "Hello"
@@ -59,7 +59,7 @@ class OneIteratorTest {
 
   @Test fun iteratorContractNextOnly() = runTest {
     var called = 0
-    val task = object : One<String>() {
+    val task = object : Task<String>() {
       override suspend fun produce(): String {
         called++
         return "Hello"

@@ -2,10 +2,10 @@ package reagent.source
 
 import kotlinx.coroutines.experimental.CancellableContinuation
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
-import reagent.One
-import reagent.source.OneCreator.Downstream
+import reagent.Task
+import reagent.source.TaskCreator.Downstream
 
-internal class OneFromCreator<out I>(private val creator: OneCreator<I>): One<I>() {
+internal class TaskFromCreator<out I>(private val creator: TaskCreator<I>): Task<I>() {
   override suspend fun produce() = suspendCancellableCoroutine<I> {
     creator.subscribe(DownstreamProducer(it))
   }

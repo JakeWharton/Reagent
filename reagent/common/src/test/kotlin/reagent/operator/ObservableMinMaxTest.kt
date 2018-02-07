@@ -3,7 +3,7 @@ package reagent.operator
 import reagent.runTest
 import reagent.source.emptyObservable
 import reagent.source.observableOf
-import reagent.tester.testOne
+import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -13,7 +13,7 @@ class ObservableMinMaxTest {
   @Test fun emptyMax() = runTest {
     emptyObservable()
         .max()
-        .testOne {
+        .testTask {
           error {
             assertTrue(it is NoSuchElementException)
             assertEquals("No elements to compare", it.message)
@@ -24,7 +24,7 @@ class ObservableMinMaxTest {
   @Test fun emptyMaxBy() = runTest {
     emptyObservable()
         .maxBy { fail() }
-        .testOne {
+        .testTask {
           error {
             assertTrue(it is NoSuchElementException)
             assertEquals("No elements to compare", it.message)
@@ -35,7 +35,7 @@ class ObservableMinMaxTest {
   @Test fun emptyMin() = runTest {
     emptyObservable()
         .min()
-        .testOne {
+        .testTask {
           error {
             assertTrue(it is NoSuchElementException)
             assertEquals("No elements to compare", it.message)
@@ -46,7 +46,7 @@ class ObservableMinMaxTest {
   @Test fun emptyMinBy() = runTest {
     emptyObservable()
         .minBy { fail() }
-        .testOne {
+        .testTask {
           error {
             assertTrue(it is NoSuchElementException)
             assertEquals("No elements to compare", it.message)
@@ -57,7 +57,7 @@ class ObservableMinMaxTest {
   @Test fun maxOne() = runTest {
     observableOf(1)
         .max()
-        .testOne {
+        .testTask {
           item(1)
         }
   }
@@ -65,7 +65,7 @@ class ObservableMinMaxTest {
   @Test fun maxMany() = runTest {
     observableOf(1, 5, 2, 3, 4)
         .max()
-        .testOne {
+        .testTask {
           item(5)
         }
   }
@@ -73,7 +73,7 @@ class ObservableMinMaxTest {
   @Test fun maxByOne() = runTest {
     observableOf(1)
         .maxBy { fail() }
-        .testOne {
+        .testTask {
           item(1)
         }
   }
@@ -81,7 +81,7 @@ class ObservableMinMaxTest {
   @Test fun maxByMany() = runTest {
     observableOf("Hello", "World", "Test")
         .maxBy { it[0] }
-        .testOne {
+        .testTask {
           item("World")
         }
   }
@@ -89,7 +89,7 @@ class ObservableMinMaxTest {
   @Test fun minOne() = runTest {
     observableOf(1)
         .min()
-        .testOne {
+        .testTask {
           item(1)
         }
   }
@@ -97,7 +97,7 @@ class ObservableMinMaxTest {
   @Test fun minMany() = runTest {
     observableOf(5, 1, 4, 2, 3)
         .min()
-        .testOne {
+        .testTask {
           item(1)
         }
   }
@@ -105,7 +105,7 @@ class ObservableMinMaxTest {
   @Test fun minByOne() = runTest {
     observableOf(1)
         .minBy { fail() }
-        .testOne {
+        .testTask {
           item(1)
         }
   }
@@ -113,7 +113,7 @@ class ObservableMinMaxTest {
   @Test fun minByMany() = runTest {
     observableOf("Test", "Hello", "World")
         .minBy { it[0] }
-        .testOne {
+        .testTask {
           item("Hello")
         }
   }

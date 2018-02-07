@@ -21,7 +21,7 @@ class ObservableConcatMapTest {
 //    val concatMapItems = mutableListOf<String>()
 //    var observableCalled = 0
 //
-//    observableOf("One", "Two")
+//    observableOf("Task", "Two")
 //        .concatMap {
 //          concatMapItems.add(it)
 //          observableReturning { ++observableCalled }
@@ -54,7 +54,7 @@ class ObservableConcatMapTest {
 //    val concatMapItems = mutableListOf<String>()
 //    var oneCalled = 0
 //
-//    observableOf("One", "Two")
+//    observableOf("Task", "Two")
 //        .concatMap {
 //          concatMapItems.add(it)
 //          observableReturning { ++oneCalled }
@@ -65,7 +65,7 @@ class ObservableConcatMapTest {
 //          complete()
 //        }
 //
-//    assertEquals(listOf("One", "Two"), concatMapItems)
+//    assertEquals(listOf("Task", "Two"), concatMapItems)
 //    assertEquals(2, oneCalled)
 //  }
 //

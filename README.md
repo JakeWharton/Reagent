@@ -17,7 +17,7 @@ platform-specific code.
  * **Polymorphic stream types.**
 
    Polymorphic types mean that just like how every `List<T>` and `Set<T>` is a `Collection<T>`,
-   every `One<T>` is just an `Observable<T>` with only a single element, etc.
+   every `Task<T>` is just an `Observable<T>` with only a single element, etc.
 
    ```
                   +---------------+
@@ -29,7 +29,7 @@ platform-specific code.
                           |
                   +-------+-------+
                   |               |
-                  |     One<T>    |
+                  |    Task<T>    |
                   |               |
                   +---------------+
    ```

@@ -18,14 +18,14 @@ package reagent.source
 import kotlin.js.Promise
 import kotlinx.coroutines.experimental.launch
 import reagent.Observable
-import reagent.One
+import reagent.Task
 
 actual fun interval(periodMillis: Int): Observable<Int> = ObservableIntervalInt(periodMillis)
-actual fun timer(delayMillis: Int): One<Unit> = OneTimerInt(delayMillis)
+actual fun timer(delayMillis: Int): Task<Unit> = TaskTimerInt(delayMillis)
 
-fun <I> Promise<I>.toOne(): One<I> = OneFromPromise(this)
+fun <I> Promise<I>.toTask(): Task<I> = TaskFromPromise(this)
 
-fun <I> One<I>.toPromise(): Promise<I> = Promise { resolve, reject ->
+fun <I> Task<I>.toPromise(): Promise<I> = Promise { resolve, reject ->
   launch {
     val result = try {
       produce()

@@ -2,7 +2,6 @@ package reagent.rxjava2
 
 import io.reactivex.Single
 import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposables
 import io.reactivex.exceptions.CompositeException
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
@@ -10,10 +9,10 @@ import kotlinx.coroutines.experimental.CoroutineStart.LAZY
 import kotlinx.coroutines.experimental.JobCancellationException
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
-import reagent.One
+import reagent.Task
 
-internal class OneReagentToRx<I : Any>(
-  private val upstream: One<I>
+internal class TaskReagentToRx<I : Any>(
+  private val upstream: Task<I>
 ) : Single<I>() {
   override fun subscribeActual(observer: SingleObserver<in I>) {
     val job = launch(Unconfined, LAZY) {

@@ -17,12 +17,11 @@ package reagent.operator
 
 import reagent.Emitter
 import reagent.Observable
-import reagent.One
-import kotlin.DeprecationLevel.ERROR
+import reagent.Task
 
 fun <I> Observable<I>.filter(predicate: (I) -> Boolean): Observable<I> = ObservableFilter(this, predicate)
 
-fun <I : Any> One<I>.filter(predicate: (I) -> Boolean): One<I?> = OneFilter(this, predicate)
+fun <I : Any> Task<I>.filter(predicate: (I) -> Boolean): Task<I?> = TaskFilter(this, predicate)
 
 internal class ObservableFilter<out I>(
     private val upstream: Observable<I>,
@@ -39,10 +38,10 @@ internal class ObservableFilter<out I>(
   }
 }
 
-internal class OneFilter<out I : Any>(
-    private val upstream: One<I>,
+internal class TaskFilter<out I : Any>(
+    private val upstream: Task<I>,
     private val predicate: (I) -> Boolean
-) : One<I?>() {
+) : Task<I?>() {
   override suspend fun produce(): I? {
     val value = upstream.produce()
     return if (predicate(value)) value else null

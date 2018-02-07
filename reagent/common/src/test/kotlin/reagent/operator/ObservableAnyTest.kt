@@ -5,7 +5,7 @@ import reagent.source.observableOf
 import reagent.source.observable
 import reagent.source.test.emptyActualObservable
 import reagent.tester.testObservable
-import reagent.tester.testOne
+import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -14,7 +14,7 @@ class ObservableAnyTest {
   @Test fun empty() = runTest {
     emptyActualObservable<Any>()
         .any { fail() }
-        .testOne {
+        .testTask {
           item(false)
         }
   }
@@ -22,7 +22,7 @@ class ObservableAnyTest {
   @Test fun success() = runTest {
     observableOf(1, 2, 3)
         .any { it == 2 }
-        .testOne {
+        .testTask {
           item(true)
         }
   }
@@ -30,7 +30,7 @@ class ObservableAnyTest {
   @Test fun failure() = runTest {
     observableOf(1, 2, 3)
         .all { false }
-        .testOne {
+        .testTask {
           item(false)
         }
   }

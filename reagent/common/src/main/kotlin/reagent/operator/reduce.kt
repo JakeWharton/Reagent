@@ -16,19 +16,18 @@
 package reagent.operator
 
 import reagent.Observable
-import reagent.One
-import kotlin.DeprecationLevel.ERROR
+import reagent.Task
 import kotlin.DeprecationLevel.WARNING
 
-fun <R, I : R> Observable<I>.reduce(operation: (accumulator: R, item: I) -> R): One<R> = ObservableReduce(this, operation)
+fun <R, I : R> Observable<I>.reduce(operation: (accumulator: R, item: I) -> R): Task<R> = ObservableReduce(this, operation)
 
 @Deprecated("Reduce has no effect on single-element stream types", level = WARNING)
-fun <R, I : R> One<I>.reduce(operation: (accumulator: R, item: I) -> R): One<R> = this
+fun <R, I : R> Task<I>.reduce(operation: (accumulator: R, item: I) -> R): Task<R> = this
 
 internal class ObservableReduce<out R, out I : R>(
   private val upstream: Observable<I>,
   private val operation: (accumulator: R, item: I) -> R
-) : One<R>() {
+) : Task<R>() {
   @Suppress("UNCHECKED_CAST") // 'accumulator' is set to an R instance before cast occurs.
   override suspend fun produce(): R {
     var first = true

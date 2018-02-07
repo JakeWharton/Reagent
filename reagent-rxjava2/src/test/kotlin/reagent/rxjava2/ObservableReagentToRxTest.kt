@@ -5,7 +5,7 @@ import reagent.Observable
 import reagent.source.emptyObservable
 import reagent.source.observable
 import reagent.source.observableOf
-import reagent.source.toOne
+import reagent.source.toTask
 import kotlin.test.assertEquals
 
 class ObservableReagentToRxTest {
@@ -34,7 +34,7 @@ class ObservableReagentToRxTest {
 
   @Test fun error() {
     val exception = RuntimeException("Oops!")
-    exception.toOne()
+    exception.toTask()
         .toRx()
         .test()
         .assertError(exception)

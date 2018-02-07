@@ -2,32 +2,32 @@ package reagent.operator
 
 import reagent.runTest
 import reagent.source.observableOf
-import reagent.source.toOne
-import reagent.tester.testOne
+import reagent.source.toTask
+import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.fail
 
-class OneFilterTest {
+class TaskFilterTest {
   @Test fun filter() = runTest {
     observableOf("Hello")
         .filter { it == "Hello" }
-        .testOne {
+        .testTask {
           item("Hello")
         }
   }
   @Test fun filterOut() = runTest {
     observableOf("Hello")
         .filter { it != "Hello" }
-        .testOne {
+        .testTask {
           item(null)
         }
   }
 
   @Test fun filterError() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toOne()
+    exception.toTask()
         .filter { fail() }
-        .testOne {
+        .testTask {
           error(exception)
         }
   }
@@ -36,7 +36,7 @@ class OneFilterTest {
     val exception = RuntimeException("Oops!")
     observableOf("Hello")
         .filter { throw exception }
-        .testOne {
+        .testTask {
           error(exception)
         }
   }

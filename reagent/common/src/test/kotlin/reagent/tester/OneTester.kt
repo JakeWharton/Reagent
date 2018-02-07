@@ -15,11 +15,11 @@
  */
 package reagent.tester
 
-import reagent.One
+import reagent.Task
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class OneAsserter<T>(private val events: MutableList<Any>) {
+class TaskAsserter<T>(private val events: MutableList<Any>) {
   fun item(item: T) {
     assertEquals(Item(item), events.removeAt(0))
   }
@@ -33,7 +33,7 @@ class OneAsserter<T>(private val events: MutableList<Any>) {
   }
 }
 
-suspend fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
+suspend fun <T> Task<T>.testTask(assertions: TaskAsserter<T>.() -> Unit) {
   val events = mutableListOf<Any>()
 
   try {
@@ -42,7 +42,7 @@ suspend fun <T> One<T>.testOne(assertions: OneAsserter<T>.() -> Unit) {
     events.add(Error(t))
   }
 
-  OneAsserter<T>(events).assertions()
+  TaskAsserter<T>(events).assertions()
 
   assertTrue(events.isEmpty(), "Unconsumed events: $events")
 }

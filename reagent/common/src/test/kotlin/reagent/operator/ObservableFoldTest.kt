@@ -3,7 +3,7 @@ package reagent.operator
 import reagent.runTest
 import reagent.source.emptyObservable
 import reagent.source.observableOf
-import reagent.tester.testOne
+import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -12,7 +12,7 @@ class ObservableFoldTest {
   @Test fun empty() = runTest {
     emptyObservable()
         .fold("Hello") { _, _ -> fail() }
-        .testOne {
+        .testTask {
           item("Hello")
         }
   }
@@ -23,7 +23,7 @@ class ObservableFoldTest {
           assertEquals("Seed", accumulator)
           assertEquals("Item", item)
           "Return"
-        }.testOne {
+        }.testTask {
           item("Return")
         }
   }
@@ -31,7 +31,7 @@ class ObservableFoldTest {
   @Test fun multiple() = runTest {
     observableOf(1, 2, 3)
         .fold(0) { accumulator, item -> accumulator + item }
-        .testOne {
+        .testTask {
           item(6)
         }
   }

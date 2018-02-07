@@ -17,27 +17,27 @@ package reagent.source
 
 import kotlinx.coroutines.experimental.await
 import reagent.runTest
-import reagent.tester.testOne
+import reagent.tester.testTask
 import kotlin.js.Promise
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 import kotlin.test.fail
 
-class OnePlatformSourceTest {
-  @Test fun toOneResolve() = runTest {
+class TaskPlatformSourceTest {
+  @Test fun toTaskResolve() = runTest {
     Promise.resolve("Hello")
-        .toOne()
-        .testOne {
+        .toTask()
+        .testTask {
           item("Hello")
         }
   }
 
-  @Test fun toOneReject() = runTest {
+  @Test fun toTaskReject() = runTest {
     val exception = RuntimeException("Hello")
     Promise.reject(exception)
-        .toOne()
-        .testOne {
+        .toTask()
+        .testTask {
           error(exception)
         }
   }
@@ -51,7 +51,7 @@ class OnePlatformSourceTest {
 
   @Test fun errorToPromise() = runTest {
     val exception = RuntimeException("Hello")
-    val promise = exception.toOne()
+    val promise = exception.toTask()
         .toPromise()
     try {
       promise.await()

@@ -21,7 +21,7 @@ class ObservableFlatMapTest {
 //    val flatMapItems = mutableListOf<String>()
 //    var observableCalled = 0
 //
-//    observableOf("One", "Two")
+//    observableOf("Task", "Two")
 //        .flatMap {
 //          flatMapItems.add(it)
 //          observableReturning { ++observableCalled }
@@ -54,7 +54,7 @@ class ObservableFlatMapTest {
 //    val flatMapItems = mutableListOf<String>()
 //    var oneCalled = 0
 //
-//    observableOf("One", "Two")
+//    observableOf("Task", "Two")
 //        .flatMap {
 //          flatMapItems.add(it)
 //          observableReturning { ++oneCalled }
@@ -65,7 +65,7 @@ class ObservableFlatMapTest {
 //          complete()
 //        }
 //
-//    assertEquals(listOf("One", "Two"), flatMapItems)
+//    assertEquals(listOf("Task", "Two"), flatMapItems)
 //    assertEquals(2, oneCalled)
 //  }
 //

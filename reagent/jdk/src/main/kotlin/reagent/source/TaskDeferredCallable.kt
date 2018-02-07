@@ -1,8 +1,8 @@
 package reagent.source
 
-import reagent.One
+import reagent.Task
 import java.util.concurrent.Callable
 
-internal class OneDeferredCallable<out I>(private val func: Callable<One<I>>): One<I>() {
+internal class TaskDeferredCallable<out I>(private val func: Callable<Task<I>>): Task<I>() {
   override suspend fun produce() = func.call().produce()
 }

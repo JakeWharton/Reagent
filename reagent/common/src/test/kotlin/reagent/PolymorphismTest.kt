@@ -16,15 +16,15 @@
 package reagent
 
 import reagent.source.observableOf
-import reagent.source.toOne
+import reagent.source.toTask
 import reagent.tester.testObservable
-import reagent.tester.testOne
+import reagent.tester.testTask
 import kotlin.test.Test
 
 class PolymorphismTest {
   @Test fun oneItem() = runTest {
     val one = observableOf("Hello")
-    one.testOne {
+    one.testTask {
       item("Hello")
     }
     one.testObservable {
@@ -35,8 +35,8 @@ class PolymorphismTest {
 
   @Test fun oneError() = runTest {
     val exception = RuntimeException("Oops")
-    val one = exception.toOne()
-    one.testOne {
+    val one = exception.toTask()
+    one.testTask {
       error(exception)
     }
     one.testObservable {

@@ -19,7 +19,7 @@ import kotlin.test.Ignore
 
 // TODO overload resolution doesn't work here
 @Ignore
-class OneFlapMapTest {
+class TaskFlapMapTest {
 //  @Test fun flatMapObservable() = runTest {
 //    oneOf("Item")
 //        .flatMap { observableOf("Hello", "World") }
@@ -32,7 +32,7 @@ class OneFlapMapTest {
 //
 //  @Test fun flatMapObservableError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    exception.toOne<String>()
+//    exception.toTask<String>()
 //        .flatMap { failObservable<String>() }
 //        .testObservable {
 //          error(exception)
@@ -42,16 +42,16 @@ class OneFlapMapTest {
 //  @Test fun flatMapOne() = runTest {
 //    oneOf("Item")
 //        .flatMap { oneOf("Hello") }
-//        .testOne {
+//        .testTask {
 //          item("Hello")
 //        }
 //  }
 //
 //  @Test fun flatMapOneError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    exception.toOne<String>()
+//    exception.toTask<String>()
 //        .flatMap { failOne<String>() }
-//        .testOne {
+//        .testTask {
 //          error(exception)
 //        }
 //  }
@@ -66,7 +66,7 @@ class OneFlapMapTest {
 //
 //  @Test fun flatMapTaskError() = runTest {
 //    val exception = RuntimeException("Oops!")
-//    exception.toOne<String>()
+//    exception.toTask<String>()
 //        .flatMap { failTask() }
 //        .testTask {
 //          error(exception)

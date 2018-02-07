@@ -4,7 +4,7 @@ import reagent.Observable
 import reagent.runTest
 import reagent.source.emptyObservable
 import reagent.source.observableOf
-import reagent.tester.testOne
+import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -14,7 +14,7 @@ class ObservableReduceTest {
   @Test fun empty() = runTest {
     emptyObservable()
         .reduce { _, _ -> fail() }
-        .testOne {
+        .testTask {
           error {
             assertTrue(it is NoSuchElementException)
             assertEquals("Reduce requires a non-empty Observable", it.message)
@@ -25,7 +25,7 @@ class ObservableReduceTest {
   @Test fun one() = runTest {
     (observableOf(1) as Observable<Int>)
         .reduce { _, _ -> fail() }
-        .testOne {
+        .testTask {
           item(1)
         }
   }
@@ -33,7 +33,7 @@ class ObservableReduceTest {
   @Test fun multiple() = runTest {
     observableOf(1, 2, 3)
         .reduce { accumulator, item -> accumulator + item }
-        .testOne {
+        .testTask {
           item(6)
         }
   }

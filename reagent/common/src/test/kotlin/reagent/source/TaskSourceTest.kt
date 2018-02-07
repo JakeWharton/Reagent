@@ -17,32 +17,32 @@ package reagent.source
 
 import kotlinx.coroutines.experimental.delay
 import reagent.runTest
-import reagent.tester.testOne
+import reagent.tester.testTask
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class OneSourceTest {
+class TaskSourceTest {
   @Test fun suspendingLambda() = runTest {
-    one {
+    task {
       delay(10)
       "Hello"
-    }.testOne {
+    }.testTask {
       item("Hello")
     }
   }
 
   @Test fun of() = runTest {
     observableOf("Hello")
-        .testOne {
+        .testTask {
           item("Hello")
         }
   }
 
   @Test fun throwable() = runTest {
     val exception = RuntimeException("Oops!")
-    exception.toOne()
-        .testOne {
+    exception.toTask()
+        .testTask {
           error(exception)
         }
   }
@@ -50,7 +50,7 @@ class OneSourceTest {
   @Test fun returning() = runTest {
     var called = false
     observableReturning { called = true; 0 }
-        .testOne {
+        .testTask {
           item(0)
         }
     assertTrue(called)
@@ -59,19 +59,19 @@ class OneSourceTest {
   @Test fun returningThrowing() = runTest {
     val exception = RuntimeException("Oops!")
     observableReturning { throw exception }
-        .testOne {
+        .testTask {
           error(exception)
         }
   }
 
   @Test fun defer() = runTest {
     var called = 0
-    val deferred = deferOne { called++; observableOf("Hello") }
-    deferred.testOne {
+    val deferred = deferTask { called++; observableOf("Hello") }
+    deferred.testTask {
       item("Hello")
     }
     assertEquals(1, called)
-    deferred.testOne {
+    deferred.testTask {
       item("Hello")
     }
     assertEquals(2, called)
@@ -80,7 +80,7 @@ class OneSourceTest {
   @Test fun timer() = runTest {
     // TODO need virtual time context to validate this works!
     val timer = timer(100)
-    timer.testOne {
+    timer.testTask {
       item(Unit)
     }
   }

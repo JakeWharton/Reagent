@@ -17,7 +17,7 @@ package reagent.operator
 
 import reagent.Emitter
 import reagent.Observable
-import reagent.One
+import reagent.Task
 
 fun <I, O> Observable<I>.flatMap(func: (I) -> Observable<O>): Observable<O> = ObservableFlatMapObservable(this, func)
 
@@ -28,11 +28,11 @@ internal class ObservableFlatMapObservable<U, out D>(
   override suspend fun subscribe(emit: Emitter<D>) = TODO()
 }
 
-fun <I, O> One<I>.flatMap(func: (I) -> One<O>): One<O> = OneFlatMapOne(this, func)
+fun <I, O> Task<I>.flatMap(func: (I) -> Task<O>): Task<O> = TaskFlatMapTask(this, func)
 
-internal class OneFlatMapOne<U, D>(
-    private val upstream: One<U>,
-    private val func: (U) -> One<D>
-) : One<D>() {
+internal class TaskFlatMapTask<U, D>(
+    private val upstream: Task<U>,
+    private val func: (U) -> Task<D>
+) : Task<D>() {
   override suspend fun produce() = func(upstream.produce()).produce()
 }

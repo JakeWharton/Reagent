@@ -8,9 +8,9 @@ import reagent.source.ObservableArray
 import reagent.source.ObservableFromCreator
 import reagent.source.ObservableIterable
 import reagent.source.ObservableDeferredCallable
-import reagent.source.OneError
-import reagent.source.OneFromCallable
-import reagent.source.OneJust
+import reagent.source.TaskError
+import reagent.source.TaskFromCallable
+import reagent.source.TaskJust
 import reagent.source.ObservableEmpty
 import reagent.source.ObservableFromRunnable
 import java.util.concurrent.Callable
@@ -44,12 +44,12 @@ actual abstract class Observable<out I> {
   companion object {
     @JvmStatic fun <I> createObservable(body: ObservableCreator<I>): Observable<I> = ObservableFromCreator(body)
     @JvmStatic fun <I> empty(): Observable<I> = ObservableEmpty
-    @JvmStatic fun <I> just(item: I): Observable<I> = OneJust(item)
-    @JvmStatic fun <I> error(t: Throwable): Observable<I> = OneError(t)
+    @JvmStatic fun <I> just(item: I): Observable<I> = TaskJust(item)
+    @JvmStatic fun <I> error(t: Throwable): Observable<I> = TaskError(t)
     @JvmStatic fun <I> fromArray(vararg items: I): Observable<I> = ObservableArray(items)
     @JvmStatic fun <I> fromIterable(items: Iterable<I>): Observable<I> = ObservableIterable(items)
     @JvmStatic fun fromRunnable(runnable: Runnable): Observable<Nothing> = ObservableFromRunnable(runnable)
-    @JvmStatic fun <I> fromCallable(callable: Callable<I>): Observable<I> = OneFromCallable(callable)
+    @JvmStatic fun <I> fromCallable(callable: Callable<I>): Observable<I> = TaskFromCallable(callable)
     @JvmStatic fun <I> deferObservable(callable: Callable<Observable<I>>): Observable<I> = ObservableDeferredCallable(callable)
   }
 }
