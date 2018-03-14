@@ -1,7 +1,7 @@
 buildscript {
   ext.versions = [
       'kotlin': '1.2.30',
-      'coroutines': '0.21.2',
+      'coroutines': '0.22.5',
   ]
 
   ext.deps = [
