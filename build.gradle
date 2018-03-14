@@ -23,7 +23,7 @@ buildscript {
               'js': "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${versions.coroutines}",
           ],
       ],
-      'rxjava2': 'io.reactivex.rxjava2:rxjava:2.1.8',
+      'rxjava2': 'io.reactivex.rxjava2:rxjava:2.1.10',
       'truth': 'com.google.truth:truth:0.39',
   ]
 
