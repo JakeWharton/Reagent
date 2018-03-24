@@ -7,7 +7,7 @@ targetCompatibility = JavaVersion.VERSION_1_6
 archivesBaseName = 'reagent'
 
 dependencies {
-  expectedBy project(':reagent:common')
+  expectedBy project(':reagent')
   api deps.kotlin.stdLib.jdk
   api deps.kotlin.coroutines.jdk
   testImplementation deps.kotlin.test.jdk

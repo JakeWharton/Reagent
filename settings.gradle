@@ -1,6 +1,6 @@
 rootProject.name = 'reagent-root'
 
-include ':reagent:common'
+include ':reagent'
 include ':reagent:jdk'
 include ':reagent:js'
 
