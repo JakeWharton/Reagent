@@ -3,6 +3,7 @@ rootProject.name = 'reagent-root'
 include ':reagent'
 include ':reagent:jdk'
 include ':reagent:js'
+include ':reagent:native'
 
 include ':reagent-rxjava2'
 include ':reagent-rxjs6'
